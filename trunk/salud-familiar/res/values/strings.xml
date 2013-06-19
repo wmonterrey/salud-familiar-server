@@ -9,6 +9,7 @@
     <!-- Menu principal -->
     <string name="main_new">Nueva ficha..</string>
     <string name="main_edit">Revisar ficha..</string>
+    <string name="main_lists">Listas..</string>
     
     <!-- Preferences -->
     <string name="preferences">Preferencias</string>
