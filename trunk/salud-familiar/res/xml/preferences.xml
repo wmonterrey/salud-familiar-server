@@ -1,0 +1,33 @@
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceScreen
+		android:id="@+id/info"
+		android:key="info"
+		android:title="@string/app_name">
+	</PreferenceScreen>
+	<PreferenceCategory android:title="@string/client">
+		<CheckBoxPreference android:id="@+id/remember_password" android:key="remember_password" android:title="@string/remember_password" />
+		<PreferenceScreen android:id="@+id/comunidad" android:key="comunidad" android:defaultValue="@string/default_comu" android:title="@string/choose_comu">
+			<Preference android:key="id_comu"/>
+		</PreferenceScreen>
+		<ListPreference
+			android:id="@+id/complete_form"
+			android:key="complete_form"
+			android:title="@string/complete_form"
+			android:dialogTitle="@string/complete_form"
+			android:defaultValue="send_noask"
+			android:entries="@array/complete_form_entries"
+			android:entryValues="@array/complete_form_entries" />
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/server_preferences">
+		<EditTextPreference android:id="@+id/server_url" android:key="server_url" android:defaultValue="@string/default_server_url" android:title="@string/server_url" android:dialogTitle="@string/change_server_url" />
+		<EditTextPreference android:id="@+id/username" android:key="username" android:title="@string/username" android:dialogTitle="@string/change_username" />
+		<EditTextPreference android:id="@+id/password" android:key="password" android:title="@string/password" android:dialogTitle="@string/change_password" />
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/update_preferences">
+	    <PreferenceScreen android:id="@+id/update_divpol" android:key="update_divpol" android:defaultValue="@string/divpol" android:title="@string/update_divpol"></PreferenceScreen>
+	    <PreferenceScreen android:id="@+id/update_sector" android:key="update_sector" android:defaultValue="@string/sector" android:title="@string/update_sector"></PreferenceScreen>
+		<PreferenceScreen android:id="@+id/update_comu" android:key="update_comu" android:defaultValue="@string/comu" android:title="@string/update_comu"></PreferenceScreen>
+		<PreferenceScreen android:id="@+id/update_cat" android:key="update_cat" android:defaultValue="@string/cat" android:title="@string/update_cat"></PreferenceScreen>
+	</PreferenceCategory>    
+</PreferenceScreen>

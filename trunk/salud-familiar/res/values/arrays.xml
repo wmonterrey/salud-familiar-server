@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array
+		name="menu_main">
+		<item>@string/main_new</item>
+		<item>@string/main_edit</item>
+	</string-array>
+	
+	<string-array
+		name="complete_form_entries">
+		<item>@string/send_noask</item>
+		<item>@string/send_ask</item>
+		<item>@string/no_send</item>
+	</string-array>
+</resources>
