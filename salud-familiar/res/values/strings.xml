@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Historia de Salud Familiar</string>
+    <string name="home">Inicio</string>
+    <string name="exit">Salir</string>
+    <string name="cancel">Cancelar</string>
+    
+    <!-- Menu principal -->
+    <string name="main_new">Nueva ficha..</string>
+    <string name="main_edit">Revisar ficha..</string>
+    
+    <!-- Preferences -->
+    <string name="preferences">Preferencias</string>
+    
+    <string name="client">Aplicación</string>
+    <string name="comu">Comunidad</string>
+    <string name="sector">Sector</string>
+    <string name="divpol">División política</string>
+    <string name="cat">Catálogos</string>
+    <string name="choose_comu">Cambiar comunidad</string>
+    <string name="change_comu">Cambiando comunidad a </string>
+    <string name="default_comu">Comunidad</string>
+    <string name="username">Usuario</string>
+    <string name="password">Contraseña</string>
+    <string name="change_username">Cambiar usuario</string>
+    <string name="change_password">Cambiar contraseña</string>
+    <string name="remember_password">Recordar contraseña</string>
+    <string name="complete_form">Acción al completar el formulario</string>
+    <string name="send_noask">Enviar sin preguntar</string>
+    <string name="send_ask">Preguntar antes de enviar</string>
+    <string name="no_send">No enviar</string>
+    
+    <string name="server">Servidor</string>
+    <string name="server_preferences">Configuración Servidor</string>
+    <string name="update_preferences">Actualización datos</string>
+    <string name="server_url">URL del servidor</string>
+    <string name="change_server_url">Cambiar URL del servidor</string>
+    <string name="default_server_url">http://192.168.1.146:8080/salud-familiar-server</string>
+    <string name="url_error">Error en URL</string>
+    <string name="update_comu">Actualizar comunidades</string>
+    <string name="update_sector">Actualizar sectores</string>
+    <string name="update_divpol">Actualizar división política</string>
+    <string name="update_cat">Actualizar catalogos</string>
+    <string name="error_download_divpol">Error al descargar división política</string>
+    <string name="error_download_sector">Error al descargar sectores</string>
+    <string name="error_download_comu">Error al descargar comunidad</string>
+    <string name="error_download_cat">Error al descargar catalogos</string>
+    <string name="success_download_divpol">Descarga división política exitosa</string>
+    <string name="success_download_sector">Descarga sectores exitosa</string>
+    <string name="success_download_comu">Descarga comunidades exitosa</string>
+    <string name="success_download_cat">Descarga catalogos exitosa</string>
+    
+    <!-- Busqueda en listas-->
+    
+    <string name="no_items">Ningún elemento fue encontrado</string>
+    <string name="search_hint">Ingresar texto de búsqueda</string>
+    <string name="desc_barcode">Escanear código de barras</string>
+    <string name="storage_error">Medio de almacenamiento no disponible!</string>
+    <string name="barcode_error">Escaner de código de barras no disponible</string>
+    <string name="error">Ha ocurrido un error!</string>
+    <string name="find_dpto">Seleccionar departamento</string>
+    <string name="dpto">Departamento</string>
+    <string name="find_sector">Seleccionar sector</string>
+    
+    <!-- Aplicacion -->
+    <string name="download">Descargar</string>
+    <string name="loading">Cargando..</string>
+    
+    <!-- Strings related to dialog -->
+    <string name="confirm">Por favor confirmar</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
+    <string name="exiting">Seguro desea salir?</string>
+    
+    
+    
+    
+    
+
+</resources>
