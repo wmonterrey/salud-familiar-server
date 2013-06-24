@@ -6,7 +6,7 @@ import javax.annotation.Resource;
 
 
 
-import ni.gob.minsa.comunitaria.familiar.domain.CatGen;
+import ni.gob.minsa.comunitaria.familiar.domain.Tblcatgen;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -14,15 +14,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Servicio para el objeto CatGen
+ * Servicio para el objeto Tblcatgen
  * 
  * @author William Aviles
  * 
  **/
 
-@Service("catGenService")
+@Service("tblcatenService")
 @Transactional
-public class CatGenService {
+public class TblcatgenService {
 	
 	@Resource(name="sessionFactory")
 	private SessionFactory sessionFactory;
@@ -35,11 +35,11 @@ public class CatGenService {
 	 */
 
 	@SuppressWarnings("unchecked")
-	public List<CatGen> getCatGens() {
+	public List<Tblcatgen> getCatGens() {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
 		// Create a Hibernate query (HQL)
-		Query query = session.createQuery("FROM CatGen cat order by cat.nombre");
+		Query query = session.createQuery("FROM Tblcatgen cat order by cat.nombre");
 		// Retrieve all
 		return  query.list();
 	}

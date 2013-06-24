@@ -3,11 +3,11 @@ package ni.gob.minsa.comunitaria.familiar;
 import java.util.List;
 import javax.annotation.Resource;
 
-import ni.gob.minsa.comunitaria.familiar.domain.CatGen;
+import ni.gob.minsa.comunitaria.familiar.domain.Tblcatgen;
 import ni.gob.minsa.comunitaria.familiar.domain.Comunidad;
 import ni.gob.minsa.comunitaria.familiar.domain.Divisionpolitica;
 import ni.gob.minsa.comunitaria.familiar.domain.Sector;
-import ni.gob.minsa.comunitaria.familiar.service.CatGenService;
+import ni.gob.minsa.comunitaria.familiar.service.TblcatgenService;
 import ni.gob.minsa.comunitaria.familiar.service.ComunidadService;
 import ni.gob.minsa.comunitaria.familiar.service.DivisionPoliticaService;
 import ni.gob.minsa.comunitaria.familiar.service.SectorService;
@@ -34,8 +34,8 @@ public class EnvioController {
 	private SectorService sectorService;
 	@Resource(name="comunidadService")
 	private ComunidadService comunidadService;
-	@Resource(name="catGenService")
-	private CatGenService catGenService;
+	@Resource(name="tblcatenService")
+	private TblcatgenService tblcatenService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EnvioController.class);
     
@@ -73,10 +73,10 @@ public class EnvioController {
      * Retorna una lista de comunidades. Acepta una solicitud GET para JSON
      * @return Un arreglo JSON de comunidades
      */
-    @RequestMapping(value = "comunidades/{muni}", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody List<Comunidad> fetchComunidadesJson(@PathVariable String muni) {
+    @RequestMapping(value = "comunidades/{sector}", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody List<Comunidad> fetchComunidadesJson(@PathVariable String sector) {
         logger.info("Obteniendo los comunidades en JSON");
-        List<Comunidad> comunidades = comunidadService.getComunidades(muni);
+        List<Comunidad> comunidades = comunidadService.getComunidades(sector);
         if (comunidades == null){
         	logger.debug("Nulo");
         }
@@ -89,9 +89,9 @@ public class EnvioController {
      * @return Un arreglo JSON de CatGen
      */
     @RequestMapping(value = "catgen", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody List<CatGen> fetchCatGensJson() {
+    public @ResponseBody List<Tblcatgen> fetchCatGensJson() {
         logger.info("Obteniendo los catgens en JSON");
-        List<CatGen> catgens = catGenService.getCatGens();
+        List<Tblcatgen> catgens = tblcatenService.getCatGens();
         if (catgens == null){
         	logger.debug("Nulo");
         }
