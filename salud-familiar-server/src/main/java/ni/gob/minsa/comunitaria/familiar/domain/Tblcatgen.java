@@ -10,7 +10,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tblcatgen", catalog = "salud_familiar")
-public class CatGen implements java.io.Serializable {
+public class Tblcatgen implements java.io.Serializable {
 
 	/**
 	 * 
@@ -20,10 +20,10 @@ public class CatGen implements java.io.Serializable {
 	private int idTipocat;
 	private String nombre;
 
-	public CatGen() {
+	public Tblcatgen() {
 	}
 
-	public CatGen(int idTiposvar, int idTipocat, String nombre) {
+	public Tblcatgen(int idTiposvar, int idTipocat, String nombre) {
 		this.idTiposvar = idTiposvar;
 		this.idTipocat = idTipocat;
 		this.nombre = nombre;
