@@ -45,7 +45,7 @@ public class DownloadCatalogosTask extends DownloadTask {
 		if (catalogos != null){
 				// open db and clean entries
 				va.open();
-				va.deleteAllDiv();
+				va.deleteAllCatGens();
 				// download and insert comms
 				try {
 					addCatalogo(catalogos);
