@@ -2,15 +2,19 @@ package ni.gob.minsa.comunitaria.familiar.domain;
 
 
 import java.math.BigDecimal;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
 import ni.gob.minsa.comunitaria.familiar.serializer.CustomDateSerializer;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.hibernate.annotations.IndexColumn;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
@@ -32,6 +36,7 @@ public class Comunidad {
 	private BigDecimal latitud;
 	private String zona;
 	
+	private Set<Tblvivienda> viviendas;
 
 	public Comunidad() {
 	}
@@ -186,6 +191,16 @@ public class Comunidad {
 
 	public void setFechaRegistro(DateTime fechaRegistro) {
 		this.fechaRegistro = fechaRegistro;
+	}
+
+	@OneToMany(mappedBy = "comunidad")
+	@IndexColumn(name = "id_pob", base=0)
+	public Set<Tblvivienda> getViviendas() {
+		return viviendas;
+	}
+
+	public void setViviendas(Set<Tblvivienda> viviendas) {
+		this.viviendas = viviendas;
 	}
 
 }
