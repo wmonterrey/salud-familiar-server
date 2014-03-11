@@ -19,7 +19,7 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 @Entity
-@Table(name = "comunidades", catalog = "salud_familiar")
+@Table(name = "comunidades", catalog = "hsf")
 public class Comunidad {
 
 	private Integer comunidadId;
