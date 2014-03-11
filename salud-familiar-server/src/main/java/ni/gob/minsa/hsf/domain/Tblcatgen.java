@@ -1,4 +1,4 @@
-package ni.gob.minsa.comunitaria.familiar.domain;
+package ni.gob.minsa.hsf.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

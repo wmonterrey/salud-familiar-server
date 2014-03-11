@@ -1,4 +1,4 @@
-package ni.gob.minsa.comunitaria.familiar.serializer;
+package ni.gob.minsa.hsf.serializer;
 
 import java.io.IOException;
 

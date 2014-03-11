@@ -1,4 +1,4 @@
-package ni.gob.minsa.comunitaria.familiar.domain;
+package ni.gob.minsa.hsf.domain;
 
 // Generated 12-06-2012 03:38:40 PM by Hibernate Tools 3.6.0
 
@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import ni.gob.minsa.comunitaria.familiar.serializer.CustomDateSerializer;
+import ni.gob.minsa.hsf.serializer.CustomDateSerializer;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.hibernate.annotations.Type;

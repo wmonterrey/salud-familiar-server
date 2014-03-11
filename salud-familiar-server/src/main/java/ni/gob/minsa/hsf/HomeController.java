@@ -1,4 +1,4 @@
-package ni.gob.minsa.comunitaria.familiar;
+package ni.gob.minsa.hsf;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

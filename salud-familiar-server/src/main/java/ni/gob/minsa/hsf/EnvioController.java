@@ -1,16 +1,16 @@
-package ni.gob.minsa.comunitaria.familiar;
+package ni.gob.minsa.hsf;
 
 import java.util.List;
 import javax.annotation.Resource;
 
-import ni.gob.minsa.comunitaria.familiar.domain.Tblcatgen;
-import ni.gob.minsa.comunitaria.familiar.domain.Comunidad;
-import ni.gob.minsa.comunitaria.familiar.domain.Divisionpolitica;
-import ni.gob.minsa.comunitaria.familiar.domain.Sector;
-import ni.gob.minsa.comunitaria.familiar.service.TblcatgenService;
-import ni.gob.minsa.comunitaria.familiar.service.ComunidadService;
-import ni.gob.minsa.comunitaria.familiar.service.DivisionPoliticaService;
-import ni.gob.minsa.comunitaria.familiar.service.SectorService;
+import ni.gob.minsa.hsf.domain.Comunidad;
+import ni.gob.minsa.hsf.domain.Divisionpolitica;
+import ni.gob.minsa.hsf.domain.Sector;
+import ni.gob.minsa.hsf.domain.Tblcatgen;
+import ni.gob.minsa.hsf.service.ComunidadService;
+import ni.gob.minsa.hsf.service.DivisionPoliticaService;
+import ni.gob.minsa.hsf.service.SectorService;
+import ni.gob.minsa.hsf.service.TblcatgenService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
