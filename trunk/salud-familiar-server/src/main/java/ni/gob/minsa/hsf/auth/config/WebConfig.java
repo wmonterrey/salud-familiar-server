@@ -1,4 +1,4 @@
-package ni.gob.minsa.comunitaria.familiar.auth.config;
+package ni.gob.minsa.hsf.auth.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

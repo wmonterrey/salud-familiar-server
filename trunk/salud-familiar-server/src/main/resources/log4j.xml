@@ -12,7 +12,7 @@
     </appender>
 
     <!-- Application Loggers -->
-    <logger name="ni.gob.minsa.comunitaria.familiar">
+    <logger name="ni.gob.minsa.familiar">
         <level value="debug" />
     </logger>
 
