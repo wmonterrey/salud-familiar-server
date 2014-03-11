@@ -17,7 +17,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name="ni.gob.minsa.comunitaria.hsf.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,12 +25,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".preferences.PreferencesActivity" />
-        <activity android:name=".activities.ListDepartamentosActivity" />
-        <activity android:name=".activities.ListMunicipiosActivity" />
-        <activity android:name=".activities.ListSectoresActivity" />
-        <activity android:name=".activities.ListComunidadesActivity" />
-        <activity android:name=".activities.DownloadActivity" />
+    ni.gob.minsa.comunitaria.hsf.preferences.PreferencesActivityferences.PreferencesActivity" />
+    ni.gob.minsa.comunitaria.hsf.activities.ListDepartamentosActivityes.ListDepartamentosActivity" />
+    ni.gob.minsa.comunitaria.hsf.activities.ListMunicipiosActivityities.ListMunicipiosActivity" />
+    ni.gob.minsa.comunitaria.hsf.activities.ListSectoresActivityivities.ListSectoresActivity" />
+    ni.gob.minsa.comunitaria.hsf.activities.ListComunidadesActivityties.ListComunidadesActivity" />
+    ni.gob.minsa.comunitaria.hsf.activities.DownloadActivity.activities.DownloadActivity" />
         
     </application>
 
