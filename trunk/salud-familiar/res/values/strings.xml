@@ -37,7 +37,7 @@
     <string name="update_preferences">Actualización datos</string>
     <string name="server_url">URL del servidor</string>
     <string name="change_server_url">Cambiar URL del servidor</string>
-    <string name="default_server_url">http://192.168.1.146:8080/salud-familiar-server</string>
+    <string name="default_server_url">http://192.168.1.146:8080/hsf</string>
     <string name="url_error">Error en URL</string>
     <string name="update_comu">Actualizar comunidades</string>
     <string name="update_sector">Actualizar sectores</string>
