@@ -5,7 +5,7 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan(basePackages="ni.gob.minsa.familiar.auth.config", excludeFilters={ @Filter(Configuration.class)} )
+@ComponentScan(basePackages="ni.gob.minsa.hsf.auth.config", excludeFilters={ @Filter(Configuration.class)} )
 public class ComponentConfig {
 
 }

@@ -17,7 +17,7 @@ import org.hibernate.annotations.ForeignKey;
  */
 
 @Entity
-@Table(name = "tblvivienda", catalog = "salud_familiar")
+@Table(name = "tblvivienda", catalog = "hsf")
 public class Tblvivienda implements java.io.Serializable {
 
 	/**
