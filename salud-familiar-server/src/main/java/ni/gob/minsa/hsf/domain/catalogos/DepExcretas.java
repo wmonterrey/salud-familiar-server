@@ -1,4 +1,4 @@
-package ni.gob.minsa.hsf.domain;
+package ni.gob.minsa.hsf.domain.catalogos;
 
 import javax.persistence.*;
 
@@ -6,18 +6,18 @@ import ni.gob.minsa.hsf.domain.estructura.Catalogo;
 
 @NamedQueries({
 @NamedQuery(
-	name = "obtenerOcupacionPorCodigo",
-	query = "select cat from Ocupacion cat where cat.codigo = :pCodigo"
+	name = "obtenerDepExcretasPorCodigo",
+	query = "select cat from DepExcretas cat where cat.codigo = :pCodigo"
 	)
 })
 @Entity
 @Inheritance(strategy= InheritanceType.SINGLE_TABLE)
-@DiscriminatorValue(value="HSF_OCUPA")
-public class Ocupacion  extends Catalogo {
+@DiscriminatorValue(value="HSF_DEPEXC")
+public class DepExcretas  extends Catalogo {
 		
     private static final long serialVersionUID = 1L;
 	
-    public Ocupacion() {
+    public DepExcretas() {
     }
 
   

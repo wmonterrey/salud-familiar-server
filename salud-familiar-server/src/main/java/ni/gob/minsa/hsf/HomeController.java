@@ -1,15 +1,18 @@
 package ni.gob.minsa.hsf;
 
+import java.util.Date;
+
 import javax.annotation.Resource;
 
-import ni.gob.minsa.hsf.domain.Escolaridad;
-import ni.gob.minsa.hsf.domain.Etnia;
 import ni.gob.minsa.hsf.domain.Familia;
-import ni.gob.minsa.hsf.domain.GrupoDispensarial;
-import ni.gob.minsa.hsf.domain.Ocupacion;
+import ni.gob.minsa.hsf.domain.MovilInfo;
 import ni.gob.minsa.hsf.domain.Persona;
-import ni.gob.minsa.hsf.domain.Religion;
-import ni.gob.minsa.hsf.domain.Sexo;
+import ni.gob.minsa.hsf.domain.catalogos.Escolaridad;
+import ni.gob.minsa.hsf.domain.catalogos.Etnia;
+import ni.gob.minsa.hsf.domain.catalogos.GrupoDispensarial;
+import ni.gob.minsa.hsf.domain.catalogos.Ocupacion;
+import ni.gob.minsa.hsf.domain.catalogos.Religion;
+import ni.gob.minsa.hsf.domain.catalogos.Sexo;
 import ni.gob.minsa.hsf.domain.poblacion.Comunidades;
 import ni.gob.minsa.hsf.service.CatalogoService;
 import ni.gob.minsa.hsf.service.ComunidadesService;
@@ -46,6 +49,15 @@ public class HomeController {
     public String test() {
         logger.info("Testing");
         Comunidades comunidad = comunidadService.getComunidad(6223);
+        
+        MovilInfo mi = new MovilInfo();
+        mi.setDeviceid("W");
+        mi.setEstado("no enviado");
+        mi.setEliminado(false);
+        mi.setToday(new Date());
+        mi.setUsername("william");
+        mi.setUltimoCambio(new Date());
+        
         Familia familia = new Familia();
         familia.setIdFamilia("00213133245-55467");
         familia.setCodFamilia("22424888624-2555");
@@ -53,6 +65,7 @@ public class HomeController {
         familia.setNumFamilia(4);
         familia.setNumVivienda(6);
         familia.setDireccion("DHHAHDJAD");
+        familia.setMovilInfo(mi);
         
         Sexo sex = catalogoService.getSexo("SEXO|M");
         Etnia etnia = catalogoService.getEtnia("ETNIA|MTIZO");
@@ -76,7 +89,7 @@ public class HomeController {
         persona.setPrimerNombre("WILLIAM");
         persona.setGrupoDisp(gd);
         persona.setFallecido("No");
-        
+        persona.setMovilInfo(mi);
         
         familiaService.addFamilia(familia);
         personaService.addPersona(persona);

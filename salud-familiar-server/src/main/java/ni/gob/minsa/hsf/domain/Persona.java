@@ -1,20 +1,30 @@
 package ni.gob.minsa.hsf.domain;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.hibernate.annotations.ForeignKey;
 
+import ni.gob.minsa.hsf.domain.catalogos.Escolaridad;
+import ni.gob.minsa.hsf.domain.catalogos.Etnia;
+import ni.gob.minsa.hsf.domain.catalogos.GrupoDispensarial;
+import ni.gob.minsa.hsf.domain.catalogos.Ocupacion;
+import ni.gob.minsa.hsf.domain.catalogos.Religion;
+import ni.gob.minsa.hsf.domain.catalogos.Sexo;
 import ni.gob.minsa.hsf.domain.estructura.Catalogo;
 
 
 @Entity
-@Table(name = "PERSONAS", catalog = "HSF")
+@Table(name = "HSF_PERSONAS", catalog = "HSF")
 public class Persona {
 	
 	private String idPersona;
@@ -40,9 +50,16 @@ public class Persona {
     private String lactMaterna;
     private String men1A;
     private String men1AVPCD;
+    private String factRiesgoMod;
+    private String factRiesgoNoMod;
+    private String factRiesgoSocial;
+    private Set<EnfermedadesCronicas> enfCronicas = new HashSet<EnfermedadesCronicas>(0);
+    private Set<EnfermedadesAgudas> enfAgudas = new HashSet<EnfermedadesAgudas>(0);
+    private Set<EnfermedadesSocioCult> enfSocioC = new HashSet<EnfermedadesSocioCult>(0);
     private GrupoDispensarial grupoDisp;
     private String fallecido;
     private Date fechaFallecimiento;
+    private MovilInfo movilInfo;
     
     
 	public Persona() {
@@ -51,7 +68,7 @@ public class Persona {
 
 
 	@Id
-	@Column(name = "ID_PERSONA", nullable = false, length = 30)
+	@Column(name = "ID_PERSONA", nullable = false, length = 50)
 	public String getIdPersona() {
 		return idPersona;
 	}
@@ -72,7 +89,7 @@ public class Persona {
 		this.idPersonaSis = idPersonaSis;
 	}
 
-	@ManyToOne
+	@ManyToOne(optional=false)
 	@JoinColumn(name="ID_FAMILIA")
 	@ForeignKey(name = "PERSONAS_FAMILIAS_FK")
 	public Familia getFamilia() {
@@ -293,6 +310,67 @@ public class Persona {
 	public void setMen1AVPCD(String men1avpcd) {
 		men1AVPCD = men1avpcd;
 	}
+	
+	@Column(name = "FACT_RIESGO_MOD", nullable = true, length = 200)
+	public String getFactRiesgoMod() {
+		return factRiesgoMod;
+	}
+
+
+	public void setFactRiesgoMod(String factRiesgoMod) {
+		this.factRiesgoMod = factRiesgoMod;
+	}
+
+	@Column(name = "FACT_RIESGO_NO_MOD", nullable = true, length = 200)
+	public String getFactRiesgoNoMod() {
+		return factRiesgoNoMod;
+	}
+
+
+	public void setFactRiesgoNoMod(String factRiesgoNoMod) {
+		this.factRiesgoNoMod = factRiesgoNoMod;
+	}
+
+	@Column(name = "FACT_RIESGO_SOCIAL", nullable = true, length = 200)
+	public String getFactRiesgoSocial() {
+		return factRiesgoSocial;
+	}
+
+
+	public void setFactRiesgoSocial(String factRiesgoSocial) {
+		this.factRiesgoSocial = factRiesgoSocial;
+	}
+
+	@OneToMany(mappedBy = "persona")
+	public Set<EnfermedadesCronicas> getEnfCronicas() {
+		return enfCronicas;
+	}
+
+
+	public void setEnfCronicas(Set<EnfermedadesCronicas> enfCronicas) {
+		this.enfCronicas = enfCronicas;
+	}
+
+	@OneToMany(mappedBy = "persona")
+	public Set<EnfermedadesAgudas> getEnfAgudas() {
+		return enfAgudas;
+	}
+
+
+	public void setEnfAgudas(Set<EnfermedadesAgudas> enfAgudas) {
+		this.enfAgudas = enfAgudas;
+	}
+
+	@OneToMany(mappedBy = "persona")
+	public Set<EnfermedadesSocioCult> getEnfSocioC() {
+		return enfSocioC;
+	}
+
+
+	public void setEnfSocioC(Set<EnfermedadesSocioCult> enfSocioC) {
+		this.enfSocioC = enfSocioC;
+	}
+
 
 	@ManyToOne(fetch=FetchType.LAZY,targetEntity=Catalogo.class)
     @JoinColumn(name="CODIGO_GD",referencedColumnName="CODIGO", nullable=true)
@@ -324,6 +402,16 @@ public class Persona {
 
 	public void setFechaFallecimiento(Date fechaFallecimiento) {
 		this.fechaFallecimiento = fechaFallecimiento;
+	}
+
+
+	public MovilInfo getMovilInfo() {
+		return movilInfo;
+	}
+
+
+	public void setMovilInfo(MovilInfo movilInfo) {
+		this.movilInfo = movilInfo;
 	}
 
 }

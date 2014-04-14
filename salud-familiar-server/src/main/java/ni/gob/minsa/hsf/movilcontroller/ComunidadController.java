@@ -30,12 +30,6 @@ public class ComunidadController {
         if (comunidades == null){
         	logger.debug("Nulo");
         }
-        else{
-        	for (Comunidades comunidad : comunidades) {
-        		comunidad.setFamilias(null);
-        	}
-        }
-        
         return comunidades;	
     }
 }

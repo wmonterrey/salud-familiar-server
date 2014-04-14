@@ -4,12 +4,12 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import ni.gob.minsa.hsf.domain.Escolaridad;
-import ni.gob.minsa.hsf.domain.Etnia;
-import ni.gob.minsa.hsf.domain.GrupoDispensarial;
-import ni.gob.minsa.hsf.domain.Ocupacion;
-import ni.gob.minsa.hsf.domain.Religion;
-import ni.gob.minsa.hsf.domain.Sexo;
+import ni.gob.minsa.hsf.domain.catalogos.Escolaridad;
+import ni.gob.minsa.hsf.domain.catalogos.Etnia;
+import ni.gob.minsa.hsf.domain.catalogos.GrupoDispensarial;
+import ni.gob.minsa.hsf.domain.catalogos.Ocupacion;
+import ni.gob.minsa.hsf.domain.catalogos.Religion;
+import ni.gob.minsa.hsf.domain.catalogos.Sexo;
 import ni.gob.minsa.hsf.domain.estructura.Catalogo;
 import org.hibernate.Query;
 import org.hibernate.Session;
