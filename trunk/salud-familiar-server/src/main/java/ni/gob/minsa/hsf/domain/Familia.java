@@ -1,9 +1,11 @@
 package ni.gob.minsa.hsf.domain;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -11,13 +13,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.ForeignKey;
-import org.hibernate.annotations.IndexColumn;
-
 import ni.gob.minsa.hsf.domain.poblacion.Comunidades;
 
 
 @Entity
-@Table(name = "FAMILIAS", catalog = "HSF")
+@Table(name = "HSF_FAMILIAS", catalog = "HSF")
 public class Familia {
 	
 	private String idFamilia;
@@ -26,8 +26,8 @@ public class Familia {
 	private Integer numVivienda;
 	private Integer numFamilia;
 	private String direccion;
-	
-	private Set<Persona> personas;
+	private Set<Persona> personas = new HashSet<Persona>(0);
+	private MovilInfo movilInfo;
 	
 	public Familia() {
 		
@@ -44,7 +44,7 @@ public class Familia {
 	}
 
 	@Id
-	@Column(name = "ID_FAMILIA", nullable = false, length = 30)
+	@Column(name = "ID_FAMILIA", nullable = false, length = 50)
 	public String getIdFamilia() {
 		return idFamilia;
 	}
@@ -62,7 +62,7 @@ public class Familia {
 		this.codFamilia = codFamilia;
 	}
 	
-	@ManyToOne
+	@ManyToOne(optional=false)
 	@JoinColumn(name="COMUNIDAD_ID")
 	@ForeignKey(name = "FAMILIAS_COMUNIDAD_FK")
 	public Comunidades getComunidad() {
@@ -101,13 +101,20 @@ public class Familia {
 	}
 
 	@OneToMany(mappedBy = "familia")
-	@IndexColumn(name = "COMUNIDAD_ID")
 	public Set<Persona> getPersonas() {
 		return personas;
 	}
 
 	public void setPersonas(Set<Persona> personas) {
 		this.personas = personas;
+	}
+
+	public MovilInfo getMovilInfo() {
+		return movilInfo;
+	}
+
+	public void setMovilInfo(MovilInfo movilInfo) {
+		this.movilInfo = movilInfo;
 	}
 	
 }

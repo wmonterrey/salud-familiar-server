@@ -1,4 +1,4 @@
-package ni.gob.minsa.hsf.domain;
+package ni.gob.minsa.hsf.domain.catalogos;
 
 import javax.persistence.*;
 

@@ -2,19 +2,14 @@ package ni.gob.minsa.hsf.domain.poblacion;
 
 
 import java.math.BigDecimal;
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import ni.gob.minsa.hsf.domain.Familia;
 import ni.gob.minsa.hsf.serializer.CustomDateSerializer;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.hibernate.annotations.IndexColumn;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
@@ -35,8 +30,6 @@ public class Comunidades {
 	private BigDecimal longitud;
 	private BigDecimal latitud;
 	private String zona;
-	
-	private Set<Familia> familias;
 
 	public Comunidades() {
 	}
@@ -191,16 +184,6 @@ public class Comunidades {
 
 	public void setFechaRegistro(DateTime fechaRegistro) {
 		this.fechaRegistro = fechaRegistro;
-	}
-
-	@OneToMany(mappedBy = "comunidad")
-	@IndexColumn(name = "COMUNIDAD_ID")
-	public Set<Familia> getFamilias() {
-		return familias;
-	}
-
-	public void setFamilias(Set<Familia> familias) {
-		this.familias = familias;
 	}
 
 }
