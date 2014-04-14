@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>Terreno</h:title>
+    <model>
+      <instance>
+        <Terreno id="terreno">
+          <informacion>
+            <confirmar/>
+            <punto/>
+          </informacion>
+          <visitaSN/>
+          <motNoVisita/>
+          <acomp/>
+          <relacionFam/>
+          <cDom/>
+          <barrio/>
+          <manzana/>
+          <direccion/>
+          <coordenadas>no</coordenadas>
+          <start/>
+          <end/>
+          <today/>
+          <deviceid/>
+          <simserial/>
+          <phonenumber/>
+          <meta>
+            <instanceID/>
+          </meta>
+        </Terreno>
+      </instance>
+      <bind nodeset="/Terreno/informacion/confirmar" readonly="true()" required="true()" type="string"/>
+      <bind nodeset="/Terreno/informacion/punto" readonly="true()" required="true()" type="string"/>
+      <bind nodeset="/Terreno/visitaSN" required="true()" type="select1"/>
+      <bind nodeset="/Terreno/motNoVisita" relevant=" /Terreno/visitaSN  = '0'" required="true()" type="select1"/>
+      <bind nodeset="/Terreno/acomp" relevant=" /Terreno/visitaSN  = '1'" required="true()" type="string"/>
+      <bind nodeset="/Terreno/relacionFam" relevant=" /Terreno/visitaSN  = '1'" required="true()" type="select1"/>
+      <bind nodeset="/Terreno/cDom" relevant=" /Terreno/visitaSN  = '1'" required="true()" type="select1"/>
+      <bind nodeset="/Terreno/barrio" relevant=" /Terreno/visitaSN  = '1' and  /Terreno/cDom  = '1'" required="true()" type="select1"/>
+      <bind constraint=".&gt;=0 and .&lt;=99" nodeset="/Terreno/manzana" relevant=" /Terreno/visitaSN  = '1' and ( /Terreno/informacion/punto  = 'No' or  /Terreno/cDom  = '1')" required="true()" type="int"/>
+      <bind nodeset="/Terreno/direccion" relevant=" /Terreno/visitaSN  = '1' and  /Terreno/cDom  = '1'" required="true()" type="string"/>
+      <bind nodeset="/Terreno/coordenadas" relevant=" /Terreno/visitaSN  = '1' and ( /Terreno/informacion/punto  = 'No' or  /Terreno/cDom  = '1')" type="geopoint"/>
+      <bind jr:preload="timestamp" jr:preloadParams="start" nodeset="/Terreno/start" type="dateTime"/>
+      <bind jr:preload="timestamp" jr:preloadParams="end" nodeset="/Terreno/end" type="dateTime"/>
+      <bind jr:preload="date" jr:preloadParams="today" nodeset="/Terreno/today" type="date"/>
+      <bind jr:preload="property" jr:preloadParams="deviceid" nodeset="/Terreno/deviceid" type="string"/>
+      <bind jr:preload="property" jr:preloadParams="simserial" nodeset="/Terreno/simserial" type="string"/>
+      <bind jr:preload="property" jr:preloadParams="phonenumber" nodeset="/Terreno/phonenumber" type="string"/>
+      <bind calculate="concat('uuid:', uuid())" nodeset="/Terreno/meta/instanceID" readonly="true()" type="string"/>
+    </model>
+  </h:head>
+  <h:body>
+    <group appearance="field-list" ref="/Terreno/informacion">
+      <label>Información del participante</label>
+      <input ref="/Terreno/informacion/confirmar">
+        <label>Confirmar</label>
+      </input>
+      <input ref="/Terreno/informacion/punto">
+        <label>Tiene punto GPS</label>
+      </input>
+    </group>
+    <select1 ref="/Terreno/visitaSN">
+      <label>Visita Exitosa?</label>
+      <item>
+        <label>SI</label>
+        <value>1</value>
+      </item>
+      <item>
+        <label>NO</label>
+        <value>0</value>
+      </item>
+    </select1>
+    <select1 ref="/Terreno/motNoVisita">
+      <label>Porque no fue exitosa la visita?</label>
+      <item>
+        <label>Casa Cerrada</label>
+        <value>1</value>
+      </item>
+      <item>
+        <label>Niño ausente</label>
+        <value>2</value>
+      </item>
+      <item>
+        <label>No se encontro la casa</label>
+        <value>4</value>
+      </item>
+      <item>
+        <label>Padres Ausentes o Adultos Ausentes</label>
+        <value>5</value>
+      </item>
+      <item>
+        <label>Se cambiaron de casa</label>
+        <value>6</value>
+      </item>
+    </select1>
+    <input ref="/Terreno/acomp">
+      <label>Persona entrevistada</label>
+    </input>
+    <select1 ref="/Terreno/relacionFam">
+      <label>Relacion Familiar de la persona Entrevistada</label>
+      <item>
+        <label>Madre</label>
+        <value>1</value>
+      </item>
+      <item>
+        <label>Padre</label>
+        <value>2</value>
+      </item>
+      <item>
+        <label>Abuelo (a)</label>
+        <value>3</value>
+      </item>
+      <item>
+        <label>Tío (a)</label>
+        <value>4</value>
+      </item>
+      <item>
+        <label>Hermano (a)</label>
+        <value>5</value>
+      </item>
+      <item>
+        <label>Otra relación familiar</label>
+        <value>6</value>
+      </item>
+      <item>
+        <label>Sin Relación Familiar</label>
+        <value>7</value>
+      </item>
+    </select1>
+    <select1 ref="/Terreno/cDom">
+      <label>Cambio de domicilio?</label>
+      <item>
+        <label>SI</label>
+        <value>1</value>
+      </item>
+      <item>
+        <label>NO</label>
+        <value>0</value>
+      </item>
+    </select1>
+    <select1 ref="/Terreno/barrio">
+      <label>Barrio?</label>
+      <item>
+        <label>Monseñor Lezcano</label>
+        <value>1</value>
+      </item>
+      <item>
+        <label>Cuba</label>
+        <value>2</value>
+      </item>
+      <item>
+        <label>Santa Ana Sur</label>
+        <value>3</value>
+      </item>
+      <item>
+        <label>Santa Ana Norte</label>
+        <value>4</value>
+      </item>
+      <item>
+        <label>La Cruz</label>
+        <value>5</value>
+      </item>
+      <item>
+        <label>Cristo del Rosario</label>
+        <value>6</value>
+      </item>
+      <item>
+        <label>San Sebastián</label>
+        <value>7</value>
+      </item>
+      <item>
+        <label>San Antonio</label>
+        <value>8</value>
+      </item>
+      <item>
+        <label>San José</label>
+        <value>9</value>
+      </item>
+      <item>
+        <label>Bóer</label>
+        <value>10</value>
+      </item>
+      <item>
+        <label>William Diaz</label>
+        <value>11</value>
+      </item>
+      <item>
+        <label>Martha Quezada</label>
+        <value>12</value>
+      </item>
+      <item>
+        <label>El Carmen y Reforma</label>
+        <value>13</value>
+      </item>
+      <item>
+        <label>Manuel Olivares</label>
+        <value>14</value>
+      </item>
+      <item>
+        <label>Julio Buitrago</label>
+        <value>15</value>
+      </item>
+      <item>
+        <label>Javier Cuadra</label>
+        <value>16</value>
+      </item>
+      <item>
+        <label>Manchester</label>
+        <value>17</value>
+      </item>
+      <item>
+        <label>Fuera de Sector</label>
+        <value>18</value>
+      </item>
+    </select1>
+    <input ref="/Terreno/manzana">
+      <label>Manzana</label>
+      <hint>Si desconoce el numero de manzana poner 0</hint>
+    </input>
+    <input ref="/Terreno/direccion">
+      <label>Direccion</label>
+      <hint>Ingrese la direccion lo mas detallada posible; MD: Mano Derecha - MI: Mano Izquierda</hint>
+    </input>
+    <input ref="/Terreno/coordenadas">
+      <label>Ubicación</label>
+      <hint>Obtiene la ubicacion GPS de la vivienda. Hay que estar fuera de la casa para que el GPS funcione.</hint>
+    </input>
+  </h:body>
+</h:html>

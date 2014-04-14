@@ -11,6 +11,7 @@ public final class FileUtils {
     // Storage paths
     public static final String FAMILIAR_ROOT = Environment.getExternalStorageDirectory() + "/minsa/hsf/";
     public static final String DATABASE_PATH = FAMILIAR_ROOT + "databases/";
+    public static final String FORMS_PATH = FAMILIAR_ROOT + "forms/";
     
     public static final boolean deleteFolder(String path) {
         // not recursive

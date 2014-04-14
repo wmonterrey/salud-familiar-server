@@ -1,15 +1,22 @@
 package ni.gob.minsa.hsf;
 
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.UUID;
+
 import ni.gob.minsa.hsf.R;
 import ni.gob.minsa.hsf.adapters.MenuPrincipalAdapter;
 import ni.gob.minsa.hsf.preferences.PreferencesActivity;
 
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.telephony.TelephonyManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -96,9 +103,10 @@ public class MainActivity extends ListActivity {
 	private void createExitDialog() {
 		// Pregunta si desea salir o no
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
+		String s = getMyPhoneNumber();
+		int mes = getSemanasPE();
 	    builder.setTitle(this.getString(R.string.confirm));
-	    builder.setMessage(this.getString(R.string.exiting));
+	    builder.setMessage(this.getString(R.string.exiting)+ s + "- mes"+mes);
 
 	    builder.setPositiveButton(this.getString(R.string.yes), new DialogInterface.OnClickListener() {
 
@@ -126,6 +134,37 @@ public class MainActivity extends ListActivity {
 	    exit.show();
 	    mExitShowing=true;
 	}
+	
+	private String getMyPhoneNumber(){
+	    TelephonyManager mTelephonyMgr;
+	    WifiManager wifi;
+	    mTelephonyMgr = (TelephonyManager)
+	        getSystemService(Context.TELEPHONY_SERVICE); 
+	    
+	    wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+	    
+	    String deviceId;
+
+	    deviceId = mTelephonyMgr.getDeviceId();
+	    
+	    if (deviceId != null){
+	    	deviceId = wifi.getConnectionInfo().getMacAddress();
+	    }
+	    Date fecha = new Date();
+	    UUID deviceUuid = new UUID(deviceId.hashCode(),fecha.hashCode());
+	    return deviceUuid.toString();
+	}
+	
+	public int getSemanasPE() {
+        int semanas = 0;
+        Calendar fur = Calendar.getInstance();
+        fur.set(2013, Calendar.DECEMBER, 31);
+        Calendar now = Calendar.getInstance();
+        long diff = now.getTimeInMillis() - fur.getTimeInMillis();
+        float dayCount = (float) diff / (24 * 60 * 60 * 1000);
+        semanas = (int) (dayCount / 7) ;
+        return semanas;
+    }
 	
 	
 }
