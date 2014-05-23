@@ -10,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import ni.gob.minsa.hsf.domain.catalogos.EnfCronica;
+import ni.gob.minsa.hsf.domain.catalogos.EnfAguda;
 import ni.gob.minsa.hsf.domain.catalogos.Profesion;
 import ni.gob.minsa.hsf.domain.estructura.Catalogo;
 
@@ -24,7 +24,7 @@ public class EnfermedadesAgudas {
 	
 	private String idEnfAgudas;
 	private Persona persona;
-	private EnfCronica enfermedad;
+	private EnfAguda enfermedad;
 	private Date fechaOcurrencia;
 	private Profesion personaAtendio;
 	private MovilInfo movilInfo;   
@@ -57,11 +57,11 @@ public class EnfermedadesAgudas {
 	@ManyToOne(fetch=FetchType.LAZY,targetEntity=Catalogo.class)
     @JoinColumn(name="CODIGO_ENFERMEDAD",referencedColumnName="CODIGO", nullable=false)
 	@ForeignKey(name = "AGUDAS_ENFERMEDAD_FK")
-	public EnfCronica getEnfermedad() {
+	public EnfAguda getEnfermedad() {
 		return enfermedad;
 	}
 
-	public void setEnfermedad(EnfCronica enfermedad) {
+	public void setEnfermedad(EnfAguda enfermedad) {
 		this.enfermedad = enfermedad;
 	}
 

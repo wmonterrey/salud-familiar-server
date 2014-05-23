@@ -1,11 +1,11 @@
 package ni.gob.minsa.hsf.domain;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -26,6 +26,9 @@ public class Familia {
 	private Integer numVivienda;
 	private Integer numFamilia;
 	private String direccion;
+	private BigDecimal latitud;
+	private BigDecimal longitud;
+	private String telefonoContacto;
 	private Set<Persona> personas = new HashSet<Persona>(0);
 	private MovilInfo movilInfo;
 	
@@ -98,6 +101,33 @@ public class Familia {
 
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
+	}
+	
+	@Column(name = "LATITUD", nullable = true)
+	public BigDecimal getLatitud() {
+		return this.latitud;
+	}
+
+	public void setLatitud(BigDecimal latitud) {
+		this.latitud = latitud;
+	}
+
+	@Column(name = "LONGITUD", nullable = true)
+	public BigDecimal getLongitud() {
+		return this.longitud;
+	}
+
+	public void setLongitud(BigDecimal longitud) {
+		this.longitud = longitud;
+	}
+
+	@Column(name = "TELEFONO_CONTACTO", nullable = true, length = 20)
+	public String getTelefonoContacto() {
+		return telefonoContacto;
+	}
+
+	public void setTelefonoContacto(String telefonoContacto) {
+		this.telefonoContacto = telefonoContacto;
 	}
 
 	@OneToMany(mappedBy = "familia")
