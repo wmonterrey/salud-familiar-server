@@ -9,7 +9,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import ni.gob.minsa.hsf.domain.catalogos.AccionesComunitarias;
 import ni.gob.minsa.hsf.domain.catalogos.CarPsicosociales;
 import ni.gob.minsa.hsf.domain.catalogos.CulturaSanitaria;
 import ni.gob.minsa.hsf.domain.catalogos.TenenciaVivienda;
@@ -35,7 +34,7 @@ public class FactSocioEconomicos {
 	private CarPsicosociales carPsicosociales;
 	private String satNecBasicas;
 	private TenenciaVivienda tenenciaVivienda;
-	private AccionesComunitarias accionesComunitarias;
+	private String accionesComunitarias;
 	private String observaciones;
 	private MovilInfo movilInfo;
     
@@ -141,14 +140,12 @@ public class FactSocioEconomicos {
 		this.tenenciaVivienda = tenenciaVivienda;
 	}
 
-	@ManyToOne(fetch=FetchType.LAZY,targetEntity=Catalogo.class)
-    @JoinColumn(name="CODIGO_COMUNITARIAS",referencedColumnName="CODIGO", nullable=true)
-	@ForeignKey(name = "FACTSOC_COMUNITARIAS_FK")
-	public AccionesComunitarias getAccionesComunitarias() {
+	@Column(name = "ACCIONES_COMUNITARIAS", nullable = true, length = 255)
+	public String getAccionesComunitarias() {
 		return accionesComunitarias;
 	}
 
-	public void setAccionesComunitarias(AccionesComunitarias accionesComunitarias) {
+	public void setAccionesComunitarias(String accionesComunitarias) {
 		this.accionesComunitarias = accionesComunitarias;
 	}
 	

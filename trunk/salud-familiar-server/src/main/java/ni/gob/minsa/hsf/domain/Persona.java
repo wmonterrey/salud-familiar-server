@@ -30,6 +30,7 @@ public class Persona {
 	private String idPersona;
 	private long idPersonaSis;
 	private Familia familia;
+	private Integer numPersona;
 	private String codPersona;
 	private String primerNombre;
     private String primerApellido;
@@ -53,9 +54,12 @@ public class Persona {
     private String factRiesgoMod;
     private String factRiesgoNoMod;
     private String factRiesgoSocial;
+	private Persona padre;
+    private Persona madre;
     private Set<EnfermedadesCronicas> enfCronicas = new HashSet<EnfermedadesCronicas>(0);
     private Set<EnfermedadesAgudas> enfAgudas = new HashSet<EnfermedadesAgudas>(0);
     private Set<EnfermedadesSocioCult> enfSocioC = new HashSet<EnfermedadesSocioCult>(0);
+    private String discapacidades;
     private GrupoDispensarial grupoDisp;
     private String fallecido;
     private Date fechaFallecimiento;
@@ -88,6 +92,17 @@ public class Persona {
 	public void setIdPersonaSis(long idPersonaSis) {
 		this.idPersonaSis = idPersonaSis;
 	}
+
+	@Column(name = "NUM_PERSONA", nullable = false)
+	public Integer getNumPersona() {
+		return numPersona;
+	}
+
+
+	public void setNumPersona(Integer numPersona) {
+		this.numPersona = numPersona;
+	}
+
 
 	@ManyToOne(optional=false)
 	@JoinColumn(name="ID_FAMILIA")
@@ -341,6 +356,40 @@ public class Persona {
 		this.factRiesgoSocial = factRiesgoSocial;
 	}
 
+    @ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="PADRE",
+				updatable=false,
+				nullable=true,
+				insertable=false,
+				referencedColumnName="ID_PERSONA")
+    @ForeignKey(name = "PADRE_FK")
+	public Persona getPadre() {
+		return padre;
+	}
+
+
+	public void setPadre(Persona padre) {
+		this.padre = padre;
+	}
+
+
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="MADRE",
+				updatable=false,
+				nullable=true,
+				insertable=false,
+				referencedColumnName="ID_PERSONA")
+	@ForeignKey(name = "MADRE_FK")
+	public Persona getMadre() {
+		return madre;
+	}
+
+
+	public void setMadre(Persona madre) {
+		this.madre = madre;
+	}
+
+
 	@OneToMany(mappedBy = "persona")
 	public Set<EnfermedadesCronicas> getEnfCronicas() {
 		return enfCronicas;
@@ -369,6 +418,16 @@ public class Persona {
 
 	public void setEnfSocioC(Set<EnfermedadesSocioCult> enfSocioC) {
 		this.enfSocioC = enfSocioC;
+	}
+
+	@Column(name = "DISCAPACIDADES", nullable = true, length = 200)
+	public String getDiscapacidades() {
+		return discapacidades;
+	}
+
+
+	public void setDiscapacidades(String discapacidades) {
+		this.discapacidades = discapacidades;
 	}
 
 
