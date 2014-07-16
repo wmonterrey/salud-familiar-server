@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import ni.gob.minsa.hsf.domain.catalogos.EtapaCicloVital;
 import ni.gob.minsa.hsf.domain.catalogos.Ontogenesis;
 import ni.gob.minsa.hsf.domain.catalogos.TamanoFam;
+import ni.gob.minsa.hsf.domain.estructura.BaseEntidadCreacion;
 import ni.gob.minsa.hsf.domain.estructura.Catalogo;
 
 import org.hibernate.annotations.ForeignKey;
@@ -19,7 +20,7 @@ import org.hibernate.annotations.ForeignKey;
 
 @Entity
 @Table(name = "HSF_FUNC_FAM", catalog = "HSF")
-public class FuncFamiliar {
+public class FuncFamiliar extends BaseEntidadCreacion{
 	
 	
 	private String idFuncFamiliar;
@@ -31,10 +32,7 @@ public class FuncFamiliar {
 	private String crisisParanormativa;
 	private String usoMedTradicional;
 	private String observaciones;
-	private MovilInfo movilInfo;
-    
-    
-    
+	 
 	public FuncFamiliar() {
 		
 	}
@@ -140,14 +138,4 @@ public class FuncFamiliar {
 		this.observaciones = observaciones;
 	}
 
-
-	public MovilInfo getMovilInfo() {
-		return movilInfo;
-	}
-
-
-	public void setMovilInfo(MovilInfo movilInfo) {
-		this.movilInfo = movilInfo;
-	}
-
-	}
+}

@@ -7,11 +7,19 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import ni.gob.minsa.hsf.domain.catalogos.Nivel;
+import ni.gob.minsa.hsf.domain.estructura.Catalogo;
+import ni.gob.minsa.hsf.domain.estructura.EntidadesAdtvas;
+import ni.gob.minsa.hsf.domain.estructura.Unidades;
+
+import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.IndexColumn;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Email;
@@ -33,16 +41,17 @@ public class User {
 	private String completeName;
 	private String email;
 	private Boolean enabled=true;
-	private String nivel;
-	private String entidad;
+	private Nivel nivel;
+	private EntidadesAdtvas entidad;
+	private Unidades unidad;
 	private String usuario;
 	private Set<Authority> authorities;
 	
 	@Id
 	@Column(name = "NOMBRE_USUARIO", nullable = false, length =50)
 	@Size(min = 5, max = 50, message = "Nombre de usuario debe contener mínimo 5 caracteres.")
-	@Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Solo alfanumerico sin espacios")
-	@NotBlank(message = "No puede estar vacío.")
+	@Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Nombre de usuario solo caracteres alfanumerico sin espacios")
+	@NotBlank(message = "Nombre de usuario no puede estar vacío.")
 	public String getUsername() {
 		return username;
 	}
@@ -58,8 +67,8 @@ public class User {
 	}
 	@Column(name = "CONTRASENA", nullable = false, length =150)
 	@Size(min = 5, max = 150, message = "Contraseña debe contener mínimo 8 caracteres.")
-	@Pattern(regexp = "^[a-zA-Z0-9!@#$%^&*()?/]+$", message = "Solo alfanumerico y caracteres especiales (!@#$%^&*()?/). No espacios")
-	@NotBlank(message = "No puede estar vacío.")
+	@Pattern(regexp = "^[a-zA-Z0-9!@#$%^&*()?/]+$", message = "Contraseña solo alfanumerico y caracteres especiales (!@#$%^&*()?/). No espacios")
+	@NotBlank(message = "Contraseña no puede estar vacío.")
 	public String getPassword() {
 		return password;
 	}
@@ -98,24 +107,38 @@ public class User {
 	public void setAuthorities(Set<Authority> authorities) {
 		this.authorities = authorities;
 	}
-	@Column(name = "ENTIDAD", nullable = false, length =10)
-	@NotBlank(message = "No puede estar vacío.")
-	public String getEntidad() {
+	
+	@ManyToOne(optional=true)
+	@JoinColumn(name="CODIGO_ENTIDAD",referencedColumnName="CODIGO", nullable=true)
+	@ForeignKey(name = "USUARIOS_ENTIDAD_FK")
+	public EntidadesAdtvas getEntidad() {
 		return entidad;
 	}
-	public void setEntidad(String entidad) {
+	public void setEntidad(EntidadesAdtvas entidad) {
 		this.entidad = entidad;
 	}
 	
-	@Column(name = "NIVEL", nullable = false, length =50)
-	@NotBlank(message = "No puede estar vacío.")
-	public String getNivel() {
+	@ManyToOne(optional=true)
+	@JoinColumn(name="CODIGO_UNIDAD",referencedColumnName="CODIGO", nullable=true)
+	@ForeignKey(name = "USUARIOS_UNIDAD_FK")
+	public Unidades getUnidad() {
+		return unidad;
+	}
+	public void setUnidad(Unidades unidad) {
+		this.unidad = unidad;
+	}
+	
+	@ManyToOne(fetch=FetchType.LAZY,targetEntity=Catalogo.class)
+    @JoinColumn(name="CODIGO_NIVEL",referencedColumnName="CODIGO", nullable=true)
+	@ForeignKey(name = "USUARIOS_NIVEL_FK")
+	public Nivel getNivel() {
 		return nivel;
 	}
 	
-	public void setNivel(String nivel) {
+	public void setNivel(Nivel nivel) {
 		this.nivel = nivel;
 	}
+	
 	@Column(name = "USUARIO_REGISTRO", nullable = false, length =50)
 	public String getUsuario() {
 		return usuario;

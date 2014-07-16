@@ -30,6 +30,16 @@ public class ComunidadesService {
 		return  query.list();
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<Comunidades> getComunidadesSector(String sector) {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = session.createQuery("FROM Comunidades c where c.sector = '"+ sector  +"' order by c.nombre");
+		// Retrieve all
+		return  query.list();
+	}
+	
 	public Comunidades getComunidad(Integer comunidadId) {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();

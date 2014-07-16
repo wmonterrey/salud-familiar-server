@@ -30,6 +30,27 @@ public class SectoresService {
 		return  query.list();
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<Sectores> getSectoresUnidad(long unidad) {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = session.createQuery("from Sectores secs where secs.unidad in (select unidad.codigo " +
+				"from Unidades as unidad where unidad.codigo = " + unidad + " or unidad.unidadAdtva = "+ unidad +")");
+		// Retrieve all
+		return  query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Sectores> getSectoresMunicipio(String municipio) {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = session.createQuery("from Sectores secs where secs.municipio = "+ municipio +" order by secs.nombre");
+		// Retrieve all
+		return  query.list();
+	}
+	
 	public Sectores getSector(Integer sectorId) {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();

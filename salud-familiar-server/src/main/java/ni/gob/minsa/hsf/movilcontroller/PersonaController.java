@@ -33,9 +33,6 @@ public class PersonaController {
         else{
         	for (Persona persona : personas) {
         		persona.setFamilia(null);
-        		persona.setEnfAgudas(null);
-        		persona.setEnfCronicas(null);
-        		persona.setEnfSocioC(null);
         	}
         }
         return personas;	

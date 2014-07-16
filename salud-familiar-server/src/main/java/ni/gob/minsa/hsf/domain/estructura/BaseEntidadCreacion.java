@@ -1,35 +1,30 @@
 package ni.gob.minsa.hsf.domain.estructura;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-import javax.validation.constraints.NotNull;
-
-import ni.gob.minsa.hsf.serializer.CustomDateSerializer;
-
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @MappedSuperclass  
 public class BaseEntidadCreacion  
 {  
-	@Column(name="FECHA_REGISTRO")
-	@Type(type="org.joda.time.contrib.hibernate.PersistentDateTime")
-	@JsonSerialize(using = CustomDateSerializer.class)
-	private DateTime fechaRegistro;
 
-    @NotNull(message="No se encontró el usuario que realiza la transacción.  Es posible que la sesión de trabajo haya finalizado.")
-	@Column(name="USUARIO_REGISTRO",updatable=false,nullable=false)
+	private Date fechaRegistro;
 	private String usuarioRegistro;
 
-	public DateTime getFechaRegistro() {
+    @Temporal( TemporalType.TIMESTAMP)
+	@Column(name="FECHA_REGISTRO")
+	public Date getFechaRegistro() {
 		return this.fechaRegistro;
 	}
 
-	public void setFechaRegistro(DateTime fechaRegistro) {
+	public void setFechaRegistro(Date fechaRegistro) {
 		this.fechaRegistro = fechaRegistro;
 	}
-
+	
+	@Column(name="USUARIO_REGISTRO", length = 50)
 	public String getUsuarioRegistro() {
 		return this.usuarioRegistro;
 	}

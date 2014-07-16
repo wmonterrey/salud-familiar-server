@@ -1,24 +1,22 @@
 package ni.gob.minsa.hsf.domain;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.ForeignKey;
+
+import ni.gob.minsa.hsf.domain.estructura.BaseEntidadCreacion;
 import ni.gob.minsa.hsf.domain.poblacion.Comunidades;
 
 
 @Entity
 @Table(name = "HSF_FAMILIAS", catalog = "HSF")
-public class Familia {
+public class Familia extends BaseEntidadCreacion{
 	
 	private String idFamilia;
 	private String codFamilia;
@@ -29,8 +27,7 @@ public class Familia {
 	private BigDecimal latitud;
 	private BigDecimal longitud;
 	private String telefonoContacto;
-	private Set<Persona> personas = new HashSet<Persona>(0);
-	private MovilInfo movilInfo;
+	
 	
 	public Familia() {
 		
@@ -130,21 +127,4 @@ public class Familia {
 		this.telefonoContacto = telefonoContacto;
 	}
 
-	@OneToMany(mappedBy = "familia")
-	public Set<Persona> getPersonas() {
-		return personas;
-	}
-
-	public void setPersonas(Set<Persona> personas) {
-		this.personas = personas;
-	}
-
-	public MovilInfo getMovilInfo() {
-		return movilInfo;
-	}
-
-	public void setMovilInfo(MovilInfo movilInfo) {
-		this.movilInfo = movilInfo;
-	}
-	
 }

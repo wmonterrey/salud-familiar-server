@@ -32,6 +32,21 @@ public class DivisionPoliticaService {
 		return  query.list();
 	}
 	
+	/**
+	 * Regresa todos los municipios de un departamento
+	 * 
+	 * @return una lista de <code>Divisionpolitica</code>
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Divisionpolitica> getMunicipios(long entidad) {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = session.createQuery("FROM  Divisionpolitica dp where dp.dependenciaSilais = "+entidad+ " order by dp.nombre");
+		// Retrieve all
+		return  query.list();
+	}
+	
 
 	public Divisionpolitica getDivisionpolitica(Integer divPoliticaId) {
 		// Retrieve session from Hibernate

@@ -15,6 +15,7 @@ import ni.gob.minsa.hsf.domain.catalogos.TenenciaVivienda;
 import ni.gob.minsa.hsf.domain.catalogos.TipoPared;
 import ni.gob.minsa.hsf.domain.catalogos.TipoPiso;
 import ni.gob.minsa.hsf.domain.catalogos.TipoTecho;
+import ni.gob.minsa.hsf.domain.estructura.BaseEntidadCreacion;
 import ni.gob.minsa.hsf.domain.estructura.Catalogo;
 
 import org.hibernate.annotations.ForeignKey;
@@ -22,7 +23,7 @@ import org.hibernate.annotations.ForeignKey;
 
 @Entity
 @Table(name = "HSF_FACT_SOCIOEC", catalog = "HSF")
-public class FactSocioEconomicos {
+public class FactSocioEconomicos extends BaseEntidadCreacion{
 	
 	
 	private String idFactSocioEc;
@@ -36,10 +37,7 @@ public class FactSocioEconomicos {
 	private TenenciaVivienda tenenciaVivienda;
 	private String accionesComunitarias;
 	private String observaciones;
-	private MovilInfo movilInfo;
-    
-    
-    
+	
 	public FactSocioEconomicos() {
 		
 	}
@@ -157,14 +155,4 @@ public class FactSocioEconomicos {
 	public void setObservaciones(String observaciones) {
 		this.observaciones = observaciones;
 	}
-
-	public MovilInfo getMovilInfo() {
-		return movilInfo;
-	}
-
-
-	public void setMovilInfo(MovilInfo movilInfo) {
-		this.movilInfo = movilInfo;
-	}
-
-	}
+}
