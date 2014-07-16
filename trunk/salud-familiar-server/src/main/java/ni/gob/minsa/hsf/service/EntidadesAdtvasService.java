@@ -24,17 +24,17 @@ public class EntidadesAdtvasService {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
 		// Create a Hibernate query (HQL)
-		Query query = session.createQuery("FROM EntidadesAdtvas");
+		Query query = session.createQuery("FROM EntidadesAdtvas ea order by ea.nombre");
 		// Retrieve all
 		return  query.list();
 	}
 	
-	public EntidadesAdtvas getEntidadesAdtvas(Integer entidadAdtvaId) {
+	public EntidadesAdtvas getEntidadesAdtvas(Integer codigo) {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery("FROM EntidadesAdtvas ea where ea.entidadAdtvaId = "+ entidadAdtvaId);
-		EntidadesAdtvas eas = (EntidadesAdtvas) query.uniqueResult();
-		return eas;
+		Query query = session.createQuery("FROM EntidadesAdtvas ea where ea.codigo = "+ codigo);
+		EntidadesAdtvas ea = (EntidadesAdtvas) query.uniqueResult();
+		return ea;
 	}
 	
 }

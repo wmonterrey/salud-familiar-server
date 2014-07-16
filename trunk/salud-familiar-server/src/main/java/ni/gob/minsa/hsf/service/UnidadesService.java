@@ -30,12 +30,22 @@ public class UnidadesService {
 		return  query.list();
 	}
 	
-	public Unidades getUnidades(Integer unidadId) {
+	@SuppressWarnings("unchecked")
+	public List<Unidades> getUnidadesEntidad(long entidad) {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery("FROM Unidades ea where ea.unidadId = "+ unidadId);
-		Unidades unidades = (Unidades) query.uniqueResult();
-		return unidades;
+		// Create a Hibernate query (HQL)
+		Query query = session.createQuery("FROM Unidades unds where unds.entidadAdtva = " + entidad + " order by unds.nombre");
+		// Retrieve all
+		return  query.list();
+	}
+	
+	public Unidades getUnidades(Integer codigo) {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery("FROM Unidades und where und.codigo = "+ codigo);
+		Unidades unidad = (Unidades) query.uniqueResult();
+		return unidad;
 	}
 	
 }

@@ -2,6 +2,7 @@ package ni.gob.minsa.hsf.domain.estructura;
 
 // Generated Mar 28, 2014 11:26:42 AM by Hibernate Tools 4.0.0
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,8 +22,12 @@ import org.joda.time.DateTime;
  */
 @Entity
 @Table(name = "ENTIDADES_ADTVAS", catalog = "HSF")
-public class EntidadesAdtvas{
+public class EntidadesAdtvas implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private long entidadAdtvaId;
 	private EntidadesAdtvas entidadesAdtvas;
 	private String nombre;

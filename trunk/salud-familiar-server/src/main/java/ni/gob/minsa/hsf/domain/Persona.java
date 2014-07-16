@@ -1,16 +1,13 @@
 package ni.gob.minsa.hsf.domain;
 
+import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.hibernate.annotations.ForeignKey;
 
@@ -20,13 +17,18 @@ import ni.gob.minsa.hsf.domain.catalogos.GrupoDispensarial;
 import ni.gob.minsa.hsf.domain.catalogos.Ocupacion;
 import ni.gob.minsa.hsf.domain.catalogos.Religion;
 import ni.gob.minsa.hsf.domain.catalogos.Sexo;
+import ni.gob.minsa.hsf.domain.estructura.BaseEntidadCreacion;
 import ni.gob.minsa.hsf.domain.estructura.Catalogo;
 
 
 @Entity
 @Table(name = "HSF_PERSONAS", catalog = "HSF")
-public class Persona {
+public class Persona extends BaseEntidadCreacion implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String idPersona;
 	private long idPersonaSis;
 	private Familia familia;
@@ -56,14 +58,10 @@ public class Persona {
     private String factRiesgoSocial;
 	private Persona padre;
     private Persona madre;
-    private Set<EnfermedadesCronicas> enfCronicas = new HashSet<EnfermedadesCronicas>(0);
-    private Set<EnfermedadesAgudas> enfAgudas = new HashSet<EnfermedadesAgudas>(0);
-    private Set<EnfermedadesSocioCult> enfSocioC = new HashSet<EnfermedadesSocioCult>(0);
     private String discapacidades;
     private GrupoDispensarial grupoDisp;
     private String fallecido;
     private Date fechaFallecimiento;
-    private MovilInfo movilInfo;
     
     
 	public Persona() {
@@ -389,37 +387,6 @@ public class Persona {
 		this.madre = madre;
 	}
 
-
-	@OneToMany(mappedBy = "persona")
-	public Set<EnfermedadesCronicas> getEnfCronicas() {
-		return enfCronicas;
-	}
-
-
-	public void setEnfCronicas(Set<EnfermedadesCronicas> enfCronicas) {
-		this.enfCronicas = enfCronicas;
-	}
-
-	@OneToMany(mappedBy = "persona")
-	public Set<EnfermedadesAgudas> getEnfAgudas() {
-		return enfAgudas;
-	}
-
-
-	public void setEnfAgudas(Set<EnfermedadesAgudas> enfAgudas) {
-		this.enfAgudas = enfAgudas;
-	}
-
-	@OneToMany(mappedBy = "persona")
-	public Set<EnfermedadesSocioCult> getEnfSocioC() {
-		return enfSocioC;
-	}
-
-
-	public void setEnfSocioC(Set<EnfermedadesSocioCult> enfSocioC) {
-		this.enfSocioC = enfSocioC;
-	}
-
 	@Column(name = "DISCAPACIDADES", nullable = true, length = 200)
 	public String getDiscapacidades() {
 		return discapacidades;
@@ -461,16 +428,6 @@ public class Persona {
 
 	public void setFechaFallecimiento(Date fechaFallecimiento) {
 		this.fechaFallecimiento = fechaFallecimiento;
-	}
-
-
-	public MovilInfo getMovilInfo() {
-		return movilInfo;
-	}
-
-
-	public void setMovilInfo(MovilInfo movilInfo) {
-		this.movilInfo = movilInfo;
 	}
 
 }

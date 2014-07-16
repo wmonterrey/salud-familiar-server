@@ -12,6 +12,7 @@ import javax.persistence.Table;
 
 import ni.gob.minsa.hsf.domain.catalogos.EnfSocioC;
 import ni.gob.minsa.hsf.domain.catalogos.Profesion;
+import ni.gob.minsa.hsf.domain.estructura.BaseEntidadCreacion;
 import ni.gob.minsa.hsf.domain.estructura.Catalogo;
 
 import org.hibernate.annotations.ForeignKey;
@@ -19,15 +20,14 @@ import org.hibernate.annotations.ForeignKey;
 
 @Entity
 @Table(name = "HSF_ENF_SOCIOC", catalog = "HSF")
-public class EnfermedadesSocioCult {
+public class EnfermedadesSocioCult extends BaseEntidadCreacion{
 	
 	
 	private String idEnfSocioC;
 	private Persona persona;
 	private EnfSocioC enfermedad;
 	private Date fechaOcurrencia;
-	private Profesion personaAtendio;
-	private MovilInfo movilInfo;   
+	private Profesion personaAtendio;  
     
 	public EnfermedadesSocioCult() {
 		
@@ -82,15 +82,6 @@ public class EnfermedadesSocioCult {
 
 	public void setPersonaAtendio(Profesion personaAtendio) {
 		this.personaAtendio = personaAtendio;
-	}
-
-	public MovilInfo getMovilInfo() {
-		return movilInfo;
-	}
-
-
-	public void setMovilInfo(MovilInfo movilInfo) {
-		this.movilInfo = movilInfo;
 	}
 
 }

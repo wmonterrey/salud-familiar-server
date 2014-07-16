@@ -7,7 +7,9 @@ import javax.annotation.Resource;
 import ni.gob.minsa.hsf.domain.catalogos.Escolaridad;
 import ni.gob.minsa.hsf.domain.catalogos.Etnia;
 import ni.gob.minsa.hsf.domain.catalogos.GrupoDispensarial;
+import ni.gob.minsa.hsf.domain.catalogos.Nivel;
 import ni.gob.minsa.hsf.domain.catalogos.Ocupacion;
+import ni.gob.minsa.hsf.domain.catalogos.Profesion;
 import ni.gob.minsa.hsf.domain.catalogos.Religion;
 import ni.gob.minsa.hsf.domain.catalogos.Sexo;
 import ni.gob.minsa.hsf.domain.estructura.Catalogo;
@@ -86,6 +88,37 @@ public class CatalogoService {
 		Query query = session.getNamedQuery("obtenerGDPorCodigo").setString("pCodigo", gd);
 		// Retrieve all
 		return  (GrupoDispensarial) query.uniqueResult();
+	}
+	
+	public Nivel getNivel(String nivel) {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = session.getNamedQuery("obtenerNivelPorCodigo").setString("pCodigo", nivel);
+		// Retrieve all
+		return  (Nivel) query.uniqueResult();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Nivel> getNiveles() {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = session.createQuery("FROM Nivel where pasivo = :pasivo order by orden");
+		query.setParameter("pasivo", false);
+		// Retrieve all
+		return  query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Profesion> getProfesiones() {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = session.createQuery("FROM Profesion where pasivo = :pasivo order by orden");
+		query.setParameter("pasivo", false);
+		// Retrieve all
+		return  query.list();
 	}
 	
 }

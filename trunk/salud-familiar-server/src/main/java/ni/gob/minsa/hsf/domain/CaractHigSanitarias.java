@@ -15,6 +15,7 @@ import ni.gob.minsa.hsf.domain.catalogos.DepBasura;
 import ni.gob.minsa.hsf.domain.catalogos.DepExcretas;
 import ni.gob.minsa.hsf.domain.catalogos.DepResLiq;
 import ni.gob.minsa.hsf.domain.catalogos.Electricidad;
+import ni.gob.minsa.hsf.domain.estructura.BaseEntidadCreacion;
 import ni.gob.minsa.hsf.domain.estructura.Catalogo;
 
 import org.hibernate.annotations.ForeignKey;
@@ -22,7 +23,7 @@ import org.hibernate.annotations.ForeignKey;
 
 @Entity
 @Table(name = "HSF_CARACT_HIG", catalog = "HSF")
-public class CaractHigSanitarias {
+public class CaractHigSanitarias extends BaseEntidadCreacion{
 	
 	
 	private String idCaractHig;
@@ -44,8 +45,6 @@ public class CaractHigSanitarias {
     private DepBasura depBasura;
     private DepResLiq depResLiq;
     private String observaciones;
-	private MovilInfo movilInfo;
-    
     
     
 	public CaractHigSanitarias() {
@@ -237,14 +236,6 @@ public class CaractHigSanitarias {
 
 	public void setObservaciones(String observaciones) {
 		this.observaciones = observaciones;
-	}
-
-	public MovilInfo getMovilInfo() {
-		return movilInfo;
-	}
-
-	public void setMovilInfo(MovilInfo movilInfo) {
-		this.movilInfo = movilInfo;
 	}
 
 }

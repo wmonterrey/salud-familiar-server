@@ -22,6 +22,7 @@ import ni.gob.minsa.hsf.service.PersonaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -45,6 +46,32 @@ public class HomeController {
         return "home";
     }
     
+    @RequestMapping(value="/login", method = RequestMethod.GET)
+	public String login(ModelMap model) {
+		return "login";
+	}
+    
+    @RequestMapping(value="/loginfailed", method = RequestMethod.GET)
+	public String loginerror(ModelMap model) {
+    	model.addAttribute("error", "true");
+		return "login";
+	}
+    
+    @RequestMapping(value="/logout", method = RequestMethod.GET)
+	public String logout(ModelMap model) {
+		return "login";
+	}
+	
+	@RequestMapping(value="/403", method = RequestMethod.GET)
+	public String noAcceso() {
+		return "403"; 
+	}
+	
+	@RequestMapping(value="/404", method = RequestMethod.GET)
+	public String noEncontrado() { 
+		return "404";
+	}
+    
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public String test() {
         logger.info("Testing");
@@ -56,7 +83,6 @@ public class HomeController {
         mi.setEliminado(false);
         mi.setToday(new Date());
         mi.setUsername("william");
-        mi.setUltimoCambio(new Date());
         
         Familia familia = new Familia();
         familia.setIdFamilia("00213133245-55467");
@@ -65,7 +91,6 @@ public class HomeController {
         familia.setNumFamilia(4);
         familia.setNumVivienda(6);
         familia.setDireccion("DHHAHDJAD");
-        familia.setMovilInfo(mi);
         
         Sexo sex = catalogoService.getSexo("SEXO|M");
         Etnia etnia = catalogoService.getEtnia("ETNIA|MTIZO");
@@ -89,7 +114,6 @@ public class HomeController {
         persona.setPrimerNombre("WILLIAM");
         persona.setGrupoDisp(gd);
         persona.setFallecido("No");
-        persona.setMovilInfo(mi);
         
         familiaService.addFamilia(familia);
         personaService.addPersona(persona);

@@ -17,10 +17,8 @@ public class MovilInfo implements Serializable{
 	//Metadata del formulario movil
 	private String estado;
 	private Boolean eliminado;
-	private Date ultimoCambio;
 	private String deviceid;
 	private String phonenumber;
-	private String simserial;
 	private Date today;	
 	private String username; 
 	
@@ -29,11 +27,10 @@ public class MovilInfo implements Serializable{
 	}
 	
 	public MovilInfo(String estado
-			, Date ultimoCambio, String start, String end, String deviceid,
-			String simserial, String phonenumber, Date today){
+			, String deviceid,
+			String phonenumber, Date today){
 		
 		this.setEstado(estado);
-		this.setUltimoCambio(ultimoCambio);
 		this.setDeviceid(deviceid);
 		this.setPhonenumber(phonenumber);
 		this.setToday(today);
@@ -46,15 +43,6 @@ public class MovilInfo implements Serializable{
 
 	public void setEstado(String estado) {
 		this.estado = estado;
-	}
-
-	@Column(name = "ultimo_cambio", nullable = true)
-	public Date getUltimoCambio() {
-		return ultimoCambio;
-	}
-
-	public void setUltimoCambio(Date ultimoCambio) {
-		this.ultimoCambio = ultimoCambio;
 	}
 
 	@Column(name = "ID_EQUIPO", nullable = true, length = 50)
@@ -100,15 +88,6 @@ public class MovilInfo implements Serializable{
 
 	public void setEliminado(Boolean eliminado) {
 		this.eliminado = eliminado;
-	}
-
-	@Column(name = "SERIE_SIM", nullable = true, length = 50)
-	public String getSimserial() {
-		return simserial;
-	}
-
-	public void setSimserial(String simserial) {
-		this.simserial = simserial;
 	}
 
 }

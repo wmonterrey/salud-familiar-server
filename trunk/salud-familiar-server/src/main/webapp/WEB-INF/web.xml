@@ -32,4 +32,24 @@
     <filter-name>springSecurityFilterChain</filter-name>
     <url-pattern>/j_spring_security_logout</url-pattern>
   </filter-mapping>
+  
+  <!-- used so we can use forms of method type 'PUT' and 'DELETE'
+see here: http://static.springsource.org/spring/docs/current/spring-framework-reference/html/view.html#rest-method-conversion
+-->
+    <filter>
+        <filter-name>httpMethodFilter</filter-name>
+        <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>httpMethodFilter</filter-name>
+        <servlet-name>appServlet</servlet-name>
+    </filter-mapping>
+    
+    	<error-page>
+		<error-code>404</error-code>
+		<location>/404</location>
+	</error-page>
+    
+    
 </web-app>

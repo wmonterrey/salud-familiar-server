@@ -33,7 +33,6 @@ public class FamiliaController {
         else{
         	for (Familia familia : familias) {
         		familia.setComunidad(null);
-        		familia.setPersonas(null);
         	}
         }
         return familias;	
