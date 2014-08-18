@@ -114,9 +114,6 @@ var FormWizardHSF = function () {
             var error = $('.alert-danger', form);
             var success = $('.alert-success', form);
             
-            jQuery.extend(jQuery.validator.messages, {
-            	  required: 'Este campo es requerido'
-            });
             
             form.validate({
                 doNotHideMessage: true, //this option enables to show the error/success messages on tab switch.
@@ -138,25 +135,25 @@ var FormWizardHSF = function () {
                         required: true
                     },
                     silais: {
-                        required: true
+                        required: false
                     },
                     municipio: {
-                        required: true
+                        required: false
                     },
                     sector: {
-                        required: true
+                        required: false
                     },
                     comunidad: {
-                        required: true
+                        required: false
                     },
                     numVivienda: {
-                        required: true
+                        required: false
                     },
                     numFamilia: {
-                        required: true
+                        required: false
                     },
                     direccion: {
-                        required: true
+                        required: false
                     },
                     'payment[]': {
                         required: true,

@@ -115,12 +115,6 @@
 											</form:select>
 										</div>
 									</div>
-									<div class="form-group">
-										<label class="control-label col-md-3"><fmt:message key="users.entity" /></label>
-										<div class="col-md-9">
-											<form:input id="entidad" path="entidad" type="text" class="form-control"/>
-										</div>
-									</div>
 								</div>
 								<div class="form-actions">
 									<button type="submit" class="btn btn-success"><fmt:message key="users.save" /></button>

@@ -49,9 +49,9 @@ public class User {
 	
 	@Id
 	@Column(name = "NOMBRE_USUARIO", nullable = false, length =50)
-	@Size(min = 5, max = 50, message = "Nombre de usuario debe contener mínimo 5 caracteres.")
-	@Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Nombre de usuario solo caracteres alfanumerico sin espacios")
-	@NotBlank(message = "Nombre de usuario no puede estar vacío.")
+	@Size(min = 5, max = 50)
+	@Pattern(regexp = "^[a-zA-Z0-9]+$")
+	@NotBlank
 	public String getUsername() {
 		return username;
 	}
@@ -66,9 +66,9 @@ public class User {
 		this.created = created;
 	}
 	@Column(name = "CONTRASENA", nullable = false, length =150)
-	@Size(min = 5, max = 150, message = "Contraseña debe contener mínimo 8 caracteres.")
-	@Pattern(regexp = "^[a-zA-Z0-9!@#$%^&*()?/]+$", message = "Contraseña solo alfanumerico y caracteres especiales (!@#$%^&*()?/). No espacios")
-	@NotBlank(message = "Contraseña no puede estar vacío.")
+	@Size(min = 8, max = 150)
+	@Pattern(regexp = "^[a-zA-Z0-9!@#$%^&*()?/]+$")
+	@NotBlank
 	public String getPassword() {
 		return password;
 	}
@@ -76,7 +76,7 @@ public class User {
 		this.password = password;
 	}
 	@Column(name = "DESCRIPCION", nullable = true, length =250)
-	@Size(max = 250, message = "Descripción debe contener máximo 250 caracteres.")
+	@Size(max = 250)
 	public String getCompleteName() {
 		return completeName;
 	}
@@ -84,8 +84,8 @@ public class User {
 		this.completeName = completeName;
 	}
 	@Column(name = "CORREO_ELECTRONICO", nullable = true, length =100)
-	@Size(max = 100, message = "Email debe contener máximo 100 caracteres.")
-	@Email(message = "No es una dirección de correo válida.")
+	@Size(max = 100)
+	@Email
 	public String getEmail() {
 		return email;
 	}
