@@ -7,14 +7,14 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
-import ni.gob.minsa.hsf.auth.config.Authority;
-import ni.gob.minsa.hsf.auth.config.AuthorityId;
-import ni.gob.minsa.hsf.auth.config.User;
 import ni.gob.minsa.hsf.domain.catalogos.Nivel;
 import ni.gob.minsa.hsf.service.CatalogoService;
 import ni.gob.minsa.hsf.service.EntidadesAdtvasService;
 import ni.gob.minsa.hsf.service.UnidadesService;
 import ni.gob.minsa.hsf.service.UsuarioService;
+import ni.gob.minsa.hsf.users.model.Authority;
+import ni.gob.minsa.hsf.users.model.AuthorityId;
+import ni.gob.minsa.hsf.users.model.UserSistema;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +54,7 @@ public class UsuariosController {
 	@RequestMapping(value = "/admin/list", method = RequestMethod.GET)
     public String obtenerUsuarios(Model model) throws ParseException { 	
     	logger.debug("Mostrando Usuarios en JSP");
-    	List<User> usuarios = usuarioService.getUsers();
+    	List<UserSistema> usuarios = usuarioService.getUsers();
     	model.addAttribute("usuarios", usuarios);
     	return "users/list";
 	}	
@@ -68,14 +68,14 @@ public class UsuariosController {
     @RequestMapping("/admin/{username}")
     public ModelAndView showUser(@PathVariable("username") String username) {
         ModelAndView mav = new ModelAndView("users/user");
-        User user = this.usuarioService.getUser(username);
+        UserSistema user = this.usuarioService.getUser(username);
         mav.addObject("user",user);
         return mav;
     }
     
     @RequestMapping(value = "/admin/new", method = RequestMethod.GET)
 	public String initCreationForm(Model model) {
-		User user = new User();
+		UserSistema user = new UserSistema();
 		List<Nivel> niveles = catalogoService.getNiveles();
 		model.addAttribute("user",user);
 		model.addAttribute("niveles",niveles);
@@ -83,7 +83,7 @@ public class UsuariosController {
 	}
 
 	@RequestMapping(value = "/admin/new", method = RequestMethod.POST)
-	public String processCreationForm(@Valid User user, BindingResult result, SessionStatus status) {
+	public String processCreationForm(@Valid UserSistema user, BindingResult result, SessionStatus status) {
 		if (result.hasErrors()) {
 			return "users/create";
 		}
@@ -93,7 +93,7 @@ public class UsuariosController {
 		} else {
 			user.setCreated(new Date());
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			user.setUsuario(authentication.getName());
+			user.setCreatedBy(authentication.getName());
 			StandardPasswordEncoder encoder = new StandardPasswordEncoder();
 			String encodedPass = encoder.encode(user.getPassword());
 			user.setPassword(encodedPass);
@@ -112,19 +112,19 @@ public class UsuariosController {
     
     @RequestMapping(value = "/admin/{username}/edit", method = RequestMethod.GET)
 	public String initUpdateUserForm(@PathVariable("username") String username, Model model) {
-		User usertoEdit = this.usuarioService.getUser(username);
+		UserSistema usertoEdit = this.usuarioService.getUser(username);
 		model.addAttribute(usertoEdit);
 		return "users/UpdateUserForm";		
 	}
 
 	@RequestMapping(value = "/admin/{username}/edit", method = RequestMethod.PUT)
-	public String processUpdateUserForm(@Valid User user, BindingResult result, SessionStatus status, RedirectAttributes redirectAttributes) {
+	public String processUpdateUserForm(@Valid UserSistema user, BindingResult result, SessionStatus status, RedirectAttributes redirectAttributes) {
 		if (result.hasErrors()) {
 			return "users/UpdateUserForm";
 		} else {
 			user.setCreated(new Date());
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			user.setUsuario(authentication.getName());
+			user.setCreatedBy(authentication.getName());
 			AuthorityId authId = new AuthorityId();
 			authId.setUsername(user.getUsername());
 			authId.setAuthority("ROLE_WEB");

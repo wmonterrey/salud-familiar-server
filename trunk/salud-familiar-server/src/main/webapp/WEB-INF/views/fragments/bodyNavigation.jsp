@@ -131,7 +131,7 @@
 					</a>
 				</li>
 				<li class="last ">
-					<a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">
+					<a href="<spring:url value="/logout" htmlEscape="true" />">
 					<i class="fa fa-sign-out"></i>
 					<span class="title">
 						<fmt:message key="log_out" />

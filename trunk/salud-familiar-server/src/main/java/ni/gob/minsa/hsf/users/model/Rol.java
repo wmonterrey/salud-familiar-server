@@ -1,4 +1,4 @@
-package ni.gob.minsa.hsf.auth.config;
+package ni.gob.minsa.hsf.users.model;
 
 import java.util.Set;
 

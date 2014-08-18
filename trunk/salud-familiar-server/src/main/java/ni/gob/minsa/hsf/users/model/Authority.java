@@ -1,4 +1,4 @@
-package ni.gob.minsa.hsf.auth.config;
+package ni.gob.minsa.hsf.users.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -21,7 +21,7 @@ import org.hibernate.annotations.ForeignKey;
 public class Authority {
 	
 	private AuthorityId authId;
-	private User user;
+	private UserSistema user;
 	private Rol rol;
 	
 	
@@ -36,11 +36,11 @@ public class Authority {
 	@ManyToOne
 	@JoinColumn(name="NOMBRE_USUARIO", insertable = false, updatable = false)
 	@ForeignKey(name = "ROLES_USUARIOS_FK")
-	public User getUser() {
+	public UserSistema getUser() {
 		return user;
 	}
 	
-	public void setUser(User user) {
+	public void setUser(UserSistema user) {
 		this.user = user;
 	}
 	@ManyToOne
@@ -51,6 +51,11 @@ public class Authority {
 	}
 	public void setRol(Rol rol) {
 		this.rol = rol;
+	}
+	
+	@Override
+	public String toString(){
+		return authId.getAuthority();
 	}
 
 }
