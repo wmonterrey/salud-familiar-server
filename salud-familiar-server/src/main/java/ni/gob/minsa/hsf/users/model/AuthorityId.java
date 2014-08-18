@@ -1,4 +1,4 @@
-package ni.gob.minsa.hsf.auth.config;
+package ni.gob.minsa.hsf.users.model;
 
 import java.io.Serializable;
 
@@ -60,6 +60,10 @@ public class AuthorityId implements Serializable {
 	public void setAuthority(String authority) {
 		this.authority = authority;
 	}
-	
+
+	@Override
+	public String toString(){
+		return username+ " " + authority;
+	}
 
 }

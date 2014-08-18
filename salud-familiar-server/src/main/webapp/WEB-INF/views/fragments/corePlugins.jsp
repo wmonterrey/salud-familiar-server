@@ -34,7 +34,12 @@
 <!-- jQuery Uniform-->
 <spring:url value="/resources/plugins/uniform/jquery.uniform.min.js" var="jQueryUniform" />
 <script src="${jQueryUniform}" type="text/javascript"></script>
-<!-- jQuery i18n-->
-<spring:url value="/resources/plugins/jquery.i18n.properties-min-1.0.9.js" var="jQueryi18n" />
-<script src="${jQueryi18n}" type="text/javascript"></script>
+<!-- jQuery Idle Time Out-->
+<spring:url value="/resources/plugins/jquery-idle-timeout/jquery.idletimeout.js" var="idleTimeout" />
+<script src="${idleTimeout}" type="text/javascript"></script>
+<spring:url value="/resources/plugins/jquery-idle-timeout/jquery.idletimer.js" var="idleTimer" />
+<script src="${idleTimer}" type="text/javascript"></script>
+<!-- jQuery Password Meter-->
+<spring:url value="/resources/plugins/jquery.pwstrength.bootstrap/src/pwstrength.js" var="pwStrength" />
+<script src="${pwStrength}" type="text/javascript"></script>
 <!-- END CORE PLUGINS -->

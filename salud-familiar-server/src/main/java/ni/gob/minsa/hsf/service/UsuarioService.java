@@ -4,8 +4,8 @@ import java.util.List;
 import javax.annotation.Resource;
 
 
-import ni.gob.minsa.hsf.auth.config.Authority;
-import ni.gob.minsa.hsf.auth.config.User;
+import ni.gob.minsa.hsf.users.model.Authority;
+import ni.gob.minsa.hsf.users.model.UserSistema;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -35,7 +35,7 @@ public class UsuarioService {
 	 */
 
 	@SuppressWarnings("unchecked")
-	public List<User> getUsers() {
+	public List<UserSistema> getUsers() {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
 		// Create a Hibernate query (HQL)
@@ -51,12 +51,12 @@ public class UsuarioService {
 	 * @return un <code>User</code>
 	 */
 
-	public User getUser(String username) {
+	public UserSistema getUser(String username) {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("FROM User u where " +
 				"u.username = '" + username + "'");
-		User user = (User) query.uniqueResult();
+		UserSistema user = (UserSistema) query.uniqueResult();
 		return user;
 	}
 	
@@ -71,7 +71,7 @@ public class UsuarioService {
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("FROM User u where " +
 				"u.username = '" + username + "'");
-		User user = (User) query.uniqueResult();
+		UserSistema user = (UserSistema) query.uniqueResult();
 		if (user!=null){
 			return true;
 		}
@@ -85,7 +85,7 @@ public class UsuarioService {
 	 * 
 	 * 
 	 */
-	public void addUser(User user) {
+	public void addUser(UserSistema user) {
 		Session session = sessionFactory.getCurrentSession();
 		session.save(user);
 	}
@@ -105,7 +105,7 @@ public class UsuarioService {
 	 * 
 	 * 
 	 */
-	public void updateUser(User user) {
+	public void updateUser(UserSistema user) {
 		Session session = sessionFactory.getCurrentSession();
 		session.update(user);
 	}

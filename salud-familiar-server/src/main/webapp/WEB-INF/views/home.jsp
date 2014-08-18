@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <!--[if IE 8]> <html class="ie8 no-js"> <![endif]-->
 <!--[if IE 9]> <html class="ie9 no-js"> <![endif]-->
@@ -30,12 +29,12 @@
 				<div class="col-md-12">
 					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
 					<h3 class="page-title">
-					<fmt:message key="welcome" /> <small><fmt:message key="heading" /></small>
+					<spring:message code="welcome" /> <small><spring:message code="heading" /></small>
 					</h3>
 					<ul class="page-breadcrumb breadcrumb">
 						<li>
 							<i class="fa fa-home"></i>
-							<a href="<spring:url value="/" htmlEscape="true "/>"><fmt:message key="dashboard" /></a>
+							<a href="<spring:url value="/" htmlEscape="true "/>"><spring:message code="dashboard" /></a>
 							<i class="fa fa-angle-right"></i>
 						</li>
 					</ul>
@@ -54,6 +53,7 @@
 <!-- END FOOTER -->
 <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
 <jsp:include page="fragments/corePlugins.jsp" />
+<jsp:include page="fragments/bodyUtils.jsp" />
 <!-- BEGIN PAGE LEVEL PLUGINS -->
 <!-- END PAGE LEVEL PLUGINS -->
 <!-- BEGIN PAGE LEVEL SCRIPTS -->

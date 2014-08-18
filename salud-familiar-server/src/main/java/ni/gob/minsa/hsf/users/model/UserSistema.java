@@ -1,4 +1,4 @@
-package ni.gob.minsa.hsf.auth.config;
+package ni.gob.minsa.hsf.users.model;
 
 import java.util.Date;
 import java.util.Set;
@@ -34,9 +34,11 @@ import org.hibernate.validator.constraints.Email;
 
 @Entity
 @Table(name = "HSF_USUARIOS_SISTEMA", catalog = "HSF")
-public class User {
+public class UserSistema {
 	private String username;
 	private Date created;
+	private Date modified;
+	private Date lastAccess;
 	private String password;
 	private String completeName;
 	private String email;
@@ -44,7 +46,12 @@ public class User {
 	private Nivel nivel;
 	private EntidadesAdtvas entidad;
 	private Unidades unidad;
-	private String usuario;
+	private Boolean accountNonExpired=true;
+	private Boolean credentialsNonExpired=true;
+	private Date lastCredentialChange;
+	private Boolean accountNonLocked=true;
+	private String createdBy;
+	private String modifiedBy;
 	private Set<Authority> authorities;
 	
 	@Id
@@ -64,6 +71,27 @@ public class User {
 	}
 	public void setCreated(Date created) {
 		this.created = created;
+	}
+	@Column(name = "FECHA_ULTMOD", nullable = true)
+	public Date getModified() {
+		return modified;
+	}
+	public void setModified(Date modified) {
+		this.modified = modified;
+	}
+	@Column(name = "FECHA_ULTACC", nullable = true)
+	public Date getLastAccess() {
+		return lastAccess;
+	}
+	public void setLastAccess(Date lastAccess) {
+		this.lastAccess = lastAccess;
+	}
+	@Column(name = "FECHA_ULTMODCRED", nullable = true)
+	public Date getLastCredentialChange() {
+		return lastCredentialChange;
+	}
+	public void setLastCredentialChange(Date lastCredentialChange) {
+		this.lastCredentialChange = lastCredentialChange;
 	}
 	@Column(name = "CONTRASENA", nullable = false, length =150)
 	@Size(min = 8, max = 150)
@@ -138,12 +166,43 @@ public class User {
 	public void setNivel(Nivel nivel) {
 		this.nivel = nivel;
 	}
-	
-	@Column(name = "USUARIO_REGISTRO", nullable = false, length =50)
-	public String getUsuario() {
-		return usuario;
+	@Column(name = "CUENTA_SINEXPIRAR", nullable = false)
+	public Boolean getAccountNonExpired() {
+		return accountNonExpired;
 	}
-	public void setUsuario(String usuario) {
-		this.usuario = usuario;
+	public void setAccountNonExpired(Boolean accountNonExpired) {
+		this.accountNonExpired = accountNonExpired;
+	}
+	@Column(name = "CREDENCIAL_SINEXPIRAR", nullable = false)
+	public Boolean getCredentialsNonExpired() {
+		return credentialsNonExpired;
+	}
+	public void setCredentialsNonExpired(Boolean credentialsNonExpired) {
+		this.credentialsNonExpired = credentialsNonExpired;
+	}
+	@Column(name = "CUENTA_SINBLOQUEAR", nullable = false)
+	public Boolean getAccountNonLocked() {
+		return accountNonLocked;
+	}
+	public void setAccountNonLocked(Boolean accountNonLocked) {
+		this.accountNonLocked = accountNonLocked;
+	}
+	@Column(name = "USUARIO_REGISTRO", nullable = false, length =50)
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	@Column(name = "USUARIO_ULTMOD", nullable = true, length =50)
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+	@Override
+	public String toString(){
+		return username;
 	}
 }

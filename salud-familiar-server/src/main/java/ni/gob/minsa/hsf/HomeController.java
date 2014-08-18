@@ -126,4 +126,10 @@ public class HomeController {
     	return "Acceso a la aplicación concedido por el servidor.";
     }
     
+	@RequestMapping( value="keepsession")
+	public @ResponseBody String keepSession()
+	{	
+		return "OK";
+	}
+    
 }
