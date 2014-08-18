@@ -66,7 +66,7 @@
 	</div>
 	<!-- END LOGIN -->
 	<!-- BEGIN COPYRIGHT -->
-	<div class="copyright">2014 &copy; Ministerio de Salud Nicaragua.</div>
+	<div class="copyright">2014 &copy; <fmt:message>title</fmt:message>.</div>
 	<!-- END COPYRIGHT -->
 	<jsp:include page="fragments/corePlugins.jsp" />
 	<!-- BEGIN PAGE LEVEL PLUGINS -->

@@ -2,6 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <!--[if IE 8]> <html class="ie8 no-js"> <![endif]-->
 <!--[if IE 9]> <html class="ie9 no-js"> <![endif]-->
@@ -498,6 +499,12 @@
 <script src="${App}" type="text/javascript"></script>
 <spring:url value="/resources/scripts/hsf-wizard.js" var="hsfWizard" />
 <script src="${hsfWizard}"></script>
+
+<spring:url value="/resources/plugins/jquery-validation/localization/messages_{language}.js" var="jQValidationLoc">
+	<spring:param name="language" value="${pageContext.request.locale.language}" />
+</spring:url>				
+<script src="${jQValidationLoc}"/></script>
+
 <!-- END PAGE LEVEL SCRIPTS -->
 <script>
     $(function () {
