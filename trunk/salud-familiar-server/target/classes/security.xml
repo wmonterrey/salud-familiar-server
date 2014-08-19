@@ -2,34 +2,61 @@
 <beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/security"
 	xsi:schemaLocation="
-		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
-
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+	
 	<http auto-config="true" request-matcher="regex">
 	    <intercept-url pattern="/movil/.*" access="ROLE_MOVIL" />
-	    <intercept-url pattern="/users/admin/.*" access="ROLE_ADMIN" />
+	    <intercept-url pattern="/admin/.*" access="ROLE_ADMIN" />
 		<intercept-url pattern="/login" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<intercept-url pattern="/loginfailed" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<intercept-url pattern="/logout" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<intercept-url pattern="/resources/.*" access="IS_AUTHENTICATED_ANONYMOUSLY" />
-		<intercept-url pattern="/.*" access="ROLE_WEB,ROLE_ADMIN" />
+		<intercept-url pattern="/.*" access="ROLE_ADMIN,ROLE_CATALOG,ROLE_BASIC" />
 		<form-login login-page="/login" default-target-url="/"
 			authentication-failure-url="/loginfailed" />
-		<logout logout-success-url="/logout" />
+		<logout logout-url="/logout" 
+		    success-handler-ref="customLogoutSuccessHandler"
+		    delete-cookies="JSESSIONID"/>
 		<access-denied-handler error-page="/403"/>
+		<session-management invalid-session-url="/login">
+        	<concurrency-control error-if-maximum-exceeded="true" max-sessions="1" expired-url="/login"/>            
+    	</session-management>
 	</http>
-
+	
+	<beans:bean id="customLogoutSuccessHandler" 
+	    class="ni.gob.minsa.hsf.web.handler.CustomLogoutSuccessHandler">
+	    <beans:property name="userDetailsDao" ref="userDetailsDao" />
+	</beans:bean>
+	
 	<beans:bean id="encoder"
 		class="org.springframework.security.crypto.password.StandardPasswordEncoder" />
-
-	<authentication-manager alias="authenticationManager">
-		<!-- DAO Based Security -->
-		<authentication-provider>
-			<password-encoder ref="encoder" />
-			<jdbc-user-service data-source-ref="dataSource"
-				users-by-username-query="select NOMBRE_USUARIO as username, CONTRASENA as password, HABILITADO as enabled from HSF_USUARIOS_SISTEMA where NOMBRE_USUARIO=?"
-				authorities-by-username-query="select U.NOMBRE_USUARIO username, UR.ROL authority from HSF_USUARIOS_SISTEMA U, HSF_USUARIOS_ROLES UR where U.NOMBRE_USUARIO = UR.NOMBRE_USUARIO and U.NOMBRE_USUARIO = ?" />
-		</authentication-provider>
+	
+	<beans:bean id="userAuthenticationEventListener"
+		class="ni.gob.minsa.hsf.web.listener.AuthenticationListener" />
+	
+	<beans:bean id="userSessionDestroyEventListener"
+		class="ni.gob.minsa.hsf.web.listener.SessionDestroyListener">
+	    <beans:property name="userDetailsDao" ref="userDetailsDao" />
+	</beans:bean>
+	
+	<beans:bean id="customUserDetailsService" class="ni.gob.minsa.hsf.users.service.CustomUserDetailsService" >
+	    <beans:property name="sessionFactory" ref="sessionFactory"/>
+	</beans:bean>
+	
+	<beans:bean id="userDetailsDao" class="ni.gob.minsa.hsf.users.dao.UserDetailsDaoImpl" >
+		<beans:property name="sessionFactory" ref="sessionFactory" />
+	</beans:bean>
+	
+	<beans:bean id="authenticationProvider"
+		class="ni.gob.minsa.hsf.web.handler.LoginAuthenticationProvider">
+		<beans:property name="userDetailsService" ref="customUserDetailsService" />
+		<beans:property name="userDetailsDao" ref="userDetailsDao" />
+		<beans:property name="passwordEncoder" ref="encoder" />
+	</beans:bean>
+	
+	<authentication-manager>
+		<authentication-provider ref="authenticationProvider" />
 	</authentication-manager>
 
 </beans:beans>

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <!--[if IE 8]> <html class="ie8 no-js"> <![endif]-->
 <!--[if IE 9]> <html class="ie9 no-js"> <![endif]-->
@@ -34,12 +33,12 @@
 				<div class="col-md-12">
 					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
 					<h3 class="page-title">
-					<fmt:message key="notfound" />
+					<spring:message code="notfound" />
 					</h3>
 					<ul class="page-breadcrumb breadcrumb">
 						<li>
 							<i class="fa fa-home"></i>
-							<a href="<spring:url value="/" htmlEscape="true "/>"><fmt:message key="dashboard" /></a>
+							<a href="<spring:url value="/" htmlEscape="true "/>"><spring:message code="dashboard" /></a>
 							<i class="fa fa-angle-right"></i>
 						</li>
 					</ul>
@@ -54,9 +53,9 @@
 						 404
 					</div>
 					<div class="details">
-						<h3><fmt:message key="notfound" /></h3>
+						<h3><spring:message code="notfound" /></h3>
 						<p>
-							 <fmt:message key="notfoundmessage" />
+							 <spring:message code="notfoundmessage" />
 						</p>
 					</div>
 				</div>

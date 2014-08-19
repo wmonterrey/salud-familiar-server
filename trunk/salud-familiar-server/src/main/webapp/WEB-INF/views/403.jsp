@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sec"	uri="http://www.springframework.org/security/tags"%>
 
 <!--[if IE 8]> <html class="ie8 no-js"> <![endif]-->
@@ -35,12 +34,12 @@
 				<div class="col-md-12">
 					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
 					<h3 class="page-title">
-					<fmt:message key="notfound" />
+					<spring:message code="denied" />
 					</h3>
 					<ul class="page-breadcrumb breadcrumb">
 						<li>
 							<i class="fa fa-home"></i>
-							<a href="<spring:url value="/" htmlEscape="true "/>"><fmt:message key="dashboard" /></a>
+							<a href="<spring:url value="/" htmlEscape="true "/>"><spring:message code="dashboard" /></a>
 							<i class="fa fa-angle-right"></i>
 						</li>
 					</ul>
@@ -55,9 +54,9 @@
 						 403
 					</div>
 					<div class="details">
-						<h3><fmt:message key="denied" />  <sec:authentication property="principal.username" /></h3>
+						<h3><spring:message code="denied" />  <sec:authentication property="principal.username" /></h3>
 						<p>
-							 <fmt:message key="deniedmessage" />
+							 <spring:message code="deniedmessage" />
 						</p>
 					</div>
 				</div>
