@@ -29,7 +29,7 @@ public class EntidadesAdtvasService {
 		return  query.list();
 	}
 	
-	public EntidadesAdtvas getEntidadesAdtvas(Integer codigo) {
+	public EntidadesAdtvas getEntidadesAdtvas(long codigo) {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("FROM EntidadesAdtvas ea where ea.codigo = "+ codigo);

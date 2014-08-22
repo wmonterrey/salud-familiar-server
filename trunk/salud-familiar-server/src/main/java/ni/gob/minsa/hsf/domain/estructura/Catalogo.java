@@ -18,6 +18,23 @@ public class Catalogo extends BaseEntidadCatalogo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
     public Catalogo() {
+
     }
 
+    @Override
+	public boolean equals(Object other) {
+		
+		if ((this == other))
+			return true;
+		if ((other == null))
+			return false;
+		if (!(other instanceof Catalogo))
+			return false;
+		
+		Catalogo castOther = (Catalogo) other;
+		
+		return (this.getCatalogoId() == castOther.getCatalogoId())
+				&& (this.getCodigo().equals(castOther.getCodigo())) 
+						&& (this.getValor().equals(castOther.getValor()));
+	}
 }

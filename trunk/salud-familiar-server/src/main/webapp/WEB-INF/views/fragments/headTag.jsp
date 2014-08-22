@@ -17,6 +17,8 @@ Ministerio de Salud Nicaragua :: Historia de Salud Familiar
 <link href="${bootstrap}" rel="stylesheet" type="text/css"/>
 <spring:url value="/resources/plugins/uniform/css/uniform.default.css" var="uniform" />
 <link href="${uniform}" rel="stylesheet" type="text/css"/>
+<spring:url value="/resources/plugins/bootstrap-toastr/toastr.min.css" var="toastcss" />
+<link rel="stylesheet" type="text/css" href="${toastcss}"/>
 <!-- END GLOBAL MANDATORY STYLES -->
 <!-- BEGIN THEME STYLES -->
 <spring:url value="/resources/css/style-conquer.css" var="styleconquer" />

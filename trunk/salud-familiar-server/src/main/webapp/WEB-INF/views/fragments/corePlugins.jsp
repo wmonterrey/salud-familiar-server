@@ -39,7 +39,7 @@
 <script src="${idleTimeout}" type="text/javascript"></script>
 <spring:url value="/resources/plugins/jquery-idle-timeout/jquery.idletimer.js" var="idleTimer" />
 <script src="${idleTimer}" type="text/javascript"></script>
-<!-- jQuery Password Meter-->
-<spring:url value="/resources/plugins/jquery.pwstrength.bootstrap/src/pwstrength.js" var="pwStrength" />
-<script src="${pwStrength}" type="text/javascript"></script>
+<!-- Bootstrap Toastr-->
+<spring:url value="/resources/plugins/bootstrap-toastr/toastr.min.js" var="toastR" />
+<script type="text/javascript" src="${toastR}"></script>
 <!-- END CORE PLUGINS -->

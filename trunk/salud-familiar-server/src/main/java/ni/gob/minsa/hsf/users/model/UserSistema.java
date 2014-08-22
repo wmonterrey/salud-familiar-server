@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import ni.gob.minsa.hsf.domain.audit.Auditable;
 import ni.gob.minsa.hsf.domain.catalogos.Nivel;
 import ni.gob.minsa.hsf.domain.estructura.Catalogo;
 import ni.gob.minsa.hsf.domain.estructura.EntidadesAdtvas;
@@ -34,7 +35,7 @@ import org.hibernate.validator.constraints.Email;
 
 @Entity
 @Table(name = "HSF_USUARIOS_SISTEMA", catalog = "HSF")
-public class UserSistema {
+public class UserSistema implements Auditable {
 	private String username;
 	private Date created;
 	private Date modified;
@@ -204,5 +205,12 @@ public class UserSistema {
 	@Override
 	public String toString(){
 		return username;
+	}
+	@Override
+	public boolean isFieldAuditable(String fieldname) {
+		if(fieldname.matches("modified")||fieldname.matches("modifiedBy")||fieldname.matches("password")){
+			return false;
+		}
+		return true;
 	}
 }
