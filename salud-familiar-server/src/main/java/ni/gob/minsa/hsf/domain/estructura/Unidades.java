@@ -339,5 +339,24 @@ public class Unidades implements Serializable{
 	public void setUnidadAdtva(Long unidadAdtva) {
 		this.unidadAdtva = unidadAdtva;
 	}
-
+	@Override
+	public String toString(){
+		return nombre;
+	}
+	@Override
+	public boolean equals(Object other) {
+		
+		if ((this == other))
+			return true;
+		if ((other == null))
+			return false;
+		if (!(other instanceof Unidades))
+			return false;
+		
+		Unidades castOther = (Unidades) other;
+		
+		return (this.getUnidadId() == castOther.getUnidadId())
+				&& (this.getCodigo() == castOther.getCodigo()) 
+				&& (this.getNombre().equals(castOther.getNombre()));
+	}
 }

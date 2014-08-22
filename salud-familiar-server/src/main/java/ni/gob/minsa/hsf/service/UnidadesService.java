@@ -40,7 +40,17 @@ public class UnidadesService {
 		return  query.list();
 	}
 	
-	public Unidades getUnidades(Integer codigo) {
+	@SuppressWarnings("unchecked")
+	public List<Unidades> getUnidadesMunicipio(String municipio) {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = session.createQuery("FROM Unidades unds where unds.municipio = " + municipio + " order by unds.nombre");
+		// Retrieve all
+		return  query.list();
+	}
+	
+	public Unidades getUnidades(long codigo) {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("FROM Unidades und where und.codigo = "+ codigo);

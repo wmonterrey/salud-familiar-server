@@ -25,8 +25,8 @@
 		<!-- BEGIN LOGIN FORM -->
 		<form class="login-form"
 			action="<c:url value='j_spring_security_check' />" method="post">
-			<h3 class="form-title">
-				<spring:message  code="title" />
+			<h3 align="center" class="form-title">
+				<spring:message  code="heading" />
 			</h3>
 			<c:if test="${not empty error}">
 			<div class="alert alert-danger">
@@ -86,7 +86,7 @@
 	</div>
 	<!-- END LOGIN -->
 	<!-- BEGIN COPYRIGHT -->
-	<div class="copyright">2014 &copy; <spring:message code="heading"/>.</div>
+	<div class="copyright">2014 &copy; <spring:message code="title"/>.</div>
 	<!-- END COPYRIGHT -->
 	<jsp:include page="fragments/corePlugins.jsp" />
 	<!-- BEGIN PAGE LEVEL PLUGINS -->

@@ -6,6 +6,11 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import ni.gob.minsa.hsf.domain.catalogos.Nivel;
+import ni.gob.minsa.hsf.domain.estructura.EntidadesAdtvas;
+import ni.gob.minsa.hsf.service.CatalogoService;
+import ni.gob.minsa.hsf.service.EntidadesAdtvasService;
+import ni.gob.minsa.hsf.service.UnidadesService;
 import ni.gob.minsa.hsf.service.UsuarioService;
 import ni.gob.minsa.hsf.users.model.Authority;
 import ni.gob.minsa.hsf.users.model.AuthorityId;
@@ -39,13 +44,19 @@ public class AdminUsuariosController {
 	private static final Logger logger = LoggerFactory.getLogger(AdminUsuariosController.class);
 	@Resource(name="usuarioService")
 	private UsuarioService usuarioService;
+	@Resource(name="catalogoService")
+	private CatalogoService catalogoService;
+	@Resource(name="entidadAdtvaService")
+	private EntidadesAdtvasService entidadAdtvaService;
+	@Resource(name="unidadesService")
+	private UnidadesService unidadesService;
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
     public String obtenerUsuarios(Model model) throws ParseException { 	
     	logger.debug("Mostrando Usuarios en JSP");
     	List<UserSistema> usuarios = usuarioService.getUsers();
     	model.addAttribute("usuarios", usuarios);
-    	return "users/list";
+    	return "admin/users/list";
 	}	
 	
     /**
@@ -56,7 +67,7 @@ public class AdminUsuariosController {
      */
     @RequestMapping("/{username}")
     public ModelAndView showUser(@PathVariable("username") String username) {
-        ModelAndView mav = new ModelAndView("users/user");
+        ModelAndView mav = new ModelAndView("admin/users/user");
         UserSistema user = this.usuarioService.getUser(username);
         List<UserAccess> accesosUsuario = usuarioService.getUserAccess(username);
         mav.addObject("user",user);
@@ -67,8 +78,12 @@ public class AdminUsuariosController {
     @RequestMapping(value = "newUser", method = RequestMethod.GET)
 	public String initCreationForm(Model model) {
     	List<Rol> roles = usuarioService.getRoles();
+    	List<Nivel> niveles = catalogoService.getNiveles();
+    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas();
     	model.addAttribute("roles", roles);
-		return "users/create";
+    	model.addAttribute("niveles", niveles);
+    	model.addAttribute("entidades", entidades);
+		return "admin/users/create";
 	}
     
     
@@ -78,6 +93,10 @@ public class AdminUsuariosController {
 			, @RequestParam( value="confirm_password", required=true ) String passwordAgain
 	        , @RequestParam( value="completeName", required=true ) String completeName
 	        , @RequestParam( value="email", required=true ) String email
+	        , @RequestParam( value="nivel", required=true ) String nivel
+	        , @RequestParam( value="entidad", required=false ) Long entidad
+	        , @RequestParam( value="municipio", required=false ) String municipio
+	        , @RequestParam( value="unidad", required=false ) Long unidad
 	        , @RequestParam( value="enabled", required=false, defaultValue="false" ) boolean enabled
 	        , @RequestParam( value="authorities", required=true ) List<String> authorities
 	        )
@@ -91,6 +110,19 @@ public class AdminUsuariosController {
 		user.setPassword(encodedPass);
 		user.setCompleteName(completeName);
 		user.setEmail(email);
+		user.setNivel(catalogoService.getNivel(nivel));
+		if (nivel.equals("HSF_NIVELES|SILAIS")){
+			user.setEntidad(entidadAdtvaService.getEntidadesAdtvas(entidad));
+			user.setUnidad(null);
+		}
+		else if (nivel.equals("HSF_NIVELES|UNIDAD")){
+			user.setEntidad(null);
+			user.setUnidad(unidadesService.getUnidades(unidad));
+		}
+		else{
+			user.setEntidad(null);
+			user.setUnidad(null);
+		}
 		user.setEnabled(enabled);
 		user.setCreated(new Date());
 		user.setLastCredentialChange(new Date());
@@ -127,8 +159,12 @@ public class AdminUsuariosController {
 		if(usertoEdit!=null){
 			model.addAttribute("user",usertoEdit);
 			List<Rol> roles = usuarioService.getRoles();
+			List<Nivel> niveles = catalogoService.getNiveles();
+	    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas();
 	    	model.addAttribute("roles", roles);
-			return "users/edit";
+	    	model.addAttribute("niveles", niveles);
+	    	model.addAttribute("entidades", entidades);
+			return "admin/users/edit";
 		}
 		else{
 			return "404";
@@ -140,6 +176,10 @@ public class AdminUsuariosController {
 	public @ResponseBody String processUpdateUserForm( @RequestParam(value="username", required=true ) String userName
 	        , @RequestParam( value="completeName", required=true ) String completeName
 	        , @RequestParam( value="email", required=true ) String email
+	        , @RequestParam( value="nivel", required=true ) String nivel
+	        , @RequestParam( value="entidad", required=false ) Long entidad
+	        , @RequestParam( value="municipio", required=false ) String municipio
+	        , @RequestParam( value="unidad", required=false ) Long unidad
 	        , @RequestParam( value="authorities", required=false ) List<String> authorities
 	        )
 	{
@@ -148,6 +188,19 @@ public class AdminUsuariosController {
 		user.setModifiedBy(authentication.getName());
 		user.setCompleteName(completeName);
 		user.setEmail(email);
+		user.setNivel(catalogoService.getNivel(nivel));
+		if (nivel.equals("HSF_NIVELES|SILAIS")){
+			user.setEntidad(entidadAdtvaService.getEntidadesAdtvas(entidad));
+			user.setUnidad(null);
+		}
+		else if (nivel.equals("HSF_NIVELES|UNIDAD")){
+			user.setEntidad(null);
+			user.setUnidad(unidadesService.getUnidades(unidad));
+		}
+		else{
+			user.setEntidad(null);
+			user.setUnidad(null);
+		}
 		user.setModified(new Date());
 		try{
 			this.usuarioService.updateUser(user);
@@ -181,7 +234,7 @@ public class AdminUsuariosController {
 		UserSistema usertoChange = this.usuarioService.getUser(username);
 		if(usertoChange!=null){
 			model.addAttribute("user",usertoChange);
-			return "users/chgpass";
+			return "admin/users/chgpass";
 		}
 		else{
 			return "404";

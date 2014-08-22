@@ -123,7 +123,7 @@
 					</ul>
 				</li>
 				<li class="users">
-					<a href="<spring:url value="/users/admin/list" htmlEscape="true "/>">
+					<a href="<spring:url value="/admin/users/" htmlEscape="true "/>">
 					<i class="fa fa-group"></i>
 					<span class="title">
 						<fmt:message key="users" />

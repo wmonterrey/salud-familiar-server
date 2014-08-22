@@ -44,16 +44,15 @@ public class OpcionesController {
      * @return Un arreglo JSON de unidades
      */
     @RequestMapping(value = "unidades", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody List<Unidades> fetchUnidadesJson(@RequestParam(value = "entidadId", required = true) long entidad) {
+    public @ResponseBody List<Unidades> fetchUnidadesJson(@RequestParam(value = "muniId", required = true) String municipio) {
         logger.info("Obteniendo las unidades en JSON");
-        List<Unidades> unidades = unidadesService.getUnidadesEntidad(entidad);
+        List<Unidades> unidades = unidadesService.getUnidadesMunicipio(municipio);
         if (unidades == null){
         	logger.debug("Nulo");
         }
         return unidades;	
     }
-    
-    
+        
     /**
      * Retorna una lista de divisionpolitica. Acepta una solicitud GET para JSON
      * @return Un arreglo JSON de unidades

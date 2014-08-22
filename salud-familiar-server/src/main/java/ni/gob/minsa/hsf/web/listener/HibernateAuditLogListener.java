@@ -165,7 +165,6 @@ PreLoadEventListener, Initializable {
 	            for (String propertyName : event.getPersister().getPropertyNames()) {  
 	            	if (obj.isFieldAuditable(propertyName)){
 		                newPropValue = event.getPersister().getPropertyValue(event.getEntity(), propertyName, entityMode);  
-		                // because we are performing an insert we only need to be concerned will non-null values  
 		                if (newPropValue != null) {  
 		                    // collections will fire their own events  
 		                    if (!(newPropValue instanceof Collection)) {  

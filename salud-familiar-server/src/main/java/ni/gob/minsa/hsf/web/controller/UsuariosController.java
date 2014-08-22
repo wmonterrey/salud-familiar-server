@@ -45,10 +45,10 @@ public class UsuariosController {
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		UserSistema user = usuarioService.getUser(authentication.getName());
-		user.setModifiedBy(authentication.getName());
-		user.setModified(new Date());
 		StandardPasswordEncoder encoder = new StandardPasswordEncoder();
 		String encodedPass = encoder.encode(password);
+		user.setModifiedBy(authentication.getName());
+		user.setModified(new Date());
 		user.setPassword(encodedPass);
 		user.setLastCredentialChange(new Date());
 		user.setCredentialsNonExpired(true);

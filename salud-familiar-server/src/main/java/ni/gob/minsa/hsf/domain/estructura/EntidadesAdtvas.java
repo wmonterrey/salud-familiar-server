@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 import ni.gob.minsa.hsf.serializer.CustomDateSerializer;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -208,6 +209,26 @@ public class EntidadesAdtvas implements Serializable{
 
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
+	}
+	@Override
+	public String toString(){
+		return nombre;
+	}
+	@Override
+	public boolean equals(Object other) {
+		
+		if ((this == other))
+			return true;
+		if ((other == null))
+			return false;
+		if (!(other instanceof EntidadesAdtvas))
+			return false;
+		
+		EntidadesAdtvas castOther = (EntidadesAdtvas) other;
+		
+		return (this.getEntidadAdtvaId() == castOther.getEntidadAdtvaId())
+				&& (this.getCodigo() == castOther.getCodigo()) 
+				&& (this.getNombre().equals(castOther.getNombre()));
 	}
 
 }
