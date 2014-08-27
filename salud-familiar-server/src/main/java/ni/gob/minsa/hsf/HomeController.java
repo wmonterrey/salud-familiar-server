@@ -103,6 +103,7 @@ public class HomeController {
         Persona persona = new Persona();
         persona.setIdPersona("00213133245-55467-01");
         persona.setCodPersona("22424888624-2555-01");
+        persona.setNumPersona(1);
         persona.setIdPersonaSis(345);
         persona.setFamilia(familia);
         persona.setSexo(sex);
@@ -111,7 +112,7 @@ public class HomeController {
         persona.setOcupacion(ocupacion);
         persona.setReligion(religion);
         persona.setPrimerApellido("AVILES");
-        persona.setPrimerNombre("WILLIAM");
+        persona.setNombres("WILLIAM");
         persona.setGrupoDisp(gd);
         persona.setFallecido("No");
         

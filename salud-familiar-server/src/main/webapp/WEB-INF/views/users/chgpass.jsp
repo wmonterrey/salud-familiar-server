@@ -2,6 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 
 <!--[if IE 8]> <html class="ie8 no-js"> <![endif]-->
 <!--[if IE 9]> <html class="ie9 no-js"> <![endif]-->
@@ -10,7 +11,7 @@
 <!--<![endif]-->
 <!-- BEGIN HEAD -->
 <head>
-<jsp:include page="../../fragments/headTag.jsp" />
+<jsp:include page="../fragments/headTag.jsp" />
 <!-- BEGIN PAGE LEVEL STYLES -->
 <!-- END PAGE LEVEL STYLES -->
 </head>
@@ -18,11 +19,11 @@
 <!-- BEGIN BODY -->
 <body class="page-header-fixed page-sidebar-fixed page-footer-fixed">
 <!-- BEGIN HEADER -->
-<jsp:include page="../../fragments/bodyHeader.jsp" />
+<jsp:include page="../fragments/bodyHeader.jsp" />
 <!-- END HEADER -->
 <!-- BEGIN CONTAINER -->
 <div class="page-container">
-<jsp:include page="../../fragments/bodyNavigation.jsp" />
+<jsp:include page="../fragments/bodyNavigation.jsp" />
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
 	<div class="page-content-wrapper">
@@ -35,7 +36,7 @@
 						<li>
 							<i class="fa fa-home"></i>
 							<a href="<spring:url value="/" htmlEscape="true "/>"><spring:message code="dashboard" /></a>
-							<i class="fa fa-angle-right"></i> <a href="<spring:url value="/admin/users/" htmlEscape="true "/>"><spring:message code="users.list" /></a> <i class="fa fa-angle-right"></i> <a href="<spring:url value="/admin/users/chgpass/${user.username}" htmlEscape="true "/>"><spring:message code="users.changepass" /></a>
+							<i class="fa fa-angle-right"></i> <a href="<spring:url value="/users/chgpass" htmlEscape="true "/>"><spring:message code="users.changepass" /></a>
 						</li>
 					</ul>
 					<!-- END PAGE TITLE & BREADCRUMB-->
@@ -43,14 +44,11 @@
 			</div>
 			<!-- END PAGE HEADER-->
 			<!-- BEGIN PAGE CONTENT-->
-			<spring:url value="/admin/users/chgPass" var="chgPassUrl"></spring:url>
-			<spring:url value="/admin/users/{username}"
-				var="usuarioUrl">
-				<spring:param name="username" value="${user.username}" />
-			</spring:url>
+			<spring:url value="/users/chgPass" var="chgPassUrl"/>
+			<spring:url value="/users/profile" var="usuarioUrl"/>
 			<c:set var="passUpdated"><spring:message code="pass.updated" /></c:set>
 			<c:set var="errorProcess"><spring:message code="process.error" /></c:set>
-			
+			<c:set var="userName"><sec:authentication property="principal.username" /></c:set>
 			<div class="row">
 				<div class="col-md-12">
 					<div class="portlet">
@@ -77,7 +75,7 @@
 										</span>
 										</label>
 										<div class="col-md-5">
-											<input id="username" name="username" type="text" readonly value="${user.username}" class="form-control"/>
+											<input id="username" name="username" type="text" readonly value="${userName}" class="form-control"/>
 										</div>
 									</div>
 									
@@ -124,11 +122,11 @@
 </div>
 <!-- END CONTAINER -->
 <!-- BEGIN FOOTER -->
-<jsp:include page="../../fragments/bodyFooter.jsp" />
+<jsp:include page="../fragments/bodyFooter.jsp" />
 <!-- END FOOTER -->
 <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
-<jsp:include page="../../fragments/corePlugins.jsp" />
-<jsp:include page="../../fragments/bodyUtils.jsp" />
+<jsp:include page="../fragments/corePlugins.jsp" />
+<jsp:include page="../fragments/bodyUtils.jsp" />
 <!-- BEGIN PAGE LEVEL PLUGINS -->
 <spring:url value="/resources/plugins/jquery-validation/dist/jquery.validate.min.js" var="jQValidation" />
 <script type="text/javascript" src="${jQValidation}"></script>

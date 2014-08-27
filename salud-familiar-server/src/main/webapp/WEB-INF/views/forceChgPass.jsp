@@ -20,7 +20,6 @@
 <spring:url value="/logout"	var="logoutUrl"/>
 <c:set var="passUpdated"><spring:message code="pass.updated" /></c:set>
 <c:set var="errorProcess"><spring:message code="process.error" /></c:set>
-<c:set var="repeatedPassword"><spring:message code="password.repeated" /></c:set>
 <c:set var="userName"><sec:authentication property="principal.username" /></c:set>
 <h3 align="center" class="page-title">
 	<spring:message code="loginfailed.accountLocked" />

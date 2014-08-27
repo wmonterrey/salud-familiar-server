@@ -34,9 +34,8 @@ public class Persona extends BaseEntidadCreacion implements Serializable{
 	private Familia familia;
 	private Integer numPersona;
 	private String codPersona;
-	private String primerNombre;
+	private String nombres;
     private String primerApellido;
-    private String segundoNombre;
     private String segundoApellido;
     private String cedula;
     private Date fechaNacimiento;
@@ -50,7 +49,7 @@ public class Persona extends BaseEntidadCreacion implements Serializable{
     private String embarazada;
     private String cpnActualizado;
     private String mujerEdadFertil;
-    private String lactMaterna;
+    private String planFamiliar;
     private String men1A;
     private String men1AVPCD;
     private String factRiesgoMod;
@@ -124,16 +123,13 @@ public class Persona extends BaseEntidadCreacion implements Serializable{
 		this.codPersona = codPersona;
 	}
 
-	@Column(name = "PRIMER_NOMBRE", nullable = false, length = 50)
-	public String getPrimerNombre() {
-		return primerNombre;
+	@Column(name = "NOMBREC", nullable = false, length = 50)
+	public String getNombres() {
+		return nombres;
 	}
-
-
-	public void setPrimerNombre(String primerNombre) {
-		this.primerNombre = primerNombre;
+	public void setNombres(String nombres) {
+		this.nombres = nombres;
 	}
-
 	@Column(name = "PRIMER_APELLIDO", nullable = false, length = 50)
 	public String getPrimerApellido() {
 		return primerApellido;
@@ -142,16 +138,6 @@ public class Persona extends BaseEntidadCreacion implements Serializable{
 
 	public void setPrimerApellido(String primerApellido) {
 		this.primerApellido = primerApellido;
-	}
-
-	@Column(name = "SEGUNDO_NOMBRE", nullable = true, length = 50)
-	public String getSegundoNombre() {
-		return segundoNombre;
-	}
-
-
-	public void setSegundoNombre(String segundoNombre) {
-		this.segundoNombre = segundoNombre;
 	}
 	
 	@Column(name = "SEGUNDO_APELLIDO", nullable = true, length = 50)
@@ -294,14 +280,14 @@ public class Persona extends BaseEntidadCreacion implements Serializable{
 		this.mujerEdadFertil = mujerEdadFertil;
 	}
 
-	@Column(name = "LACT_MAT", nullable = true, length = 2)
-	public String getLactMaterna() {
-		return lactMaterna;
+	@Column(name = "PLAN_FAM", nullable = true, length = 2)
+	public String getPlanFamiliar() {
+		return planFamiliar;
 	}
 
 
-	public void setLactMaterna(String lactMaterna) {
-		this.lactMaterna = lactMaterna;
+	public void setPlanFamiliar(String planFamiliar) {
+		this.planFamiliar = planFamiliar;
 	}
 
 	@Column(name = "NIN_MEN_1A", nullable = true, length = 2)
