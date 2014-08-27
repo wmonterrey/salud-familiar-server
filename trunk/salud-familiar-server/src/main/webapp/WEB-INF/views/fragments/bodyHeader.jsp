@@ -33,7 +33,13 @@
 				</a>
 				<ul class="dropdown-menu">
 					<li>
-						<a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />"><i class="fa fa-sign-out"></i> <fmt:message key="log_out" /></a>
+						<a href="<spring:url value="/users/profile" htmlEscape="true" />"><i class="fa fa-user"></i> <spring:message code="users.profile" /></a>
+					</li>
+					<li>
+						<a href="<spring:url value="/users/chgpass" htmlEscape="true" />"><i class="fa fa-key"></i> <spring:message code="users.changepass" /></a>
+					</li>
+					<li>
+						<a href="<spring:url value="/logout" htmlEscape="true" />"><i class="fa fa-sign-out"></i> <fmt:message key="log_out" /></a>
 					</li>
 				</ul>
 			</li>

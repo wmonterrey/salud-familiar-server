@@ -18,49 +18,55 @@ var FormWizardHSF = function () {
             'autounmask': true
         });
 
-        $("#wzFicha").inputmask({
+        $("#numFicha").inputmask({
             "mask": "9",
             "repeat": 6,
             "greedy": false
         });
         
-        $("#wzFechaVisita").inputmask("d/m/y", {
+        $("#fechaVisita").inputmask("d/m/y", {
             "placeholder": "dd/mm/yyyy"
         }); //multi-char placeholder
     };
 
+    var handleMultiSelect = function () {
+        $('#animalesDom').multiSelect();
+    };
+    
+    var handleSelect2 = function () {
+    	$("#personaVisitaProfesion").select2({
+        });
+        $("#silais").select2({
+        });
+        $("#municipio").select2({
+        });
+        $("#sector").select2({
+        });
+        $("#comunidad").select2({
+        });
+    };
 
     return {
         //main function to initiate the module
-        init: function () {
+        init: function (parametros) {
             if (!jQuery().bootstrapWizard) {
                 return;
             }
             
             handleDatePickers();
             handleInputMasks();
+            handleMultiSelect();
+            handleSelect2();
 
-            $("#wzProfesion").select2({
-            });
-            $("#bqSilais").select2({
-            });
-            $("#bqMunicipio").select2({
-            });
-            $("#bqSector").select2({
-            });
-            $("#bqComunidad").select2({
-            });
-            
-            
-            $('#bqSilais').change(
+            $('#silais').change(
             		function() {
             			$.getJSON('/hsf/opciones/municipios', {
-            				entidadId : $('#bqSilais').val(),
+            				entidadId : $('#silais').val(),
             				ajax : 'true'
             			}, function(data) {
-            				$("#bqMunicipio").select2("val", "");
-            				$("#bqSector").select2("val", "");
-            				$("#bqComunidad").select2("val", "");
+            				$("#municipio").select2("val", "");
+            				$("#sector").select2("val", "");
+            				$("#comunidad").select2("val", "");
             				var html='<option value=""></option>';
             				var len = data.length;
             				for ( var i = 0; i < len; i++) {
@@ -68,19 +74,18 @@ var FormWizardHSF = function () {
             							+ data[i].nombre + '</option>';
             				}
             				html += '</option>';
-            				$('#bqMunicipio').html(html);
-            				$('#wzVivienda').val('2131');
+            				$('#municipio').html(html);
             			});
                     });
             
-            $('#bqMunicipio').change(
+            $('#municipio').change(
             		function() {
             			$.getJSON('/hsf/opciones/sectores', {
-            				municipioId : $('#bqMunicipio').val(),
+            				municipioId : $('#municipio').val(),
             				ajax : 'true'
             			}, function(data) {
-            				$("#bqSector").select2("val", "");
-            				$("#bqComunidad").select2("val", "");
+            				$("#sector").select2("val", "");
+            				$("#comunidad").select2("val", "");
             				var html='<option value=""></option>';
             				var len = data.length;
             				for ( var i = 0; i < len; i++) {
@@ -88,17 +93,17 @@ var FormWizardHSF = function () {
             							+ data[i].nombre + '</option>';
             				}
             				html += '</option>';
-            				$('#bqSector').html(html);
+            				$('#sector').html(html);
             			});
                     });
             
-            $('#bqSector').change(
+            $('#sector').change(
             		function() {
             			$.getJSON('/hsf/opciones/comunidades', {
-            				sectorId : $('#bqSector').val(),
+            				sectorId : $('#sector').val(),
             				ajax : 'true'
             			}, function(data) {
-            				$("#bqComunidad").select2("val", "");
+            				$("#comunidad").select2("val", "");
             				var html='<option value=""></option>';
             				var len = data.length;
             				for ( var i = 0; i < len; i++) {
@@ -106,15 +111,14 @@ var FormWizardHSF = function () {
             							+ data[i].nombre + '</option>';
             				}
             				html += '</option>';
-            				$('#bqComunidad').html(html);
+            				$('#comunidad').html(html);
             			});
                     });
             
             var form = $('#submit_form');
             var error = $('.alert-danger', form);
             var success = $('.alert-success', form);
-            
-            
+                       
             form.validate({
                 doNotHideMessage: true, //this option enables to show the error/success messages on tab switch.
                 errorElement: 'span', //default input error message container
@@ -122,20 +126,8 @@ var FormWizardHSF = function () {
                 focusInvalid: false, // do not focus the last invalid input
                 rules: {
                     //Datos generales
-                	numFicha: {
+                	silais: {
                         required: true
-                    },
-                    fechaVisita: {
-                        required: true
-                    },
-                    personaVisita: {
-                        required: true
-                    },
-                    personaVisitaProfesion: {
-                        required: true
-                    },
-                    silais: {
-                        required: false
                     },
                     municipio: {
                         required: false
@@ -155,27 +147,26 @@ var FormWizardHSF = function () {
                     direccion: {
                         required: false
                     },
-                    'payment[]': {
-                        required: true,
-                        minlength: 1
+                    numFicha: {
+                        required: false
+                    },
+                    personaVisita: {
+                        required: false
+                    },
+                    personaVisitaProfesion: {
+                        required: false
+                    },
+                    fechaVisita: {
+                        required: false
+                    },
+                    hacinamiento: {
+                        required: false
+                    },
+                    testval: {
+                    	min:1,
+                    	required: true
                     }
-                },
-
-                messages: { // custom messages for radio buttons and checkboxes
-                    'payment[]': {
-                        required: "Please select at least one option",
-                        minlength: jQuery.format("Please select at least one option")
-                    }
-                },
-
-                errorPlacement: function (error, element) { // render error placement for each input type
-                    if (element.attr("name") == "gender") { // for uniform radio buttons, insert the after the given container
-                        error.insertAfter("#form_gender_error");
-                    } else if (element.attr("name") == "payment[]") { // for uniform radio buttons, insert the after the given container
-                        error.insertAfter("#form_payment_error");
-                    } else {
-                        error.insertAfter(element); // for other inputs, just perform default behavior
-                    }
+                    
                 },
 
                 invalidHandler: function (event, validator) { //display error alert on form submit   
@@ -210,9 +201,8 @@ var FormWizardHSF = function () {
                     success.show();
                     error.hide();
                     //add here some ajax code to submit your form or just call form.submit() if you want to submit the form without ajax
-                    alert('Que onda con esto :)');
+                    alert("ddd");
                 }
-
             });
 
             var displayConfirm = function() {
@@ -224,12 +214,6 @@ var FormWizardHSF = function () {
                         $(this).html(input.find('option:selected').text());
                     } else if (input.is(":radio") && input.is(":checked")) {
                         $(this).html(input.attr("data-title"));
-                    } else if ($(this).attr("data-display") == 'payment') {
-                        var payment = [];
-                        $('[name="payment[]"]').each(function(){
-                            payment.push($(this).attr('data-title'));
-                        });
-                        $(this).html(payment.join("<br>"));
                     }
                 });
             };
@@ -287,7 +271,6 @@ var FormWizardHSF = function () {
                 onPrevious: function (tab, navigation, index) {
                     success.hide();
                     error.hide();
-
                     handleTitle(tab, navigation, index);
                 },
                 onTabShow: function (tab, navigation, index) {
@@ -302,10 +285,85 @@ var FormWizardHSF = function () {
 
             $('#form_wizard_1').find('.button-previous').hide();
             $('#form_wizard_1 .button-submit').click(function () {
-                alert('Finished! Hopeccc you like it fool!:)');
+            	if (form.valid()) {
+            		alert('Finished! Hopeccc you like it fool!:)');
+                    return false;
+                }
             }).hide();
-        }
+            
+            
+            $(document).on('keypress','form input',function(event){                
+    		    event.stopImmediatePropagation();
+    		    if( event.which == 13 )
+    		    {
+    		        event.preventDefault();
+    		        var $input = $('form input');
+    		        if( $(this).is( $input.last() ) )
+    		        {
+    		            //Time to submit the form!!!!
+    		            //alert( 'Hooray .....' );
+    		        }
+    		        else
+    		        {
+    		            $input.eq( $input.index( this ) + 1 ).focus();
+    		        }
+    		    }
+    		});
+            
+            $('[data-dismiss=modal]').on('click', function (e) {
+    		    var $t = $(this),
+    		        target = $t[0].href || $t.data("target") || $t.parents('.modal') || [];
 
+    		  $(target)
+    		    .find("input,textarea,select")
+    		       .val('')
+    		       .end()
+    		    .find("input[type=checkbox], input[type=radio]")
+    		       .prop("checked", "")
+    		       .end();
+    		});
+            
+            var table  = $('#lista_personas').DataTable({
+                "aLengthMenu": [
+                    [5, 10, 15, 20, -1],
+                    [5, 10, 15, 20, "Todos"] // change per page values here
+                ],
+                // set the initial value
+                "iDisplayLength": 5,
+                "sPaginationType": "bootstrap"
+            });
+    		
+    		var tt = new $.fn.dataTable.TableTools( table, {
+            	"sSwfPath": "${dataTablesTTSWF}",
+            	"aButtons": [
+            	                {
+            	                    "sExtends":    "collection",
+            	                    "sButtonText": parametros.exportar,
+            	                    "aButtons": [
+            	                                 {
+            	                                     "sExtends": "csv",
+            	                                     "oSelectorOpts": { filter: 'applied', order: 'current' },
+            	                                     "mColumns": [ 0, 1, 2, 3, 4 ]
+            	                                 },
+            	                                 {
+            	                                     "sExtends": "pdf",
+            	                                     "oSelectorOpts": { filter: 'applied', order: 'current' },
+            	                                     "mColumns": [ 0, 1, 2, 3, 4 ],
+            	                                     "sPdfOrientation": "landscape",
+            	                                 }
+            	                                 ]
+            	                }
+            	            ]
+            } );
+    		 
+    	    $( tt.fnContainer() ).insertBefore('div.table-toolbar');
+
+            jQuery('#lista_personas_wrapper .dataTables_filter input').addClass("form-control input-medium"); // modify table search input
+            jQuery('#lista_personas_wrapper .dataTables_length select').addClass("form-control input-small"); // modify table per page dropdown
+            jQuery('#lista_personas_wrapper .dataTables_length select').select2({
+                showSearchInput : false //hide search box with special css class
+            }); // initialize select2 dropdown
+        }
     };
 
 }();

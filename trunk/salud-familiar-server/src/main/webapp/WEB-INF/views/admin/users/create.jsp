@@ -31,16 +31,16 @@
 <div class="page-content-wrapper">
 	<div class="page-content-wrapper">
 		<div class="page-content">
-			<jsp:include page="../../fragments/bodyCustomizer.jsp" />
 			<!-- BEGIN PAGE HEADER-->
 			<div class="row">
 				<div class="col-md-12">
 					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
-					<h3 class="page-title">
-					<spring:message code="users" />
-					</h3>
 					<ul class="page-breadcrumb breadcrumb">
-						
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="<spring:url value="/" htmlEscape="true "/>"><spring:message code="dashboard" /></a>
+							<i class="fa fa-angle-right"></i> <a href="<spring:url value="/admin/users/" htmlEscape="true "/>"><spring:message code="users.list" /></a> <i class="fa fa-angle-right"></i> <a href="<spring:url value="/admin/users/newUser" htmlEscape="true "/>"><spring:message code="users.add" /></a>
+						</li>
 					</ul>
 					<!-- END PAGE TITLE & BREADCRUMB-->
 				</div>

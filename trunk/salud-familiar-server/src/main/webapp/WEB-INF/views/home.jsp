@@ -23,14 +23,10 @@
 <div class="page-content-wrapper">
 	<div class="page-content-wrapper">
 		<div class="page-content">
-			<jsp:include page="fragments/bodyCustomizer.jsp" />
 			<!-- BEGIN PAGE HEADER-->
 			<div class="row">
 				<div class="col-md-12">
 					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
-					<h3 class="page-title">
-					<spring:message code="welcome" /> <small><spring:message code="heading" /></small>
-					</h3>
 					<ul class="page-breadcrumb breadcrumb">
 						<li>
 							<i class="fa fa-home"></i>

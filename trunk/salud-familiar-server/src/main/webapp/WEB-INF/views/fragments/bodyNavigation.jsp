@@ -35,7 +35,7 @@
 					</a>
 					<ul class="sub-menu">
 						<li class="hsfnuevo">
-							<a href="<spring:url value="/info/create" htmlEscape="true "/>">
+							<a href="<spring:url value="/info/newHsf" htmlEscape="true "/>">
 							<i class="fa fa-file-o"></i>
 							<fmt:message key="hsf.nuevo" /></a>
 						</li>
@@ -43,16 +43,6 @@
 							<a href="<spring:url value="/" htmlEscape="true "/>">
 							<i class="fa fa-edit"></i>
 							<fmt:message key="hsf.edit" /></a>
-						</li>
-						<li class="hsfperson">
-							<a href="<spring:url value="/" htmlEscape="true "/>">
-							<i class="fa fa-user"></i>
-							<fmt:message key="hsf.person" /></a>
-						</li>
-						<li class="hsffamily">
-							<a href="<spring:url value="/" htmlEscape="true "/>">
-							<i class="fa fa-group"></i>
-							<fmt:message key="hsf.family" /></a>
 						</li>
 					</ul>
 				</li>

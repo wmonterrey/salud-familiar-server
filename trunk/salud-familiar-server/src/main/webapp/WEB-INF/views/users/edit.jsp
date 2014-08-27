@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 
 <!--[if IE 8]> <html class="ie8 no-js"> <![endif]-->
 <!--[if IE 9]> <html class="ie9 no-js"> <![endif]-->
@@ -11,23 +12,19 @@
 <!--<![endif]-->
 <!-- BEGIN HEAD -->
 <head>
-<jsp:include page="../../fragments/headTag.jsp" />
+<jsp:include page="../fragments/headTag.jsp" />
 <!-- BEGIN PAGE LEVEL STYLES -->
-<spring:url value="/resources/plugins/select2/select2_conquer.css" var="sel2css" />
-<link rel="stylesheet" type="text/css" href="${sel2css}"/>
-<spring:url value="/resources/plugins/jquery-multi-select/css/multi-select.css" var="jqmscss" />
-<link rel="stylesheet" type="text/css" href="${jqmscss}"/>
 <!-- END PAGE LEVEL STYLES -->
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
 <body class="page-header-fixed page-sidebar-fixed page-footer-fixed">
 <!-- BEGIN HEADER -->
-<jsp:include page="../../fragments/bodyHeader.jsp" />
+<jsp:include page="../fragments/bodyHeader.jsp" />
 <!-- END HEADER -->
 <!-- BEGIN CONTAINER -->
 <div class="page-container">
-<jsp:include page="../../fragments/bodyNavigation.jsp" />
+<jsp:include page="../fragments/bodyNavigation.jsp" />
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
 	<div class="page-content-wrapper">
@@ -40,7 +37,7 @@
 						<li>
 							<i class="fa fa-home"></i>
 							<a href="<spring:url value="/" htmlEscape="true "/>"><spring:message code="dashboard" /></a>
-							<i class="fa fa-angle-right"></i> <a href="<spring:url value="/admin/users/" htmlEscape="true "/>"><spring:message code="users.list" /></a> <i class="fa fa-angle-right"></i> <a href="<spring:url value="/admin/users/edit/${user.username}" htmlEscape="true "/>"><spring:message code="users.edit" /></a>
+							<i class="fa fa-angle-right"></i> <a href="<spring:url value="/users/edit" htmlEscape="true "/>"><spring:message code="users.edit" /></a>
 						</li>
 					</ul>
 					<!-- END PAGE TITLE & BREADCRUMB-->
@@ -48,14 +45,10 @@
 			</div>
 			<!-- END PAGE HEADER-->
 			<!-- BEGIN PAGE CONTENT-->
-			<spring:url value="/admin/users/editUser" var="editUserUrl"></spring:url>
-			<spring:url value="/admin/users/{username}"
-				var="usuarioUrl">
-				<spring:param name="username" value="${user.username}" />
-			</spring:url>
+			<spring:url value="/users/editUser" var="editUserUrl"></spring:url>
+			<spring:url value="/users/profile" var="usuarioUrl"/>
 			<c:set var="userUpdated"><spring:message code="user.updated" /></c:set>
 			<c:set var="errorProcess"><spring:message code="process.error" /></c:set>
-			<c:set var="selectMessage"><spring:message code="select" /></c:set>
 			
 			<div class="row">
 				<div class="col-md-12">
@@ -106,106 +99,6 @@
 											<input id="email" name="email" type="text" value="${user.email}" class="form-control"/>
 										</div>
 									</div>
-									<div class="form-group">
-										<label class="control-label col-md-3"><spring:message code="users.nivel" />
-										<span class="required">
-											 *
-										</span>
-										</label>
-										<div class="col-md-5">
-											<select name="nivel" id="nivel" class="form-control">
-												<option value=""></option>
-												<c:forEach items="${niveles}" var="nivel"> 
-													<c:choose> 
-														<c:when test="${nivel.valor eq user.nivel}">
-															<option selected value="${nivel.codigo}">${nivel.valor}</option>
-														</c:when>
-														<c:otherwise>
-															<option value="${nivel.codigo}">${nivel.valor}</option>
-														</c:otherwise>
-													</c:choose>
-												</c:forEach>
-											</select>
-										</div>
-									</div>
-									<div id="entidad-div" class="form-group" hidden=true>
-										<label class="control-label col-md-3"><spring:message code="silais" />
-										<span class="required">
-											 *
-										</span>
-										</label>
-										<div class="col-md-5">
-											<select name="entidad" id="entidad" class="form-control">
-												<option value=""></option>
-												<c:forEach items="${entidades}" var="entidad">
-													<c:choose> 
-														<c:when test="${entidad.nombre eq user.entidad.nombre}">
-															<option selected value="${entidad.codigo}">${entidad.nombre}</option>
-														</c:when>
-														<c:otherwise>
-															<option value="${entidad.codigo}">${entidad.nombre}</option>
-														</c:otherwise>
-													</c:choose> 
-												</c:forEach>
-											</select>
-										</div>
-									</div>
-									<div id="municipio-div" class="form-group" hidden=true>
-										<label class="control-label col-md-3"><spring:message code="muni" />
-										<span class="required">
-											 *
-										</span>
-										</label>
-										<div class="col-md-5">
-											<select name="municipio" id="municipio" class="form-control">
-												<option value=""></option>
-											</select>
-										</div>
-									</div>
-									<div id="unidad-div" class="form-group" hidden=true>
-										<label class="control-label col-md-3"><spring:message code="unit" />
-										<span class="required">
-											 *
-										</span>
-										</label>
-										<div class="col-md-5">
-											<div class="row">
-											<div class="col-md-11">
-											<select name="unidad" id="unidad" class="form-control">
-												<option value=""></option>
-												<option selected value="${user.unidad.codigo}">${user.unidad.nombre}</option>
-											</select>
-											</div>
-											<div class="col-md-1">
-											<button type="button" class="btn btn-default btn-xs" onclick="mostrarSelects()"><i class="fa fa-refresh"></i></button>
-											</div>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="control-label col-md-3"><spring:message code="users.roles" />
-										<span class="required">
-											 *
-										</span>
-										</label>
-										<div class="col-md-5">
-											<select multiple="multiple" class="multi-select" id="authorities" name="authorities">
-											<c:forEach items="${user.authorities}" var="auth" varStatus="stat">
-												<c:set var="rolesUsuario" value="${stat.first ? '' : rolesUsuario} ${auth.authId.authority}" />
-											</c:forEach>
-											<c:forEach items="${roles}" var="rol">
-												<c:choose> 
-													<c:when test="${fn:contains(rolesUsuario, rol.authority)}">
-														<option selected value="${rol.authority}"><spring:message code="${rol.authority}" /></option>
-													</c:when>
-													<c:otherwise>
-														<option value="${rol.authority}"><spring:message code="${rol.authority}" /></option>
-													</c:otherwise>
-												</c:choose>
-											</c:forEach>
-											</select>
-										</div>
-									</div>
 								</div>
 								<div class="form-actions fluid">
 									<div class="col-md-offset-6 col-md-6">
@@ -226,16 +119,12 @@
 </div>
 <!-- END CONTAINER -->
 <!-- BEGIN FOOTER -->
-<jsp:include page="../../fragments/bodyFooter.jsp" />
+<jsp:include page="../fragments/bodyFooter.jsp" />
 <!-- END FOOTER -->
 <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
-<jsp:include page="../../fragments/corePlugins.jsp" />
-<jsp:include page="../../fragments/bodyUtils.jsp" />
+<jsp:include page="../fragments/corePlugins.jsp" />
+<jsp:include page="../fragments/bodyUtils.jsp" />
 <!-- BEGIN PAGE LEVEL PLUGINS -->
-<spring:url value="/resources/plugins/select2/select2.min.js" var="Select2" />
-<script type="text/javascript" src="${Select2}"></script>
-<spring:url value="/resources/plugins/jquery-multi-select/js/jquery.multi-select.js" var="jQueryMultiSelect" />
-<script type="text/javascript" src="${jQueryMultiSelect}"></script>
 <spring:url value="/resources/plugins/jquery-validation/dist/jquery.validate.min.js" var="jQValidation" />
 <script type="text/javascript" src="${jQValidation}"></script>
 <spring:url value="/resources/plugins/jquery-validation/dist/additional-methods.min.js" var="jQValidationAdd" />
@@ -285,17 +174,6 @@
 	  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {
 	    		alert( "error:" + errorThrown);
 	  		});
-	}
-	
-	function mostrarSelects() {
-		$('#entidad').select2('val', '');
-		$('#municipio').select2('val', '');
-		$('#unidad').select2('val', '');
-		$('#municipio').html('<option value=""></option>');
-		$('#unidad').html('<option value=""></option>');
-		$('#entidad-div').show();
-		$('#municipio-div').show();
-		$('#unidad-div').show();	
 	}
 </script>
 <!-- END JAVASCRIPTS -->
