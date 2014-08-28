@@ -75,14 +75,12 @@ public class HomeController {
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public String test() {
         logger.info("Testing");
-        Comunidades comunidad = comunidadService.getComunidad(6223);
+        Comunidades comunidad = comunidadService.getComunidad("6223");
         
         MovilInfo mi = new MovilInfo();
         mi.setDeviceid("W");
         mi.setEstado("no enviado");
         mi.setEliminado(false);
-        mi.setToday(new Date());
-        mi.setUsername("william");
         
         Familia familia = new Familia();
         familia.setIdFamilia("00213133245-55467");

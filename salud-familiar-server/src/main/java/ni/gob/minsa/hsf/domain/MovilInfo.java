@@ -19,8 +19,6 @@ public class MovilInfo implements Serializable{
 	private Boolean eliminado;
 	private String deviceid;
 	private String phonenumber;
-	private Date today;	
-	private String username; 
 	
 	public MovilInfo(){
 		
@@ -33,7 +31,6 @@ public class MovilInfo implements Serializable{
 		this.setEstado(estado);
 		this.setDeviceid(deviceid);
 		this.setPhonenumber(phonenumber);
-		this.setToday(today);
 	}
 	
 	@Column(name = "ESTADO", nullable = true, length = 15)
@@ -61,24 +58,6 @@ public class MovilInfo implements Serializable{
 
 	public void setPhonenumber(String phonenumber) {
 		this.phonenumber = phonenumber;
-	}
-
-	@Column(name = "FECHA_REGISTRO", nullable = false)
-	public Date getToday() {
-		return today;
-	}
-
-	public void setToday(Date today) {
-		this.today = today;
-	}
-
-	@Column(name = "USUARIO", nullable = false, length = 50)
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
 	}
 
 	@Column(name = "ELIMINADO", nullable = true)

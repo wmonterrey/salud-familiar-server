@@ -10,9 +10,8 @@
     <!-- Enable this to see the SQL statements in the logs-->
     <property name="show_sql">true</property>
     <property name="hbm2ddl.auto">validate</property>
-    <listener type="pre-delete" class="ni.gob.minsa.hsf.web.listener.HibernateAuditLogListener"/>  
-	<listener type="pre-update" class="ni.gob.minsa.hsf.web.listener.HibernateAuditLogListener"/>  
-	<listener type="pre-insert" class="ni.gob.minsa.hsf.web.listener.HibernateAuditLogListener"/>  
-	<listener type="pre-load" class="ni.gob.minsa.hsf.web.listener.HibernateAuditLogListener"/> 
+    <listener type="post-delete" class="ni.gob.minsa.hsf.web.listener.HibernateAuditLogListener"/>  
+	<listener type="post-update" class="ni.gob.minsa.hsf.web.listener.HibernateAuditLogListener"/>  
+	<listener type="post-insert" class="ni.gob.minsa.hsf.web.listener.HibernateAuditLogListener"/>  
   </session-factory>
 </hibernate-configuration>

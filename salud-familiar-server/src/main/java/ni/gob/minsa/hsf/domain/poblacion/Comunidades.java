@@ -1,6 +1,7 @@
 package ni.gob.minsa.hsf.domain.poblacion;
 
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,8 +16,12 @@ import org.joda.time.DateTime;
 
 @Entity
 @Table(name = "COMUNIDADES", catalog = "HSF")
-public class Comunidades {
+public class Comunidades implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer comunidadId;
 	private String nombre;
 	private String sector;
@@ -184,6 +189,28 @@ public class Comunidades {
 
 	public void setFechaRegistro(DateTime fechaRegistro) {
 		this.fechaRegistro = fechaRegistro;
+	}
+	
+	@Override
+	public String toString(){
+		return nombre;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		
+		if ((this == other))
+			return true;
+		if ((other == null))
+			return false;
+		if (!(other instanceof Comunidades))
+			return false;
+		
+		Comunidades castOther = (Comunidades) other;
+		
+		return (this.getComunidadId() == castOther.getComunidadId())
+				&& (this.getCodigo() == castOther.getCodigo()) 
+				&& (this.getNombre().equals(castOther.getNombre()));
 	}
 
 }
