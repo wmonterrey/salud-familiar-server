@@ -40,10 +40,10 @@ public class ComunidadesService {
 		return  query.list();
 	}
 	
-	public Comunidades getComunidad(Integer comunidadId) {
+	public Comunidades getComunidad(String codComunidad) {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery("FROM Comunidades c where c.comunidadId = "+ comunidadId);
+		Query query = session.createQuery("FROM Comunidades c where c.codigo = '"+ codComunidad + "'");
 		Comunidades com = (Comunidades) query.uniqueResult();
 		return com;
 	}

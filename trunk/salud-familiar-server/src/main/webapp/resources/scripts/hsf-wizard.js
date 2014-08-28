@@ -1,11 +1,11 @@
 var FormWizardHSF = function () {
 	
-	var handleDatePickers = function () {
+	var handleDatePickers = function (idioma) {
 
         if (jQuery().datepicker) {
             $('.date-picker').datepicker({
                 rtl: App.isRTL(),
-                language: 'es',
+                language: idioma,
                 format:'dd/mm/yyyy',
                 autoclose: true
             });
@@ -53,7 +53,7 @@ var FormWizardHSF = function () {
                 return;
             }
             
-            handleDatePickers();
+            handleDatePickers(parametros.language);
             handleInputMasks();
             handleMultiSelect();
             handleSelect2();
@@ -120,14 +120,13 @@ var FormWizardHSF = function () {
             var success = $('.alert-success', form);
                        
             form.validate({
-                doNotHideMessage: true, //this option enables to show the error/success messages on tab switch.
                 errorElement: 'span', //default input error message container
                 errorClass: 'help-block', // default input error message class
                 focusInvalid: false, // do not focus the last invalid input
                 rules: {
                     //Datos generales
                 	silais: {
-                        required: true
+                        required: false
                     },
                     municipio: {
                         required: false
@@ -148,7 +147,7 @@ var FormWizardHSF = function () {
                         required: false
                     },
                     numFicha: {
-                        required: false
+                        required: true
                     },
                     personaVisita: {
                         required: false
@@ -162,11 +161,17 @@ var FormWizardHSF = function () {
                     hacinamiento: {
                         required: false
                     },
-                    testval: {
+                    noPersonasFamilia: {
                     	min:1,
-                    	required: true
+                    	required: false
                     }
                     
+                },
+                
+                messages: { 
+                	noPersonasFamilia: {
+                        required: parametros.valPersonas,
+                    }
                 },
 
                 invalidHandler: function (event, validator) { //display error alert on form submit   
@@ -188,12 +193,11 @@ var FormWizardHSF = function () {
                 success: function (label) {
                     if (label.attr("for") == "gender" || label.attr("for") == "payment[]") { // for checkboxes and radio buttons, no need to show OK icon
                         label
-                            .closest('.form-group').removeClass('has-error').addClass('has-success');
+                            .closest('.form-group').removeClass('has-error');
                         label.remove(); // remove error label here
                     } else { // display success icon for other inputs
                         label
-                            .addClass('valid') // mark the current input as valid and display OK icon
-                        .closest('.form-group').removeClass('has-error').addClass('has-success'); // set success class to the control group
+                        .closest('.form-group').removeClass('has-error'); 
                     }
                 },
 
@@ -266,6 +270,11 @@ var FormWizardHSF = function () {
                     if (form.valid() == false) {
                         return false;
                     }
+                    else{
+                    	if (index == 1){
+                    		guardarFamiliaVisita();
+                    	}
+                    }
                     handleTitle(tab, navigation, index);
                 },
                 onPrevious: function (tab, navigation, index) {
@@ -285,11 +294,54 @@ var FormWizardHSF = function () {
 
             $('#form_wizard_1').find('.button-previous').hide();
             $('#form_wizard_1 .button-submit').click(function () {
-            	if (form.valid()) {
+            	var IsValid = true;
+
+                // Validate Each Bootstrap tab
+                $(".tab-content").find("div.tab-pane").each(function (index, tab) {
+                    var id = $(tab).attr("id");
+                    $('a[href="#' + id + '"]').tab('show');
+
+                    var IsTabValid = form.valid();
+
+                    if (!IsTabValid) {
+                        IsValid = false;
+                    }
+                });
+            	if (IsValid) {
             		alert('Finished! Hopeccc you like it fool!:)');
-                    return false;
                 }
+            	else{
+            		// Show first tab with error
+                    $(".tab-content").find("div.tab-pane").each(function (index, tab) {
+                        var id = $(tab).attr("id");
+                        $('a[href="#' + id + '"]').tab('show');
+
+                        var IsTabValid = form.valid();
+
+                        if (!IsTabValid) {
+                            return false; // Break each loop
+                        }
+                    });
+            	}
             }).hide();
+            
+            function guardarFamiliaVisita()
+        	{
+            	$.post( parametros.addFamiliaVisitaUrl
+    		            , $('#submit_form').serialize()
+    		            , function( data )
+    		            {
+    						visita = JSON.parse(data);
+    						toastr.success("Exito", visita.idVisita);
+    						$('#idFamilia').val(visita.familia.idFamilia);
+    						$('#idVisita').val(visita.idVisita);
+    						$('#idFamiliaPerson').val(visita.familia.idFamilia);
+    		            }
+    		            , 'text' )
+    			  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {
+    			    		alert( "error:" + errorThrown);
+    			  		});
+        	}
             
             
             $(document).on('keypress','form input',function(event){                
@@ -309,6 +361,10 @@ var FormWizardHSF = function () {
     		        }
     		    }
     		});
+            
+            $("#personamodalform").on("shown.bs.modal", function () { 
+            	$('#numPersona').focus();
+            });
             
             $('[data-dismiss=modal]').on('click', function (e) {
     		    var $t = $(this),

@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import ni.gob.minsa.hsf.domain.catalogos.Profesion;
+import ni.gob.minsa.hsf.domain.estructura.BaseEntidadCreacion;
 import ni.gob.minsa.hsf.domain.estructura.Catalogo;
 
 import org.hibernate.annotations.ForeignKey;
@@ -18,7 +19,7 @@ import org.hibernate.annotations.ForeignKey;
 
 @Entity
 @Table(name = "HSF_VISITAS", catalog = "HSF")
-public class Visita {
+public class Visita extends BaseEntidadCreacion{
 	
 	private String idVisita;
 	private Familia familia;

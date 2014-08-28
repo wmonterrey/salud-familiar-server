@@ -12,14 +12,12 @@ import org.hibernate.HibernateException;
 import org.hibernate.StatelessSession;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.event.Initializable;
-import org.hibernate.event.PreDeleteEvent;
-import org.hibernate.event.PreDeleteEventListener;
-import org.hibernate.event.PreInsertEvent;
-import org.hibernate.event.PreInsertEventListener;
-import org.hibernate.event.PreLoadEvent;
-import org.hibernate.event.PreLoadEventListener;
-import org.hibernate.event.PreUpdateEvent;
-import org.hibernate.event.PreUpdateEventListener;
+import org.hibernate.event.PostDeleteEvent;
+import org.hibernate.event.PostDeleteEventListener;
+import org.hibernate.event.PostInsertEvent;
+import org.hibernate.event.PostInsertEventListener;
+import org.hibernate.event.PostUpdateEvent;
+import org.hibernate.event.PostUpdateEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -32,8 +30,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
  * @author whoover 
  */  
 public final class HibernateAuditLogListener implements  
-PreDeleteEventListener, PreInsertEventListener, PreUpdateEventListener,  
-PreLoadEventListener, Initializable { 
+PostDeleteEventListener, PostInsertEventListener, PostUpdateEventListener,  
+Initializable { 
 	
 	
 	private static final long serialVersionUID = 1L;  
@@ -50,15 +48,15 @@ PreLoadEventListener, Initializable {
     public final void initialize(final Configuration cfg) {  
         //  
     }  
-  
+    
     /** 
      * Log deletions made to the current model in the the Audit Trail. 
      *  
      * @param event 
-     *            the pre-deletion event 
-     */  
-    @Override  
-    public final boolean onPreDelete(final PreDeleteEvent event) {  
+     *            the post-deletion event
+     */ 
+	@Override
+	public void onPostDelete(PostDeleteEvent event) {
         try {  
             final Serializable entityId = event.getPersister().hasIdentifierProperty() ? event.getPersister().getIdentifier(event.getEntity(), event.getSession()) : null;  
             final String entityName = event.getEntity().getClass().toString();  
@@ -82,17 +80,17 @@ PreLoadEventListener, Initializable {
         } catch (HibernateException e) {  
             LOG.error("Unable to process audit log for DELETE operation", e);  
         }  
-        return false;  
-    }  
-    /** 
+	}
+
+	/** 
      * Log insertions made to the current model in the the Audit Trail. 
      *  
      * @param event 
-     *            the pre-insertion event 
-     */  
-    @Override  
-    public final boolean onPreInsert(final PreInsertEvent event) {  
-        try {    
+     *            the post-insertion event 
+     */            
+	@Override
+	public void onPostInsert(PostInsertEvent event) {
+		try {    
             final String entityId = event.getPersister().hasIdentifierProperty() ? event.getPersister().getIdentifier(event.getEntity(), event.getSession())  
                     .toString() : "";  
             final String entityName = event.getEntity().getClass().toString();  
@@ -130,18 +128,17 @@ PreLoadEventListener, Initializable {
         } catch (HibernateException e) {  
             LOG.error("Unable to process audit log for INSERT operation", e);  
         }  
-        return false;  
-    }  
-  
-    /** 
+	}
+
+	/** 
      * Log updates made to the current model in the the Audit Trail. 
      *  
      * @param event 
-     *            the pre-update event 
-     */  
-    @Override  
-    public final boolean onPreUpdate(PreUpdateEvent event) {  
-        try {  
+     *            the post-update event 
+     */
+	@Override
+	public void onPostUpdate(PostUpdateEvent event) {
+		try {  
             final Serializable entityId = event.getPersister().hasIdentifierProperty() ? event.getPersister().getIdentifier(event.getEntity(), event.getSession())  
                     : null;  
             final String entityName = event.getEntity().getClass().toString();  
@@ -186,20 +183,6 @@ PreLoadEventListener, Initializable {
             }
         } catch (HibernateException e) {  
             LOG.error("Unable to process audit log for UPDATE operation", e);  
-        }  
-        return false;  
-    }  
-  
-    /** 
-     * Log the loading of the current model in the the Audit Trail. 
-     *  
-     * @param event 
-     *            the pre-load event 
-     */  
-    @Override  
-    public final void onPreLoad(final PreLoadEvent event) {  
-        // TODO : complete load audit log if desired  
-    }  
-    
-    
+        }
+	}     
 }

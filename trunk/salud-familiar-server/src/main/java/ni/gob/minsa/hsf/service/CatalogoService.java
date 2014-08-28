@@ -110,6 +110,15 @@ public class CatalogoService {
 		return  query.list();
 	}
 	
+	public Profesion getProfesion(String profesion) {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = session.getNamedQuery("obtenerProfesionPorCodigo").setString("pCodigo", profesion);
+		// Retrieve all
+		return  (Profesion) query.uniqueResult();
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<Profesion> getProfesiones() {
 		// Retrieve session from Hibernate

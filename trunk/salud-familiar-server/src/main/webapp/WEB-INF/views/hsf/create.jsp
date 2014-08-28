@@ -55,6 +55,8 @@
 			<!-- END PAGE HEADER-->
 			<!-- BEGIN PAGE CONTENT-->
 			<c:set var="exportar"><spring:message code="export" /></c:set>
+			<c:set var="valPersonas"><spring:message code="person.valtotal" /></c:set>
+			<c:set var="dateFormat"><spring:message code="date.format" /></c:set>
 			<div class="row">
 				<div class="col-md-12">
 					<div class="portlet" id="form_wizard_1">
@@ -66,8 +68,6 @@
 								</span>
 							</div>
 							<div class="tools hidden-xs">
-								<a href="javascript:;" class="collapse"></a>
-								<a href="javascript:;" class="remove"></a>
 							</div>
 						</div>
 						<div class="portlet-body form">
@@ -140,6 +140,34 @@
 												<spring:message code="form.success" />
 											</div>
 											<div class="tab-pane active" id="tab1">
+												<!-- START ROW -->
+												<div class="row">
+													<div class="col-md-6">
+														<div class="form-group">
+															<label class="control-label col-md-3"><spring:message code="nofamilia" />:
+															<span class="required">
+																 *
+															</span>
+															</label>
+															<div class="col-md-9">
+																<input type="text" id="idFamilia" name="idFamilia" class="form-control"/>
+															</div>
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="form-group">
+															<label class="control-label col-md-3"><spring:message code="noficha" />:
+															<span class="required">
+																 *
+															</span>
+															</label>
+															<div class="col-md-9">
+																<input type="text" id="idVisita" name="idVisita" class="form-control"/>
+															</div>
+														</div>
+													</div>
+												</div>
+												<!-- END ROW -->
 												<div class="row">
 													<div class="col-md-6">
 														<div class="form-group">
@@ -311,14 +339,9 @@
 																	<i class="fa fa-group"></i><spring:message code="person.list" />
 																</div>
 																<div class="tools">
-																	<a href="javascript:;" class="collapse"></a>
-																	<a href="javascript:;" class="remove"></a>
 																</div>
 															</div>
 															<div class="portlet-body">
-																<div class="form-group">
-																	<input type="text" readonly placeholder="<spring:message code="please.enter" /> <spring:message code="personnel" />" class="form-control" id="testval" name="testval"/>
-																</div>
 																<div class="table-toolbar">
 																	<div class="btn-group">
 																		<a class="btn btn-success" data-toggle="modal" href="#personamodalform"><spring:message code="person.add" /> <i class="fa fa-plus"></i></a>																		
@@ -338,6 +361,20 @@
 															</div>
 														</div>
 														<!-- END TABLE PORTLET-->
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-md-6">
+														<div class="form-group">
+															<label class="control-label col-md-4"><spring:message code="person.total" />:
+															<span class="required">
+																 *
+															</span>
+															</label>
+															<div class="col-md-3">
+																<input id="noPersonasFamilia" name="noPersonasFamilia" class="form-control" readonly />
+															</div>
+														</div>
 													</div>
 												</div>
 											</div>
@@ -432,6 +469,20 @@
 												<!-- BEGIN FORM-->
 												<form action="#" class="form-horizontal" data-role="form" id="add_person_form">
 													<div class="form-body">
+														<div class="row">
+															<div class="col-md-6">
+																<div class="form-group">
+																	<label class="control-label col-md-3"><spring:message code="nofamilia" />:
+																	<span class="required">
+																		 *
+																	</span>
+																	</label>
+																	<div class="col-md-9">
+																		<input type="text" id="idFamiliaPerson" name="idFamiliaPerson" class="form-control"/>
+																	</div>
+																</div>
+															</div>
+														</div>
 														<!-- START ROW -->
 														<div class="row">
 															<div class="col-md-6">
@@ -497,8 +548,7 @@
 								</div>
 								<div class="modal-footer">
 									<button type="button" id="dismiss-modalperson" data-dismiss="modal" class="btn btn-danger"><spring:message code="cancel" /></button>
-									<button type="button" class="btn btn-info" onclick="validarModal()"><spring:message code="ok" /></button>
-									<button id="guardar" type="submit" class="btn btn-success"><spring:message code="save" /></button>
+									<button type="button" class="btn btn-info" onclick="validarModalPersona()"><spring:message code="ok" /></button>
 								</div>
 							</div>
 						</div>
@@ -540,7 +590,7 @@
 <script src="${App}" type="text/javascript"></script>
 <spring:url value="/resources/scripts/hsf-wizard.js" var="hsfWizard" />
 <script src="${hsfWizard}"></script>
-<spring:url value="/resources/scripts/hsf-wizard-modals-validation.js" var="hsfWizard" />
+<spring:url value="/resources/scripts/hsf-wizard-modal-persona.js" var="hsfWizard" />
 <script src="${hsfWizard}"></script>
 <spring:url value="/resources/plugins/jquery-validation/localization/messages_{language}.js" var="jQValidationLoc">
 	<spring:param name="language" value="${pageContext.request.locale.language}" />
@@ -558,7 +608,8 @@
 <script type="text/javascript" src="${dataTablesTT}"></script>
 <spring:url value="/resources/plugins/data-tables/TableTools/swf/copy_csv_xls_pdf.swf" var="dataTablesTTSWF" />
 <!-- END PAGE LEVEL SCRIPTS -->
-<spring:url value="/info/newHsf" var="addPersonUrl"/>
+<spring:url value="/info/newPersona" var="addPersonUrl"/>
+<spring:url value="/info/newFamiliaVisita" var="addFamiliaVisitaUrl"/>
 <script>
     $(function () {
     	$("li.hsf").removeClass("hsf").addClass("active");
@@ -568,13 +619,16 @@
 <script>
 	jQuery(document).ready(function() {
 		App.init();
-		var parametros = {exportar: "${exportar}"};
+		var parametros = {exportar: "${exportar}"
+				, valPersonas: "${valPersonas}"
+				, addFamiliaVisitaUrl: "${addFamiliaVisitaUrl}"
+				,language:"${pageContext.request.locale.language}" };
 		FormWizardHSF.init(parametros);
 	});
-	function validarModal()
+	function validarModalPersona()
 	{
 		var parametros = {addPersonUrl: "${addPersonUrl}"};
-		FormWizardHSFModalValidation.init(parametros);
+		FormWizardHSFModalPersonaValidation.init(parametros);
 	}
 </script>
 <!-- END JAVASCRIPTS -->

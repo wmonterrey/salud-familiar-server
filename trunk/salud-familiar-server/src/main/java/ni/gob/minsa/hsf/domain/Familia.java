@@ -7,16 +7,18 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.ForeignKey;
 
+import ni.gob.minsa.hsf.domain.audit.Auditable;
 import ni.gob.minsa.hsf.domain.estructura.BaseEntidadCreacion;
 import ni.gob.minsa.hsf.domain.poblacion.Comunidades;
 
 
 @Entity
-@Table(name = "HSF_FAMILIAS", catalog = "HSF")
-public class Familia extends BaseEntidadCreacion{
+@Table(name = "HSF_FAMILIAS", catalog = "HSF", uniqueConstraints = @UniqueConstraint(columnNames = "COD_FAMILIA"))
+public class Familia extends BaseEntidadCreacion implements Auditable{
 	
 	private String idFamilia;
 	private String codFamilia;
@@ -63,7 +65,7 @@ public class Familia extends BaseEntidadCreacion{
 	}
 	
 	@ManyToOne(optional=false)
-	@JoinColumn(name="COMUNIDAD_ID")
+	@JoinColumn(name="COMUNIDAD", referencedColumnName="CODIGO")
 	@ForeignKey(name = "FAMILIAS_COMUNIDAD_FK")
 	public Comunidades getComunidad() {
 		return comunidad;
@@ -125,6 +127,14 @@ public class Familia extends BaseEntidadCreacion{
 
 	public void setTelefonoContacto(String telefonoContacto) {
 		this.telefonoContacto = telefonoContacto;
+	}
+
+	@Override
+	public boolean isFieldAuditable(String fieldname) {
+		if(fieldname.matches("fechaRegistro")||fieldname.matches("usuarioRegistro")||fieldname.matches("numVivienda")||fieldname.matches("numFamilia")){
+			return false;
+		}
+		return true;
 	}
 
 }

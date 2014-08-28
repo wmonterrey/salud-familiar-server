@@ -1,4 +1,4 @@
-var FormWizardHSFModalValidation = function () {
+var FormWizardHSFModalPersonaValidation = function () {
 	
 	
 	return {
@@ -16,6 +16,9 @@ var FormWizardHSFModalValidation = function () {
     	        focusInvalid: false, // do not focus the last invalid input
     	        rules: {
     	            //Datos generales
+    	        	idFamilia: {
+     	                required: true
+     	            },
     	            numPersona: {
     	                required: true
     	            }
@@ -29,7 +32,7 @@ var FormWizardHSFModalValidation = function () {
     	
     	        highlight: function (element) { // hightlight error inputs
     	            $(element)
-    	                .closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
+    	                .closest('.form-group').addClass('has-error'); // set error class to the control group
     	        },
     	
     	        unhighlight: function (element) { // revert the change done by hightlight
@@ -39,14 +42,12 @@ var FormWizardHSFModalValidation = function () {
     	
     	        success: function (label) {
     	                label
-    	                    .addClass('valid') // mark the current input as valid and display OK icon
-    	                .closest('.form-group').removeClass('has-error').addClass('has-success'); // set success class to the control group
+    	                .closest('.form-group').removeClass('has-error'); // set success class to the control group
     	        },
     	
     	    });
     	    
     	    $('#dismiss-modalperson').click(function() {
-    	    	validatorPerson.elements().closest('.form-group').removeClass('has-success');
     	    	validatorPerson.elements().closest('.form-group').removeClass('has-error');
     	    	validatorPerson.resetForm();
     	    });
@@ -56,11 +57,17 @@ var FormWizardHSFModalValidation = function () {
     		            , $('#add_person_form').serialize()
     		            , function( data )
     		            {
-    						obj = JSON.parse(data);
+    						persona = JSON.parse(data);
     						$('table#lista_personas').dataTable().fnAddData( [
-    			                                                       obj.idPersona,
-    			                                                       obj.nombres ] );
-    						$('#testval').val($("table#lista_personas > tbody > tr").length);
+    			                                                       persona.idPersona,
+    			                                                       persona.nombres ] );
+    						$('#noPersonasFamilia').val($("table#lista_personas > tbody > tr").length);
+    						$('#numPersona').val('');
+    	            		$('#nombres').val('');
+    	            		$('#primerApellido').val('');
+    	            		$('#segundoApellido').val('');
+    	            		$('#numPersona').focus();
+    	            		validatorPerson.resetForm();
     		            }
     		            , 'text' )
     			  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {

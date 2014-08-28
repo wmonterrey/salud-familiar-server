@@ -361,8 +361,7 @@
 <!-- END PAGE LEVEL SCRIPTS -->
 <script>
     $(function () {
-    	$("li.admin").removeClass("admin").addClass("active");
-        $("li.adminusers").removeClass("adminusers").addClass("active");
+    	$("li.users").removeClass("users").addClass("active");
     });
 </script>
 <script>
