@@ -10,12 +10,13 @@ import javax.persistence.TemporalType;
 @MappedSuperclass  
 public class BaseEntidadCreacion  
 {  
-
-	private Date fechaRegistro;
-	private String usuarioRegistro;
-
     @Temporal( TemporalType.TIMESTAMP)
 	@Column(name="FECHA_REGISTRO")
+	private Date fechaRegistro;
+	@Column(name="USUARIO_REGISTRO", length = 50)
+	private String usuarioRegistro;
+
+
 	public Date getFechaRegistro() {
 		return this.fechaRegistro;
 	}
@@ -24,7 +25,7 @@ public class BaseEntidadCreacion
 		this.fechaRegistro = fechaRegistro;
 	}
 	
-	@Column(name="USUARIO_REGISTRO", length = 50)
+
 	public String getUsuarioRegistro() {
 		return this.usuarioRegistro;
 	}

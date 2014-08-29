@@ -15,7 +15,7 @@ import ni.gob.minsa.hsf.domain.catalogos.TenenciaVivienda;
 import ni.gob.minsa.hsf.domain.catalogos.TipoPared;
 import ni.gob.minsa.hsf.domain.catalogos.TipoPiso;
 import ni.gob.minsa.hsf.domain.catalogos.TipoTecho;
-import ni.gob.minsa.hsf.domain.estructura.BaseEntidadCreacion;
+import ni.gob.minsa.hsf.domain.estructura.BaseMetaData;
 import ni.gob.minsa.hsf.domain.estructura.Catalogo;
 
 import org.hibernate.annotations.ForeignKey;
@@ -23,7 +23,7 @@ import org.hibernate.annotations.ForeignKey;
 
 @Entity
 @Table(name = "HSF_FACT_SOCIOEC", catalog = "HSF")
-public class FactSocioEconomicos extends BaseEntidadCreacion{
+public class FactSocioEconomicos extends BaseMetaData{
 	
 	
 	private String idFactSocioEc;

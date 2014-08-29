@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import ni.gob.minsa.hsf.domain.catalogos.Profesion;
-import ni.gob.minsa.hsf.domain.estructura.BaseEntidadCreacion;
+import ni.gob.minsa.hsf.domain.estructura.BaseMetaData;
 import ni.gob.minsa.hsf.domain.estructura.Catalogo;
 import ni.gob.minsa.hsf.domain.estructura.Cie10;
 
@@ -20,7 +20,7 @@ import org.hibernate.annotations.ForeignKey;
 
 @Entity
 @Table(name = "HSF_ENFERMEDADES", catalog = "HSF")
-public class Enfermedades extends BaseEntidadCreacion {
+public class Enfermedades extends BaseMetaData {
 	
 	
 	private String idEnfermedad;
