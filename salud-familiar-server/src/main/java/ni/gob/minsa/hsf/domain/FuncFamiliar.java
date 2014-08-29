@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import ni.gob.minsa.hsf.domain.catalogos.EtapaCicloVital;
 import ni.gob.minsa.hsf.domain.catalogos.Ontogenesis;
 import ni.gob.minsa.hsf.domain.catalogos.TamanoFam;
-import ni.gob.minsa.hsf.domain.estructura.BaseEntidadCreacion;
+import ni.gob.minsa.hsf.domain.estructura.BaseMetaData;
 import ni.gob.minsa.hsf.domain.estructura.Catalogo;
 
 import org.hibernate.annotations.ForeignKey;
@@ -20,7 +20,7 @@ import org.hibernate.annotations.ForeignKey;
 
 @Entity
 @Table(name = "HSF_FUNC_FAM", catalog = "HSF")
-public class FuncFamiliar extends BaseEntidadCreacion{
+public class FuncFamiliar extends BaseMetaData{
 	
 	
 	private String idFuncFamiliar;

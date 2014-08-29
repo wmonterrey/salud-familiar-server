@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 import ni.gob.minsa.hsf.domain.catalogos.EnfSocioC;
 import ni.gob.minsa.hsf.domain.catalogos.Profesion;
-import ni.gob.minsa.hsf.domain.estructura.BaseEntidadCreacion;
+import ni.gob.minsa.hsf.domain.estructura.BaseMetaData;
 import ni.gob.minsa.hsf.domain.estructura.Catalogo;
 
 import org.hibernate.annotations.ForeignKey;
@@ -20,7 +20,7 @@ import org.hibernate.annotations.ForeignKey;
 
 @Entity
 @Table(name = "HSF_ENF_SOCIOC", catalog = "HSF")
-public class EnfermedadesSocioCult extends BaseEntidadCreacion{
+public class EnfermedadesSocioCult extends BaseMetaData{
 	
 	
 	private String idEnfSocioC;

@@ -101,8 +101,8 @@ public class HsfController {
 			idFamilia = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
 		}
 		familia.setIdFamilia(idFamilia);
-		familia.setUsuarioRegistro(authentication.getName());
-		familia.setFechaRegistro(new Date());
+		familia.setCreatedBy(authentication.getName());
+		familia.setCreated(new Date());
 		familiaService.addFamilia(familia);
 		
 		
@@ -117,13 +117,12 @@ public class HsfController {
 		MovilInfo movilInfo = new MovilInfo();
 		WebAuthenticationDetails wad  = (WebAuthenticationDetails) authentication.getDetails();
 		movilInfo.setDeviceid(wad.getRemoteAddress());
-		movilInfo.setEliminado(false);
 		if (idVisita.equals("")){
 			idVisita = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
 		}
 		visita.setIdVisita(idVisita);
-		visita.setUsuarioRegistro(authentication.getName());
-		visita.setFechaRegistro(new Date());
+		visita.setCreatedBy(authentication.getName());
+		visita.setCreated(new Date());
 		visita.setMovilInfo(movilInfo);
 		visitaService.addVisita(visita);
 		return createJsonResponse(visita);

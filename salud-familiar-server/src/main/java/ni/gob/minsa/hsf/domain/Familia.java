@@ -12,13 +12,13 @@ import javax.persistence.UniqueConstraint;
 import org.hibernate.annotations.ForeignKey;
 
 import ni.gob.minsa.hsf.domain.audit.Auditable;
-import ni.gob.minsa.hsf.domain.estructura.BaseEntidadCreacion;
+import ni.gob.minsa.hsf.domain.estructura.BaseMetaData;
 import ni.gob.minsa.hsf.domain.poblacion.Comunidades;
 
 
 @Entity
 @Table(name = "HSF_FAMILIAS", catalog = "HSF", uniqueConstraints = @UniqueConstraint(columnNames = "COD_FAMILIA"))
-public class Familia extends BaseEntidadCreacion implements Auditable{
+public class Familia extends BaseMetaData implements Auditable{
 	
 	private String idFamilia;
 	private String codFamilia;

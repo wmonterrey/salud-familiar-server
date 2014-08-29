@@ -80,7 +80,6 @@ public class HomeController {
         MovilInfo mi = new MovilInfo();
         mi.setDeviceid("W");
         mi.setEstado("no enviado");
-        mi.setEliminado(false);
         
         Familia familia = new Familia();
         familia.setIdFamilia("00213133245-55467");

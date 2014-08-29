@@ -17,13 +17,13 @@ import ni.gob.minsa.hsf.domain.catalogos.GrupoDispensarial;
 import ni.gob.minsa.hsf.domain.catalogos.Ocupacion;
 import ni.gob.minsa.hsf.domain.catalogos.Religion;
 import ni.gob.minsa.hsf.domain.catalogos.Sexo;
-import ni.gob.minsa.hsf.domain.estructura.BaseEntidadCreacion;
+import ni.gob.minsa.hsf.domain.estructura.BaseMetaData;
 import ni.gob.minsa.hsf.domain.estructura.Catalogo;
 
 
 @Entity
 @Table(name = "HSF_PERSONAS", catalog = "HSF")
-public class Persona extends BaseEntidadCreacion implements Serializable{
+public class Persona extends BaseMetaData implements Serializable{
 	
 	/**
 	 * 

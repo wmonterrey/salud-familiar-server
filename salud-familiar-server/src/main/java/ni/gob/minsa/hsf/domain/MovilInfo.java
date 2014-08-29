@@ -16,7 +16,6 @@ public class MovilInfo implements Serializable{
 	
 	//Metadata del formulario movil
 	private String estado;
-	private Boolean eliminado;
 	private String deviceid;
 	private String phonenumber;
 	
@@ -58,15 +57,6 @@ public class MovilInfo implements Serializable{
 
 	public void setPhonenumber(String phonenumber) {
 		this.phonenumber = phonenumber;
-	}
-
-	@Column(name = "ELIMINADO", nullable = true)
-	public Boolean getEliminado() {
-		return eliminado;
-	}
-
-	public void setEliminado(Boolean eliminado) {
-		this.eliminado = eliminado;
 	}
 
 }

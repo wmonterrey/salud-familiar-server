@@ -15,7 +15,7 @@ import ni.gob.minsa.hsf.domain.catalogos.DepBasura;
 import ni.gob.minsa.hsf.domain.catalogos.DepExcretas;
 import ni.gob.minsa.hsf.domain.catalogos.DepResLiq;
 import ni.gob.minsa.hsf.domain.catalogos.Electricidad;
-import ni.gob.minsa.hsf.domain.estructura.BaseEntidadCreacion;
+import ni.gob.minsa.hsf.domain.estructura.BaseMetaData;
 import ni.gob.minsa.hsf.domain.estructura.Catalogo;
 
 import org.hibernate.annotations.ForeignKey;
@@ -23,7 +23,7 @@ import org.hibernate.annotations.ForeignKey;
 
 @Entity
 @Table(name = "HSF_CARACT_HIG", catalog = "HSF")
-public class CaractHigSanitarias extends BaseEntidadCreacion{
+public class CaractHigSanitarias extends BaseMetaData{
 	
 	
 	private String idCaractHig;
