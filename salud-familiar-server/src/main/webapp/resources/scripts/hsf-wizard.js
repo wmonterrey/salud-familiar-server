@@ -1,7 +1,6 @@
 var FormWizardHSF = function () {
 	
 	var handleDatePickers = function (idioma) {
-
         if (jQuery().datepicker) {
             $('.date-picker').datepicker({
                 rtl: App.isRTL(),
@@ -24,13 +23,38 @@ var FormWizardHSF = function () {
             "greedy": false
         });
         
+        $("#numFamilia").inputmask({
+            "mask": "9",
+            "repeat": 6,
+            "greedy": false
+        });
+        
+        $("#numVivienda").inputmask({
+            "mask": "9",
+            "repeat": 6,
+            "greedy": false
+        });
+        
         $("#fechaVisita").inputmask("d/m/y", {
             "placeholder": "dd/mm/yyyy"
         }); //multi-char placeholder
     };
 
     var handleMultiSelect = function () {
+        $('#factRiesgoMod').multiSelect();
+        $('#factRiesgoNoMod').multiSelect();
+        $('#factRiesgoSocial').multiSelect();
+        $('#discapacidades').multiSelect();
         $('#animalesDom').multiSelect();
+        $('#riesgoNatural').multiSelect();
+        $('#riesgoMeteorologico').multiSelect();
+        $('#riesgoBiologico').multiSelect();
+        $('#riesgoSocial').multiSelect();
+        $('#factoresMedAmb').multiSelect();
+        $('#combCocinar').multiSelect();
+        $('#accionesComunitarias').multiSelect();
+        $('#crisisNormativa').multiSelect();
+        $('#crisisParanormativa').multiSelect();
     };
     
     var handleSelect2 = function () {
@@ -43,6 +67,70 @@ var FormWizardHSF = function () {
         $("#sector").select2({
         });
         $("#comunidad").select2({
+        });
+        $("#actaNacimiento").select2({
+        });
+        $("#etnia").select2({
+        });
+        $("#sexo").select2({
+        });
+        $("#escolaridad").select2({
+        });
+        $("#ocupacion").select2({
+        });
+        $("#religion").select2({
+        });
+        $("#embarazada").select2({
+        });
+        $("#cpnActualizado").select2({
+        });
+        $("#mujerEdadFertil").select2({
+        });
+        $("#planFamiliar").select2({
+        });  
+        $("#men1A").select2({
+        });
+        $("#men1AVPCD").select2({
+        }); 
+        $("#grupoDisp").select2({
+        });
+        $("#fallecido").select2({
+        }); 
+        $("#hacinamiento").select2({
+        });
+        $("#aAgua").select2({
+        });
+        $("#cAgua").select2({
+        });
+        $("#electricidad").select2({
+        });
+        $("#depExcretas").select2({
+        });
+        $("#depBasura").select2({
+        });
+        $("#depResLiq").select2({
+        });
+        $("#tipoPiso").select2({
+        });
+        $("#tipoTecho").select2({
+        });
+        $("#tipoPared").select2({
+        });
+        $("#culturaSanitaria").select2({
+        });
+        $("#carPsicosociales").select2({
+        });
+        $("#satNecBasicas").select2({
+        });
+        $("#tenenciaVivienda").select2({
+        });
+        $("#tamFamilia").select2({
+        });
+        $("#ontogenesis").select2({
+        });
+        $("#etapaCicloVital").select2({
+        });
+        $("#usoMedTradicional").select2({
         });
     };
 
@@ -138,18 +226,23 @@ var FormWizardHSF = function () {
                         required: false
                     },
                     numVivienda: {
+                    	min:1,
                         required: false
                     },
                     numFamilia: {
+                    	min:1,
                         required: false
                     },
                     direccion: {
+                    	minlength:10,
                         required: false
                     },
                     numFicha: {
-                        required: true
+                    	min:1,
+                        required: false
                     },
                     personaVisita: {
+                    	minlength:10,
                         required: false
                     },
                     personaVisitaProfesion: {
@@ -164,6 +257,9 @@ var FormWizardHSF = function () {
                     noPersonasFamilia: {
                     	min:1,
                     	required: false
+                    },
+                    accionesComunitarias: {
+                    	required: true
                     }
                     
                 },
@@ -210,7 +306,7 @@ var FormWizardHSF = function () {
             });
 
             var displayConfirm = function() {
-                $('#tab2 .form-control-static', form).each(function(){
+                $('#tab6 .form-control-static', form).each(function(){
                     var input = $('[name="'+$(this).attr("data-display")+'"]', form);
                     if (input.is(":text") || input.is("textarea")) {
                         $(this).html(input.val());
@@ -261,6 +357,9 @@ var FormWizardHSF = function () {
                     if (form.valid() == false) {
                         return false;
                     }
+                    else {
+                    	guardarHSF(index + 1);
+                    }
                     handleTitle(tab, navigation, clickedIndex);
                 },
                 onNext: function (tab, navigation, index) {
@@ -271,9 +370,7 @@ var FormWizardHSF = function () {
                         return false;
                     }
                     else{
-                    	if (index == 1){
-                    		guardarFamiliaVisita();
-                    	}
+                    	guardarHSF(index);
                     }
                     handleTitle(tab, navigation, index);
                 },
@@ -297,7 +394,7 @@ var FormWizardHSF = function () {
             	var IsValid = true;
 
                 // Validate Each Bootstrap tab
-                $(".tab-content").find("div.tab-pane").each(function (index, tab) {
+                $(".hsfcompleta").find("div.tab-pane").each(function (index, tab) {
                     var id = $(tab).attr("id");
                     $('a[href="#' + id + '"]').tab('show');
 
@@ -305,25 +402,31 @@ var FormWizardHSF = function () {
 
                     if (!IsTabValid) {
                         IsValid = false;
+                        return false; // Break each loop
                     }
                 });
             	if (IsValid) {
-            		alert('Finished! Hopeccc you like it fool!:)');
+            		guardarFamiliaVisita();
+            		guardarCarHigSan();
+            		guardarFactSocEc();
+            		guardarFuncFam();
                 }
-            	else{
-            		// Show first tab with error
-                    $(".tab-content").find("div.tab-pane").each(function (index, tab) {
-                        var id = $(tab).attr("id");
-                        $('a[href="#' + id + '"]').tab('show');
-
-                        var IsTabValid = form.valid();
-
-                        if (!IsTabValid) {
-                            return false; // Break each loop
-                        }
-                    });
-            	}
             }).hide();
+            
+            function guardarHSF(index){
+            	if (index == 1){
+            		guardarFamiliaVisita();
+            	}
+            	else if (index == 3){
+            		guardarCarHigSan();
+            	}
+            	else if (index == 4){
+            		guardarFactSocEc();
+            	}
+            	else if (index == 5){
+            		guardarFuncFam();
+            	}
+            }
             
             function guardarFamiliaVisita()
         	{
@@ -332,14 +435,61 @@ var FormWizardHSF = function () {
     		            , function( data )
     		            {
     						visita = JSON.parse(data);
-    						toastr.success("Exito", visita.idVisita);
+    						toastr.success(parametros.processSuccess);
     						$('#idFamilia').val(visita.familia.idFamilia);
     						$('#idVisita').val(visita.idVisita);
-    						$('#idFamiliaPerson').val(visita.familia.idFamilia);
     		            }
     		            , 'text' )
     			  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {
-    			    		alert( "error:" + errorThrown);
+    			    		alert( parametros.processError + " : " + errorThrown);
+    			  		});
+        	}
+            
+            function guardarCarHigSan()
+        	{
+            	$.post( parametros.addCarHigSanUrl
+    		            , $('#submit_form').serialize()
+    		            , function( data )
+    		            {
+    						caract = JSON.parse(data);
+    						toastr.success(parametros.processSuccess);
+    						$('#idCaractHig').val(caract.idCaractHig);
+    		            }
+    		            , 'text' )
+    			  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {
+    			  			alert( parametros.processError + " : " + errorThrown);
+    			  		});
+        	}
+            
+            function guardarFactSocEc()
+        	{
+            	$.post( parametros.addFactSocEcUrl
+    		            , $('#submit_form').serialize()
+    		            , function( data )
+    		            {
+    						factores = JSON.parse(data);
+    						toastr.success(parametros.processSuccess);
+    						$('#idFactSocioEc').val(factores.idFactSocioEc);
+    		            }
+    		            , 'text' )
+    			  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {
+    			  			alert( parametros.processError + " : " + errorThrown);
+    			  		});
+        	}
+            
+            function guardarFuncFam()
+        	{
+            	$.post( parametros.addFuncFamUrl
+    		            , $('#submit_form').serialize()
+    		            , function( data )
+    		            {
+    						funcionamiento = JSON.parse(data);
+    						toastr.success(parametros.processSuccess);
+    						$('#idFuncFamiliar').val(funcionamiento.idFuncFamiliar);
+    		            }
+    		            , 'text' )
+    			  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {
+    			  			alert( parametros.processError + " : " + errorThrown);
     			  		});
         	}
             
@@ -362,22 +512,18 @@ var FormWizardHSF = function () {
     		    }
     		});
             
+                      
             $("#personamodalform").on("shown.bs.modal", function () { 
-            	$('#numPersona').focus();
+            	$('#nombres').focus();
             });
             
-            $('[data-dismiss=modal]').on('click', function (e) {
-    		    var $t = $(this),
-    		        target = $t[0].href || $t.data("target") || $t.parents('.modal') || [];
-
-    		  $(target)
-    		    .find("input,textarea,select")
-    		       .val('')
-    		       .end()
-    		    .find("input[type=checkbox], input[type=radio]")
-    		       .prop("checked", "")
-    		       .end();
-    		});
+            $('body').on('hidden.bs.modal', '.modal', function () {
+            	$('#add_person_form').trigger("reset");
+            	$('#add_person_form .alert-danger').hide();
+            	$('#add_person_form .alert-success').hide();
+				$("#save-person").unbind("click");
+				$("#save-person-add").unbind("click");
+              });
             
             var table  = $('#lista_personas').DataTable({
                 "aLengthMenu": [

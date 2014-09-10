@@ -39,10 +39,10 @@
 							<i class="fa fa-file-o"></i>
 							<fmt:message key="hsf.nuevo" /></a>
 						</li>
-						<li class="hsfedit">
-							<a href="<spring:url value="/" htmlEscape="true "/>">
-							<i class="fa fa-edit"></i>
-							<fmt:message key="hsf.edit" /></a>
+						<li class="hsfsearch">
+							<a href="<spring:url value="/info/searchHsf" htmlEscape="true "/>">
+							<i class="fa fa-search"></i>
+							<fmt:message key="hsf.search" /></a>
 						</li>
 					</ul>
 				</li>

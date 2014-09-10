@@ -75,7 +75,12 @@
 										</span>
 										</label>
 										<div class="col-md-5">
-											<input id="username" name="username" type="text" readonly value="${userName}" class="form-control"/>
+											<div class="input-group">
+												<input id="username" name="username" type="text" readonly value="${userName}" class="form-control"/>
+												<span class="input-group-addon">
+													<i class="fa fa-user"></i>
+												</span>
+											</div>
 										</div>
 									</div>
 									
@@ -86,7 +91,12 @@
 										</span>
 										</label>
 										<div class="col-md-5">
-											<input id="password" name="password" type="password" class="form-control"/>
+											<div class="input-group">
+												<input id="password" name="password" type="password" class="form-control"/>
+												<span class="input-group-addon">
+													<i class="fa fa-lock"></i>
+												</span>
+											</div>
 											<span class="help-block">
 												 <spring:message code="Pattern.password.format" />
 											</span>
@@ -99,7 +109,12 @@
 										</span>
 										</label>
 										<div class="col-md-5">
-											<input id="confirm_password" name="confirm_password" type="password" class="form-control"/>
+											<div class="input-group">
+												<input id="confirm_password" name="confirm_password" type="password" class="form-control"/>
+												<span class="input-group-addon">
+													<i class="fa fa-lock"></i>
+												</span>
+											</div>
 										</div>
 									</div>
 								</div>

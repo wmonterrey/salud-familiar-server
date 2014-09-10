@@ -81,7 +81,12 @@
 										</span>
 										</label>
 										<div class="col-md-5">
-											<input id="username" name="username" type="text" placeholder="<spring:message code="please.enter" /> <spring:message code="users.username" />" class="form-control"/>
+											<div class="input-group">
+												<input id="username" name="username" type="text" placeholder="<spring:message code="please.enter" /> <spring:message code="users.username" />" class="form-control"/>
+												<span class="input-group-addon">
+													<i class="fa fa-user"></i>
+												</span>
+											</div>
 										</div>
 									</div>
 									<div class="form-group">
@@ -91,7 +96,12 @@
 										</span>
 										</label>
 										<div class="col-md-5">
-											<input id="completeName" name="completeName" type="text" placeholder="<spring:message code="please.enter" /> <spring:message code="users.desc" />" class="form-control"/>
+											<div class="input-group">
+												<input id="completeName" name="completeName" type="text" placeholder="<spring:message code="please.enter" /> <spring:message code="users.desc" />" class="form-control"/>
+												<span class="input-group-addon">
+													<i class="fa fa-user"></i>
+												</span>
+											</div>
 										</div>
 									</div>
 									<div class="form-group">
@@ -101,7 +111,12 @@
 										</span>
 										</label>
 										<div class="col-md-5">
-											<input id="email" name="email" type="text" placeholder="<spring:message code="please.enter" /> <spring:message code="users.email" />" class="form-control"/>
+											<div class="input-group">
+												<input id="email" name="email" type="text" placeholder="<spring:message code="please.enter" /> <spring:message code="users.email" />" class="form-control"/>
+												<span class="input-group-addon">
+													<i class="fa fa-envelope"></i>
+												</span>
+											</div>
 										</div>
 									</div>
 									<div class="form-group">
@@ -165,7 +180,12 @@
 										</span>
 										</label>
 										<div class="col-md-5">
-											<input id="password" name="password" type="password" placeholder="<spring:message code="please.enter" /> <spring:message code="users.pass1" />" class="form-control"/>
+											<div class="input-group">
+												<input id="password" name="password" type="password" placeholder="<spring:message code="please.enter" /> <spring:message code="users.pass1" />" class="form-control"/>
+												<span class="input-group-addon">
+													<i class="fa fa-lock"></i>
+												</span>
+											</div>
 											<span class="help-block">
 												 <spring:message code="Pattern.password.format" />
 											</span>
@@ -178,7 +198,12 @@
 										</span>
 										</label>
 										<div class="col-md-5">
-											<input id="confirm_password" name="confirm_password" type="password" placeholder="<spring:message code="please.enter" /> <spring:message code="users.pass2" />" class="form-control"/>
+											<div class="input-group">
+												<input id="confirm_password" name="confirm_password" type="password" placeholder="<spring:message code="please.enter" /> <spring:message code="users.pass2" />" class="form-control"/>
+												<span class="input-group-addon">
+													<i class="fa fa-lock"></i>
+												</span>
+											</div>
 										</div>
 									</div>
 									<div class="form-group">

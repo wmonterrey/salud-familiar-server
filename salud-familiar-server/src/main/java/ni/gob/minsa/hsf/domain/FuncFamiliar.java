@@ -31,7 +31,7 @@ public class FuncFamiliar extends BaseMetaData{
 	private String crisisNormativa;
 	private String crisisParanormativa;
 	private String usoMedTradicional;
-	private String observaciones;
+	private String obsFuncFamiliar;
 	 
 	public FuncFamiliar() {
 		
@@ -129,13 +129,13 @@ public class FuncFamiliar extends BaseMetaData{
 	}
 
 
-	public String getObservaciones() {
-		return observaciones;
+	public String getObsFuncFamiliar() {
+		return obsFuncFamiliar;
 	}
 
 	@Column(name = "OBSERVACIONES", nullable = true, length = 255)
-	public void setObservaciones(String observaciones) {
-		this.observaciones = observaciones;
+	public void setObsFuncFamiliar(String obsFuncFamiliar) {
+		this.obsFuncFamiliar = obsFuncFamiliar;
 	}
 
 }

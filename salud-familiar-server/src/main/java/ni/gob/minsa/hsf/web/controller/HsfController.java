@@ -8,22 +8,58 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 
+import ni.gob.minsa.hsf.domain.CaractHigSanitarias;
+import ni.gob.minsa.hsf.domain.FactSocioEconomicos;
 import ni.gob.minsa.hsf.domain.Familia;
+import ni.gob.minsa.hsf.domain.FuncFamiliar;
 import ni.gob.minsa.hsf.domain.MovilInfo;
 import ni.gob.minsa.hsf.domain.Persona;
 import ni.gob.minsa.hsf.domain.Visita;
+import ni.gob.minsa.hsf.domain.catalogos.AbastecimientoAgua;
+import ni.gob.minsa.hsf.domain.catalogos.AccionesComunitarias;
+import ni.gob.minsa.hsf.domain.catalogos.AnimalesDomesticos;
+import ni.gob.minsa.hsf.domain.catalogos.CalidadAgua;
+import ni.gob.minsa.hsf.domain.catalogos.CarPsicosociales;
+import ni.gob.minsa.hsf.domain.catalogos.CombCocinar;
+import ni.gob.minsa.hsf.domain.catalogos.CrisisNormativa;
+import ni.gob.minsa.hsf.domain.catalogos.CrisisParanormativa;
+import ni.gob.minsa.hsf.domain.catalogos.CulturaSanitaria;
+import ni.gob.minsa.hsf.domain.catalogos.DepBasura;
+import ni.gob.minsa.hsf.domain.catalogos.DepExcretas;
+import ni.gob.minsa.hsf.domain.catalogos.DepResLiq;
+import ni.gob.minsa.hsf.domain.catalogos.Discapacidad;
+import ni.gob.minsa.hsf.domain.catalogos.Electricidad;
 import ni.gob.minsa.hsf.domain.catalogos.Escolaridad;
+import ni.gob.minsa.hsf.domain.catalogos.EtapaCicloVital;
 import ni.gob.minsa.hsf.domain.catalogos.Etnia;
+import ni.gob.minsa.hsf.domain.catalogos.FactRiesgoMod;
+import ni.gob.minsa.hsf.domain.catalogos.FactRiesgoNoMod;
+import ni.gob.minsa.hsf.domain.catalogos.FactRiesgoSoc;
+import ni.gob.minsa.hsf.domain.catalogos.FactoresMedAmb;
 import ni.gob.minsa.hsf.domain.catalogos.GrupoDispensarial;
 import ni.gob.minsa.hsf.domain.catalogos.Ocupacion;
+import ni.gob.minsa.hsf.domain.catalogos.Ontogenesis;
 import ni.gob.minsa.hsf.domain.catalogos.Profesion;
 import ni.gob.minsa.hsf.domain.catalogos.Religion;
+import ni.gob.minsa.hsf.domain.catalogos.RiesgoBiologico;
+import ni.gob.minsa.hsf.domain.catalogos.RiesgoMeteorologico;
+import ni.gob.minsa.hsf.domain.catalogos.RiesgoNatural;
+import ni.gob.minsa.hsf.domain.catalogos.RiesgoSocial;
 import ni.gob.minsa.hsf.domain.catalogos.Sexo;
+import ni.gob.minsa.hsf.domain.catalogos.SiNoNs;
+import ni.gob.minsa.hsf.domain.catalogos.TamanoFam;
+import ni.gob.minsa.hsf.domain.catalogos.TenenciaVivienda;
+import ni.gob.minsa.hsf.domain.catalogos.TipoPared;
+import ni.gob.minsa.hsf.domain.catalogos.TipoPiso;
+import ni.gob.minsa.hsf.domain.catalogos.TipoTecho;
 import ni.gob.minsa.hsf.domain.estructura.EntidadesAdtvas;
+import ni.gob.minsa.hsf.service.CaractHigSanitariasService;
 import ni.gob.minsa.hsf.service.CatalogoService;
 import ni.gob.minsa.hsf.service.ComunidadesService;
 import ni.gob.minsa.hsf.service.EntidadesAdtvasService;
+import ni.gob.minsa.hsf.service.FactSocioEconomicosService;
 import ni.gob.minsa.hsf.service.FamiliaService;
+import ni.gob.minsa.hsf.service.FuncFamiliarService;
 import ni.gob.minsa.hsf.service.PersonaService;
 import ni.gob.minsa.hsf.service.VisitaService;
 
@@ -61,6 +97,12 @@ public class HsfController {
 	private FamiliaService familiaService;
 	@Resource(name="visitaService")
 	private VisitaService visitaService;
+	@Resource(name="caractHigSanitariasService")
+	private CaractHigSanitariasService caractHigSanitariasService;
+	@Resource(name="factSocioEconomicosService")
+	private FactSocioEconomicosService factSocioEconomicosService;
+	@Resource(name="funcFamiliarService")
+	private FuncFamiliarService funcFamiliarService;
 	@Resource(name="personaService")
 	private PersonaService personaService;
 	
@@ -71,8 +113,80 @@ public class HsfController {
     	logger.debug("Crear nueva HSF");
     	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas();
     	List<Profesion> profesiones = catalogoService.getProfesiones();
+    	List<SiNoNs> sinons = catalogoService.getSiNoNs();
+    	List<Sexo> sexos = catalogoService.getSexo();
+    	List<Etnia> etnias = catalogoService.getEtnia();
+    	List<Escolaridad> escolaridades = catalogoService.getEscda();
+    	List<Ocupacion> ocupaciones = catalogoService.getOcupacion();
+    	List<Religion> religiones = catalogoService.getReligion();
+    	List<FactRiesgoNoMod> frnms = catalogoService.getFactRiesgoNoMod();
+    	List<FactRiesgoMod> frms = catalogoService.getFactRiesgoMod();
+    	List<FactRiesgoSoc> frss = catalogoService.getFactRiesgoSoc();
+    	List<Discapacidad> discps = catalogoService.getDiscapacidad();
+    	List<GrupoDispensarial> gds = catalogoService.getGrupoDispensarial();
+    	List<AnimalesDomesticos> animales = catalogoService.getAnimalesDomesticos();
+    	List<RiesgoNatural> rgnats = catalogoService.getRiesgoNatural();
+    	List<RiesgoMeteorologico> rgmets = catalogoService.getRiesgoMeteorologico();
+    	List<RiesgoBiologico> rgbios = catalogoService.getRiesgoBiologico();
+    	List<RiesgoSocial> rgsocs = catalogoService.getRiesgoSocial();
+    	List<FactoresMedAmb> factoresMedAmbs = catalogoService.getFactoresMedAmb();
+    	List<CombCocinar> combCocinars = catalogoService.getCombCocinar();
+    	List<AbastecimientoAgua> abastecimientoAguas = catalogoService.getAbastecimientoAgua();
+    	List<CalidadAgua> calidadAguas = catalogoService.getCalidadAgua();
+    	List<Electricidad> electricidads = catalogoService.getElectricidad();
+    	List<DepExcretas> depExcretas = catalogoService.getDepExcretas();
+    	List<DepBasura> depBasuras = catalogoService.getDepBasura();
+    	List<DepResLiq> depResLiqs = catalogoService.getDepResLiq();
+    	List<TipoPiso> pisos = catalogoService.getTipoPiso();
+    	List<TipoTecho> techos = catalogoService.getTipoTecho();
+    	List<TipoPared> paredes = catalogoService.getTipoPared();
+    	List<CulturaSanitaria> culturasSanitaria = catalogoService.getCulturaSanitaria();
+    	List<CarPsicosociales> carsPsicosociales = catalogoService.getCarPsicosociales();
+    	List<TenenciaVivienda> tenenciasVivienda = catalogoService.getTenenciaVivienda();
+    	List<AccionesComunitarias> accionesComunitarias = catalogoService.getAccionesComunitarias();
+    	List<TamanoFam> tamanos = catalogoService.getTamanoFam();
+    	List<Ontogenesis> ontos = catalogoService.getOntogenesis();
+    	List<EtapaCicloVital> etapasCicloVital = catalogoService.getEtapaCicloVital();
+    	List<CrisisNormativa> crisisNormativas = catalogoService.getCrisisNormativa();
+    	List<CrisisParanormativa> crisisParanormativas = catalogoService.getCrisisParanormativa();
     	model.addAttribute("entidades", entidades);
     	model.addAttribute("profesiones", profesiones);
+    	model.addAttribute("sinons", sinons);
+    	model.addAttribute("sexos", sexos);
+    	model.addAttribute("etnias", etnias);
+    	model.addAttribute("escolaridades", escolaridades);
+    	model.addAttribute("ocupaciones", ocupaciones);
+    	model.addAttribute("religiones", religiones);
+    	model.addAttribute("frnms", frnms);
+    	model.addAttribute("frss", frss);
+    	model.addAttribute("frms", frms);
+    	model.addAttribute("discps", discps);
+    	model.addAttribute("gds", gds);
+    	model.addAttribute("animales", animales);
+    	model.addAttribute("rgnats", rgnats);
+    	model.addAttribute("rgmets", rgmets);
+    	model.addAttribute("rgbios", rgbios);
+    	model.addAttribute("rgsocs", rgsocs);
+    	model.addAttribute("factoresMedAmbs", factoresMedAmbs);
+    	model.addAttribute("combCocinars", combCocinars);
+    	model.addAttribute("abastecimientoAguas", abastecimientoAguas);
+    	model.addAttribute("calidadAguas", calidadAguas);
+    	model.addAttribute("electricidads", electricidads);
+    	model.addAttribute("depExcretas", depExcretas);
+    	model.addAttribute("depBasuras", depBasuras);
+    	model.addAttribute("depResLiqs", depResLiqs);
+    	model.addAttribute("pisos", pisos);
+    	model.addAttribute("techos", techos);
+    	model.addAttribute("paredes", paredes);
+    	model.addAttribute("culturasSanitaria", culturasSanitaria);
+    	model.addAttribute("carsPsicosociales", carsPsicosociales);
+    	model.addAttribute("tenenciasVivienda", tenenciasVivienda);
+    	model.addAttribute("accionesComunitarias", accionesComunitarias);
+    	model.addAttribute("tamanos", tamanos);
+    	model.addAttribute("ontos", ontos);
+    	model.addAttribute("etapasCicloVital", etapasCicloVital);
+    	model.addAttribute("crisisNormativas", crisisNormativas);
+    	model.addAttribute("crisisParanormativas", crisisParanormativas);
     	return "hsf/create";
 	}
 	
@@ -103,6 +217,7 @@ public class HsfController {
 		familia.setIdFamilia(idFamilia);
 		familia.setCreatedBy(authentication.getName());
 		familia.setCreated(new Date());
+		familia.setPasive('0');
 		familiaService.addFamilia(familia);
 		
 		
@@ -123,46 +238,113 @@ public class HsfController {
 		visita.setIdVisita(idVisita);
 		visita.setCreatedBy(authentication.getName());
 		visita.setCreated(new Date());
+		visita.setPasive('0');
 		visita.setMovilInfo(movilInfo);
 		visitaService.addVisita(visita);
 		return createJsonResponse(visita);
 	}
 	
+	@RequestMapping( value="newCarHigSan", method=RequestMethod.POST)
+	public ResponseEntity<String> processCreationCaractHigForm( @RequestParam( value="idVisita", required=true) String idVisita
+			, @RequestParam( value="hacinamiento", required=true) String hacinamiento
+			, @RequestParam( value="animalesDom", required=true) String animalesDom
+			, @RequestParam( value="idCaractHig", required=false, defaultValue="" ) String idCaractHig
+	        ) 
+	{
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CaractHigSanitarias carHigSan =  new CaractHigSanitarias();
+		carHigSan.setVisita(visitaService.getVisita(idVisita));
+		carHigSan.setHacinamiento(hacinamiento);
+		carHigSan.setAnimalesDom(animalesDom);
+		if (idCaractHig.equals("")){
+			idCaractHig = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
+		}
+		carHigSan.setIdCaractHig(idCaractHig);
+		carHigSan.setCreated(new Date());
+		carHigSan.setCreatedBy(authentication.getName());
+		carHigSan.setPasive('0');
+		caractHigSanitariasService.addCaractHigSanitarias(carHigSan);
+		return createJsonResponse(carHigSan);
+	}
+	
+	@RequestMapping( value="newFactSocEc", method=RequestMethod.POST)
+	public ResponseEntity<String> processCreationFactSocEcForm( @RequestParam( value="idVisita", required=true) String idVisita
+			, @RequestParam( value="tipoPiso", required=true) String tipoPiso
+			, @RequestParam( value="tipoTecho", required=true) String tipoTecho
+			, @RequestParam( value="idFactSocioEc", required=false, defaultValue="" ) String idFactSocioEc
+	        ) 
+	{
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		FactSocioEconomicos factSocEc =  new FactSocioEconomicos();
+		factSocEc.setVisita(visitaService.getVisita(idVisita));
+		factSocEc.setTipoPiso(catalogoService.getTipoPiso(tipoPiso));
+		factSocEc.setTipoTecho(catalogoService.getTipoTecho(tipoTecho));
+		if (idFactSocioEc.equals("")){
+			idFactSocioEc = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
+		}
+		factSocEc.setIdFactSocioEc(idFactSocioEc);
+		factSocEc.setCreated(new Date());
+		factSocEc.setCreatedBy(authentication.getName());
+		factSocEc.setPasive('0');
+		factSocioEconomicosService.addFactSocioEconomicos(factSocEc);
+		return createJsonResponse(factSocEc);
+	}
+	
+	@RequestMapping( value="newFuncFam", method=RequestMethod.POST)
+	public ResponseEntity<String> processCreationFuncFamForm( @RequestParam( value="idVisita", required=true) String idVisita
+			, @RequestParam( value="tamFamilia", required=true) String tamFamilia
+			, @RequestParam( value="ontogenesis", required=true) String ontogenesis
+			, @RequestParam( value="idFuncFamiliar", required=false, defaultValue="" ) String idFuncFamiliar
+	        ) 
+	{
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		FuncFamiliar funcFam =  new FuncFamiliar();
+		funcFam.setVisita(visitaService.getVisita(idVisita));
+		funcFam.setTamFamilia(catalogoService.getTamanoFam(tamFamilia));
+		funcFam.setOntogenesis(catalogoService.getOntogenesis(ontogenesis));
+		if (idFuncFamiliar.equals("")){
+			idFuncFamiliar = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
+		}
+		funcFam.setIdFuncFamiliar(idFuncFamiliar);
+		funcFam.setCreated(new Date());
+		funcFam.setCreatedBy(authentication.getName());
+		funcFam.setPasive('0');
+		funcFamiliarService.addFuncFamiliar(funcFam);
+		return createJsonResponse(funcFam);
+	}
+	
 	@RequestMapping( value="newPersona", method=RequestMethod.POST)
 	public ResponseEntity<String> processCreationPersonaForm( @RequestParam(value="idFamiliaPerson", required=true ) String idFamiliaPerson
-			, @RequestParam(value="numPersona", required=true ) String numPersona
+			, @RequestParam(value="numPersona", required=true ) Integer numPersona
 			, @RequestParam( value="nombres", required=true ) String nombres
 			, @RequestParam( value="primerApellido", required=true ) String primerApellido
 			, @RequestParam( value="segundoApellido", required=true ) String segundoApellido
+			, @RequestParam( value="idPersona", required=false, defaultValue="" ) String idPersona
 	        )
 	{
-		
-		Familia familia = familiaService.getFamilia(idFamiliaPerson);
-		
-		
-		Sexo sex = catalogoService.getSexo("SEXO|M");
-        Etnia etnia = catalogoService.getEtnia("ETNIA|MTIZO");
-        Escolaridad escda = catalogoService.getEscda("ESCDA|EDUSC");
-        Ocupacion ocupacion = catalogoService.getOcupacion("HSF_OCUPA|EMP");
-        Religion religion = catalogoService.getReligion("HSF_RELIG|CAT");
-        GrupoDispensarial gd = catalogoService.getGrupoDispensarial("HSF_GD|GII");
-        
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Familia familia = familiaService.getFamilia(idFamiliaPerson);    
 		Persona persona = new Persona();
-        persona.setIdPersona(numPersona);
-        persona.setCodPersona("22424888624-2555-01");
-        persona.setNumPersona(1);
-        persona.setIdPersonaSis(345);
-        persona.setFamilia(familia);
-        persona.setSexo(sex);
-        persona.setEtnia(etnia);
-        persona.setEscolaridad(escda);
-        persona.setOcupacion(ocupacion);
-        persona.setReligion(religion);
+		persona.setFamilia(familia);
+        persona.setCodPersona(familia.getCodFamilia()+"-"+numPersona);
+        persona.setNumPersona(numPersona);
+        persona.setNombres(nombres);
         persona.setPrimerApellido(primerApellido);
         persona.setSegundoApellido(segundoApellido);
-        persona.setNombres(nombres);
-        persona.setGrupoDisp(gd);
+        if (idPersona.equals("")){
+        	idPersona = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
+		}
+        persona.setIdPersona(idPersona);
+        persona.setSexo(catalogoService.getSexo("SEXO|M"));
+        persona.setEtnia(catalogoService.getEtnia("ETNIA|MTIZO"));
+        persona.setEscolaridad(catalogoService.getEscda("ESCDA|EDUSC"));
+        persona.setOcupacion(catalogoService.getOcupacion("HSF_OCUPA|EMP"));
+        persona.setReligion(catalogoService.getReligion("HSF_RELIG|CAT"));
+        persona.setGrupoDisp(catalogoService.getGrupoDispensarial("HSF_GD|GII"));
         persona.setFallecido("No");
+        persona.setCreated(new Date());
+        persona.setCreatedBy(authentication.getName());
+        persona.setPasive('0');
         personaService.addPersona(persona);
 		
 		return createJsonResponse(persona);

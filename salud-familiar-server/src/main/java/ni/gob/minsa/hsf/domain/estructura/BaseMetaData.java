@@ -13,7 +13,7 @@ public class BaseMetaData
 
 	private Date created;
 	private String createdBy;
-	private char pasive = 0;
+	private char pasive = '0';
 
 	@Temporal( TemporalType.TIMESTAMP)
 	@Column(name="FECHA_REGISTRO")
@@ -34,7 +34,7 @@ public class BaseMetaData
 		this.createdBy = createdBy;
 	}
 
-	@Column(name="USUARIO_REGISTRO", nullable = false, length = 1)
+	@Column(name="PASIVO", nullable = false, length = 1)
 	public char getPasive() {
 		return pasive;
 	}
