@@ -28,6 +28,7 @@ public class Visita extends BaseMetaData{
 	private String personaVisita;
 	private Profesion personaVisitaProfesion;
 	private MovilInfo movilInfo;
+	private char visitaFinalizada = '0';
 	
 	public Visita() {
 		
@@ -98,6 +99,15 @@ public class Visita extends BaseMetaData{
 
 	public void setMovilInfo(MovilInfo movilInfo) {
 		this.movilInfo = movilInfo;
+	}
+
+	@Column(name = "FINALIZADA", nullable = true)
+	public char getVisitaFinalizada() {
+		return visitaFinalizada;
+	}
+
+	public void setVisitaFinalizada(char visitaFinalizada) {
+		this.visitaFinalizada = visitaFinalizada;
 	}
 	
 }

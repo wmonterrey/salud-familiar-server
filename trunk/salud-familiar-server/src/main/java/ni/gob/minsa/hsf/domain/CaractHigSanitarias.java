@@ -44,8 +44,7 @@ public class CaractHigSanitarias extends BaseMetaData{
     private DepExcretas depExcretas;
     private DepBasura depBasura;
     private DepResLiq depResLiq;
-    private String observaciones;
-    
+    private String obsCaractHig;
     
 	public CaractHigSanitarias() {
 		
@@ -230,12 +229,12 @@ public class CaractHigSanitarias extends BaseMetaData{
 	}
 
 	@Column(name = "OBSERVACIONES", nullable = true, length = 255)
-	public String getObservaciones() {
-		return observaciones;
+	public String getObsCaractHig() {
+		return obsCaractHig;
 	}
 
-	public void setObservaciones(String observaciones) {
-		this.observaciones = observaciones;
+	public void setObsCaractHig(String obsCaractHig) {
+		this.obsCaractHig = obsCaractHig;
 	}
 
 }

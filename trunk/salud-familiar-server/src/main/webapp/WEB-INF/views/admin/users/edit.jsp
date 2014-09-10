@@ -83,7 +83,12 @@
 										</span>
 										</label>
 										<div class="col-md-5">
-											<input id="username" name="username" type="text" readonly value="${user.username}" class="form-control"/>
+											<div class="input-group">
+												<input id="username" name="username" type="text" readonly value="${user.username}" class="form-control"/>
+												<span class="input-group-addon">
+													<i class="fa fa-user"></i>
+												</span>
+											</div>
 										</div>
 									</div>
 									<div class="form-group">
@@ -93,7 +98,12 @@
 										</span>
 										</label>
 										<div class="col-md-5">
-											<input id="completeName" name="completeName" type="text" value="${user.completeName}" class="form-control"/>
+											<div class="input-group">
+												<input id="completeName" name="completeName" type="text" value="${user.completeName}" class="form-control"/>
+												<span class="input-group-addon">
+													<i class="fa fa-user"></i>
+												</span>
+											</div>
 										</div>
 									</div>
 									<div class="form-group">
@@ -103,7 +113,12 @@
 										</span>
 										</label>
 										<div class="col-md-5">
-											<input id="email" name="email" type="text" value="${user.email}" class="form-control"/>
+											<div class="input-group">
+												<input id="email" name="email" type="text" value="${user.email}" class="form-control"/>
+												<span class="input-group-addon">
+													<i class="fa fa-envelope"></i>
+												</span>
+											</div>
 										</div>
 									</div>
 									<div class="form-group">
@@ -250,6 +265,10 @@
 	<spring:param name="language" value="${pageContext.request.locale.language}" />
 </spring:url>				
 <script src="${jQValidationLoc}"/></script>
+<spring:url value="/resources/plugins/select2/select2_locale_{language}.js" var="Select2Loc">
+	<spring:param name="language" value="${pageContext.request.locale.language}" />
+</spring:url>				
+<script src="${Select2Loc}"/></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 <script>
     $(function () {

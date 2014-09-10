@@ -208,7 +208,7 @@ public class UserSistema implements Auditable {
 	}
 	@Override
 	public boolean isFieldAuditable(String fieldname) {
-		if(fieldname.matches("modified")||fieldname.matches("modifiedBy")||fieldname.matches("password")){
+		if(fieldname.matches("created")||fieldname.matches("createdBy")||fieldname.matches("modified")||fieldname.matches("modifiedBy")||fieldname.matches("password")){
 			return false;
 		}
 		return true;

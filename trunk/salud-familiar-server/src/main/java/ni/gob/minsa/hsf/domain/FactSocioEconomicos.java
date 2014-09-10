@@ -36,7 +36,7 @@ public class FactSocioEconomicos extends BaseMetaData{
 	private String satNecBasicas;
 	private TenenciaVivienda tenenciaVivienda;
 	private String accionesComunitarias;
-	private String observaciones;
+	private String obsFactSocioEc;
 	
 	public FactSocioEconomicos() {
 		
@@ -148,11 +148,11 @@ public class FactSocioEconomicos extends BaseMetaData{
 	}
 	
 	@Column(name = "OBSERVACIONES", nullable = true, length = 255)
-	public String getObservaciones() {
-		return observaciones;
+	public String getObsFactSocioEc() {
+		return obsFactSocioEc;
 	}
 
-	public void setObservaciones(String observaciones) {
-		this.observaciones = observaciones;
+	public void setObsFactSocioEc(String obsFactSocioEc) {
+		this.obsFactSocioEc = obsFactSocioEc;
 	}
 }

@@ -208,9 +208,10 @@ public class Comunidades implements Serializable{
 		
 		Comunidades castOther = (Comunidades) other;
 		
-		return (this.getComunidadId() == castOther.getComunidadId())
-				&& (this.getCodigo() == castOther.getCodigo()) 
-				&& (this.getNombre().equals(castOther.getNombre()));
+		
+		return ((this.getComunidadId().equals(castOther.getComunidadId()))
+				&& (this.getCodigo().equals(castOther.getCodigo())) 
+				&& (this.getNombre().equals(castOther.getNombre())));
 	}
 
 }
