@@ -4,10 +4,12 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import ni.gob.minsa.hsf.domain.estructura.Cie10;
 import ni.gob.minsa.hsf.domain.estructura.Unidades;
 import ni.gob.minsa.hsf.domain.poblacion.Comunidades;
 import ni.gob.minsa.hsf.domain.poblacion.Divisionpolitica;
 import ni.gob.minsa.hsf.domain.poblacion.Sectores;
+import ni.gob.minsa.hsf.service.Cie10Service;
 import ni.gob.minsa.hsf.service.ComunidadesService;
 import ni.gob.minsa.hsf.service.DivisionPoliticaService;
 import ni.gob.minsa.hsf.service.SectoresService;
@@ -38,6 +40,8 @@ public class OpcionesController {
 	private SectoresService sectorService;
 	@Resource(name="comunidadService")
 	private ComunidadesService comunidadService;
+	@Resource(name="cie10Service")
+	private Cie10Service cie10Service;
 
 	/**
      * Retorna una lista de unidades. Acepta una solicitud GET para JSON
@@ -51,6 +55,20 @@ public class OpcionesController {
         	logger.debug("Nulo");
         }
         return unidades;	
+    }
+    
+    /**
+     * Retorna una lista de enfermedades. Acepta una solicitud GET para JSON
+     * @return Un arreglo JSON de Cie10
+     */
+    @RequestMapping(value = "enfermedades", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody List<Cie10> fetchEnfermedadesJson(@RequestParam(value = "filtro", required = true) String filtro) {
+        logger.info("Obteniendo las enfermedades en JSON");
+        List<Cie10> enfermedades = cie10Service.getCie10Filtered(filtro);
+        if (enfermedades == null){
+        	logger.debug("Nulo");
+        }
+        return enfermedades;	
     }
         
     /**

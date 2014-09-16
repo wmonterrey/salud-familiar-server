@@ -1,7 +1,7 @@
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <div class="footer">
 <div class="footer-inner">
-	 2014 &copy; <fmt:message>title</fmt:message>.
+	 2014 &copy; <spring:message code="title"/>.
 </div>
 <div class="footer-tools">
 	<span class="go-top">

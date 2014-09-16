@@ -1,5 +1,4 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <!-- BEGIN HEADER -->
 <div class="header navbar navbar-inverse navbar-fixed-top">
@@ -39,7 +38,7 @@
 						<a href="<spring:url value="/users/chgpass" htmlEscape="true" />"><i class="fa fa-key"></i> <spring:message code="users.changepass" /></a>
 					</li>
 					<li>
-						<a href="<spring:url value="/logout" htmlEscape="true" />"><i class="fa fa-sign-out"></i> <fmt:message key="log_out" /></a>
+						<a href="<spring:url value="/logout" htmlEscape="true" />"><i class="fa fa-sign-out"></i> <spring:message code="log_out" /></a>
 					</li>
 				</ul>
 			</li>

@@ -5,11 +5,6 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
 
-import ni.gob.minsa.hsf.serializer.CustomDateSerializer;
-
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.hibernate.annotations.Type;
-
 @NamedQueries({
 	@NamedQuery(
 		name = "cie10PorCodigoCie10",
@@ -111,8 +106,6 @@ public class Cie10  implements Serializable {
         this.activo = activo;
     }
     @Column(name="FECHA_REGISTRO")
-	@Type(type="org.joda.time.contrib.hibernate.PersistentDateTime")
-	@JsonSerialize(using = CustomDateSerializer.class)
     public Date getFechaRegistro() {
         return this.fechaRegistro;
     }
