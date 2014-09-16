@@ -1,10 +1,9 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!--
 Ministerio de Salud Nicaragua :: Historia de Salud Familiar
 -->
 <meta charset="utf-8"/>
-<title><fmt:message key="title" /> | <fmt:message key="heading" /></title>
+<title><spring:message code="title" /> | <spring:message code="heading" /></title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="" name="description"/>

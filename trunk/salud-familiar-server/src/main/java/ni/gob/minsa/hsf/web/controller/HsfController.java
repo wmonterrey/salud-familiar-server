@@ -9,6 +9,7 @@ import java.util.UUID;
 import javax.annotation.Resource;
 
 import ni.gob.minsa.hsf.domain.CaractHigSanitarias;
+import ni.gob.minsa.hsf.domain.Enfermedades;
 import ni.gob.minsa.hsf.domain.FactSocioEconomicos;
 import ni.gob.minsa.hsf.domain.Familia;
 import ni.gob.minsa.hsf.domain.FuncFamiliar;
@@ -55,7 +56,9 @@ import ni.gob.minsa.hsf.domain.catalogos.TipoTecho;
 import ni.gob.minsa.hsf.domain.estructura.EntidadesAdtvas;
 import ni.gob.minsa.hsf.service.CaractHigSanitariasService;
 import ni.gob.minsa.hsf.service.CatalogoService;
+import ni.gob.minsa.hsf.service.Cie10Service;
 import ni.gob.minsa.hsf.service.ComunidadesService;
+import ni.gob.minsa.hsf.service.EnfermedadesService;
 import ni.gob.minsa.hsf.service.EntidadesAdtvasService;
 import ni.gob.minsa.hsf.service.FactSocioEconomicosService;
 import ni.gob.minsa.hsf.service.FamiliaService;
@@ -105,7 +108,10 @@ public class HsfController {
 	private FuncFamiliarService funcFamiliarService;
 	@Resource(name="personaService")
 	private PersonaService personaService;
-	
+	@Resource(name="enfermedadesService")
+	private EnfermedadesService enfermedadesService;
+	@Resource(name="cie10Service")
+	private Cie10Service cie10Service;
 	
 	
 	@RequestMapping(value = "newHsf", method = RequestMethod.GET)
@@ -319,35 +325,99 @@ public class HsfController {
 			, @RequestParam( value="nombres", required=true ) String nombres
 			, @RequestParam( value="primerApellido", required=true ) String primerApellido
 			, @RequestParam( value="segundoApellido", required=true ) String segundoApellido
+			, @RequestParam( value="cedula", required=false, defaultValue="" ) String cedula
+			, @RequestParam( value="fechaNacimiento", required=false, defaultValue="") String fechaNacimiento
+			, @RequestParam( value="actaNacimiento", required=false) String actaNacimiento
+			, @RequestParam(value="edad", required=false, defaultValue="" ) Integer edad
+			, @RequestParam(value="etnia", required=false ) String etnia
+			, @RequestParam(value="sexo", required=false ) String sexo
+			, @RequestParam(value="escolaridad", required=false ) String escolaridad
+			, @RequestParam(value="ocupacion", required=false ) String ocupacion
+			, @RequestParam(value="religion", required=false ) String religion
+			, @RequestParam(value="embarazada", required=false ) String embarazada
+			, @RequestParam(value="cpnActualizado", required=false ) String cpnActualizado
+			, @RequestParam(value="mujerEdadFertil", required=false ) String mujerEdadFertil
+			, @RequestParam(value="planFamiliar", required=false ) String planFamiliar
+			, @RequestParam(value="men1A", required=false ) String men1A
+			, @RequestParam(value="men1AVPCD", required=false ) String men1AVPCD
+			, @RequestParam(value="factRiesgoMod", required=false ) String factRiesgoMod
+			, @RequestParam(value="factRiesgoNoMod", required=false ) String factRiesgoNoMod
+			, @RequestParam(value="factRiesgoSocial", required=false ) String factRiesgoSocial
+			, @RequestParam(value="discapacidades", required=false ) String discapacidades
+			, @RequestParam(value="grupoDisp", required=false ) String grupoDisp
 			, @RequestParam( value="idPersona", required=false, defaultValue="" ) String idPersona
-	        )
+	        ) throws ParseException
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Familia familia = familiaService.getFamilia(idFamiliaPerson);    
 		Persona persona = new Persona();
+		if (idPersona.equals("")){
+        	idPersona = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
+		}
+		persona.setIdPersona(idPersona);
 		persona.setFamilia(familia);
         persona.setCodPersona(familia.getCodFamilia()+"-"+numPersona);
         persona.setNumPersona(numPersona);
         persona.setNombres(nombres);
         persona.setPrimerApellido(primerApellido);
         persona.setSegundoApellido(segundoApellido);
-        if (idPersona.equals("")){
-        	idPersona = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
-		}
-        persona.setIdPersona(idPersona);
-        persona.setSexo(catalogoService.getSexo("SEXO|M"));
-        persona.setEtnia(catalogoService.getEtnia("ETNIA|MTIZO"));
-        persona.setEscolaridad(catalogoService.getEscda("ESCDA|EDUSC"));
-        persona.setOcupacion(catalogoService.getOcupacion("HSF_OCUPA|EMP"));
-        persona.setReligion(catalogoService.getReligion("HSF_RELIG|CAT"));
-        persona.setGrupoDisp(catalogoService.getGrupoDispensarial("HSF_GD|GII"));
-        persona.setFallecido("No");
+        persona.setCedula(cedula);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		Date date = formatter.parse(fechaNacimiento);
+		persona.setFechaNacimiento(date);
+		persona.setActaNacimiento(actaNacimiento);
+        persona.setEdad(edad);
+        persona.setEtnia(catalogoService.getEtnia(etnia));
+        persona.setSexo(catalogoService.getSexo(sexo));
+        persona.setEscolaridad(catalogoService.getEscda(escolaridad));
+        persona.setOcupacion(catalogoService.getOcupacion(ocupacion));
+        persona.setReligion(catalogoService.getReligion(religion));
+        persona.setEmbarazada(embarazada);
+        persona.setCpnActualizado(cpnActualizado);
+        persona.setMujerEdadFertil(mujerEdadFertil);
+        persona.setPlanFamiliar(planFamiliar);
+        persona.setMen1A(men1A);
+        persona.setMen1AVPCD(men1AVPCD);
+        persona.setFactRiesgoMod(factRiesgoMod);
+        persona.setFactRiesgoNoMod(factRiesgoNoMod);
+        persona.setFactRiesgoSocial(factRiesgoSocial);
+        persona.setDiscapacidades(discapacidades);
+        persona.setGrupoDisp(catalogoService.getGrupoDispensarial(grupoDisp));
+        persona.setFallecido('0');
         persona.setCreated(new Date());
-        persona.setCreatedBy(authentication.getName());
         persona.setPasive('0');
+        persona.setCreatedBy(authentication.getName());
         personaService.addPersona(persona);
 		
 		return createJsonResponse(persona);
+	}
+	
+	@RequestMapping( value="newEnfermedad", method=RequestMethod.POST)
+	public ResponseEntity<String> processCreationEnfermedadForm( @RequestParam(value="idPersonaEnf", required=true ) String idPersonaEnf
+			, @RequestParam( value="enfermedad", required=true ) String enfermedad
+			, @RequestParam( value="personaAtendio", required=true ) String personaAtendio
+			, @RequestParam( value="fechaOcurrencia", required=true) String fechaOcurrencia
+			, @RequestParam( value="idEnfermedad", required=false, defaultValue="" ) String idEnfermedad
+	        ) throws ParseException
+	{
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Persona persona = personaService.getPersona(idPersonaEnf);
+		Enfermedades enf = new Enfermedades();
+		enf.setPersona(persona);
+		enf.setEnfermedad(cie10Service.getCie10(enfermedad));
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		Date date = formatter.parse(fechaOcurrencia);
+		enf.setFechaOcurrencia(date);
+        if (idEnfermedad.equals("")){
+        	idEnfermedad = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
+		}
+        enf.setIdEnfermedad(idEnfermedad);
+        enf.setPersonaAtendio(catalogoService.getProfesion(personaAtendio));
+        enf.setCreated(new Date());
+        enf.setCreatedBy(authentication.getName());
+        enf.setPasive('0');
+        enfermedadesService.addEnfermedades(enf);
+		return createJsonResponse(enf);
 	}
 	
 	private ResponseEntity<String> createJsonResponse( Object o )

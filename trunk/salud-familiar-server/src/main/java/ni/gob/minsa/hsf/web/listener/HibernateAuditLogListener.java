@@ -116,7 +116,7 @@ Initializable {
 		                        if (LOG.isDebugEnabled()) {  
 		                            LOG.debug("{} for: {}, ID: {}, property: {}, value: {}, actor: {}, date: {}", new Object[] { OPERATION_TYPE_INSERT, entityName, entityId, propertyName, newPropValue, actorId, transTime });  
 		                        }  
-		                        session.insert(new AuditTrail(entityId, entityName, propertyName, null, newPropValue != null ? newPropValue.toString() : null, OPERATION_TYPE_INSERT, actorId, transTime));  
+		                        //session.insert(new AuditTrail(entityId, entityName, propertyName, null, newPropValue != null ? newPropValue.toString() : null, OPERATION_TYPE_INSERT, actorId, transTime));  
 		                    }  
 		                }  
 	            	}

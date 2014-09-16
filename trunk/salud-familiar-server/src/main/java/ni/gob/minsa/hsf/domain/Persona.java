@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.ForeignKey;
 
+import ni.gob.minsa.hsf.domain.audit.Auditable;
 import ni.gob.minsa.hsf.domain.catalogos.Escolaridad;
 import ni.gob.minsa.hsf.domain.catalogos.Etnia;
 import ni.gob.minsa.hsf.domain.catalogos.GrupoDispensarial;
@@ -23,7 +24,7 @@ import ni.gob.minsa.hsf.domain.estructura.Catalogo;
 
 @Entity
 @Table(name = "HSF_PERSONAS", catalog = "HSF")
-public class Persona extends BaseMetaData implements Serializable{
+public class Persona extends BaseMetaData implements Auditable, Serializable{
 	
 	/**
 	 * 
@@ -59,7 +60,7 @@ public class Persona extends BaseMetaData implements Serializable{
     private Persona madre;
     private String discapacidades;
     private GrupoDispensarial grupoDisp;
-    private String fallecido;
+    private char fallecido = '0';
     private Date fechaFallecimiento;
     
     
@@ -396,13 +397,13 @@ public class Persona extends BaseMetaData implements Serializable{
 		this.grupoDisp = grupoDisp;
 	}
 
-	@Column(name = "FALLECIDO", nullable = false, length = 2)
-	public String getFallecido() {
+	@Column(name = "FALLECIDO", nullable = false)
+	public char getFallecido() {
 		return fallecido;
 	}
 
 
-	public void setFallecido(String fallecido) {
+	public void setFallecido(char fallecido) {
 		this.fallecido = fallecido;
 	}
 
@@ -414,6 +415,14 @@ public class Persona extends BaseMetaData implements Serializable{
 
 	public void setFechaFallecimiento(Date fechaFallecimiento) {
 		this.fechaFallecimiento = fechaFallecimiento;
+	}
+	
+	@Override
+	public boolean isFieldAuditable(String fieldname) {
+		if(fieldname.matches("created")||fieldname.matches("createdBy")){
+			return false;
+		}
+		return true;
 	}
 
 }

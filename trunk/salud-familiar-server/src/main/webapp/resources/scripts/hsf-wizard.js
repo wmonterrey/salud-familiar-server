@@ -132,6 +132,40 @@ var FormWizardHSF = function () {
         });
         $("#usoMedTradicional").select2({
         });
+        $('#enfermedad').select2({
+        	minimumInputLength: 3,
+        	id: function(enfermedad){ return enfermedad.codigoCie10; },
+            ajax: {
+                url: '/hsf/opciones/enfermedades',
+                dataType: 'json',
+                quietMillis: 100,
+                data: function(term, page) {
+                    return {
+                    	filtro: term
+                    };
+                },
+                results: function(data, page ) {
+                    return {
+                    	results: data
+                    };
+                }
+            },
+            formatResult: function(enfermedad) { 
+            	var markup = "<table'><tr>";
+                markup += "<td valign='top'><h5>" + enfermedad.codigoCie10 + "</h5>";
+                markup += "<div>" + enfermedad.nombreCie10 + "</div>";
+                markup += "</td></tr></table>";
+                return markup; 
+            },
+            formatSelection: function(enfermedad) { 
+                return enfermedad.nombreCie10; 
+            },
+            dropdownCssClass: "bigdrop",
+            initSelection: function (item, callback) {
+                return item;
+            },
+            escapeMarkup: function (m) { return m; }
+        });
     };
 
     return {
@@ -145,6 +179,19 @@ var FormWizardHSF = function () {
             handleInputMasks();
             handleMultiSelect();
             handleSelect2();
+            
+            
+            var table1 = $('#lista_personas').DataTable({
+            	bFilter: false, bInfo: false, bPaginate: false
+            });
+            
+            var table2 = $('#lista_enfermedades').DataTable({
+            	bFilter: false, bInfo: false, bPaginate: false
+            });
+            
+            var table3 = $('#lista_enfermedadessoc').DataTable({
+            	bFilter: false, bInfo: false, bPaginate: false
+            });
 
             $('#silais').change(
             		function() {
@@ -214,54 +261,131 @@ var FormWizardHSF = function () {
                 rules: {
                     //Datos generales
                 	silais: {
-                        required: false
+                        required: true
                     },
                     municipio: {
-                        required: false
+                        required: true
                     },
                     sector: {
-                        required: false
+                        required: true
                     },
                     comunidad: {
-                        required: false
+                        required: true
                     },
                     numVivienda: {
                     	min:1,
-                        required: false
+                        required: true
                     },
                     numFamilia: {
                     	min:1,
-                        required: false
+                        required: true
                     },
                     direccion: {
                     	minlength:10,
-                        required: false
+                        required: true
                     },
                     numFicha: {
                     	min:1,
-                        required: false
+                        required: true
                     },
                     personaVisita: {
                     	minlength:10,
-                        required: false
+                        required: true
                     },
                     personaVisitaProfesion: {
-                        required: false
+                        required: true
                     },
                     fechaVisita: {
-                        required: false
-                    },
-                    hacinamiento: {
-                        required: false
+                        required: true
                     },
                     noPersonasFamilia: {
                     	min:1,
-                    	required: false
+                    	required: true
+                    },
+                    hacinamiento: {
+                        required: true
+                    },
+                    animalesDom: {
+                    	required: true
+                    },
+                    riesgoNatural: {
+                    	required: true
+                    },
+                    riesgoMeteorologico: {
+                    	required: true
+                    },
+                    riesgoBiologico: {
+                    	required: true
+                    },
+                    riesgoSocial: {
+                    	required: true
+                    },
+                    factoresMedAmb: {
+                    	required: true
+                    },
+                    combCocinar: {
+                    	required: true
+                    },
+                    aAgua: {
+                    	required: true
+                    },
+                    cAgua: {
+                    	required: true
+                    },
+                    electricidad: {
+                    	required: true
+                    },
+                    depExcretas: {
+                    	required: true
+                    },
+                    depBasura: {
+                    	required: true
+                    },
+                    depResLiq: {
+                    	required: true
+                    },
+                    tipoPiso: {
+                    	required: true
+                    },
+                    tipoTecho: {
+                    	required: true
+                    },
+                    tipoPared: {
+                    	required: true
+                    },
+                    culturaSanitaria: {
+                    	required: true
+                    },
+                    carPsicosociales: {
+                    	required: true
+                    },
+                    satNecBasicas: {
+                    	required: true
+                    },
+                    tenenciaVivienda: {
+                    	required: true
                     },
                     accionesComunitarias: {
                     	required: true
+                    },
+                    tamFamilia: {
+                    	required: true
+                    },
+                    ontogenesis: {
+                    	required: true
+                    },
+                    etapaCicloVital: {
+                    	required: true
+                    },
+                    crisisNormativa: {
+                    	required: true
+                    },
+                    crisisParanormativa: {
+                    	required: true
+                    },
+                    usoMedTradicional: {
+                    	required: true
                     }
-                    
                 },
                 
                 messages: { 
@@ -392,24 +516,22 @@ var FormWizardHSF = function () {
             $('#form_wizard_1').find('.button-previous').hide();
             $('#form_wizard_1 .button-submit').click(function () {
             	var IsValid = true;
-
                 // Validate Each Bootstrap tab
                 $(".hsfcompleta").find("div.tab-pane").each(function (index, tab) {
                     var id = $(tab).attr("id");
                     $('a[href="#' + id + '"]').tab('show');
-
                     var IsTabValid = form.valid();
-
                     if (!IsTabValid) {
                         IsValid = false;
                         return false; // Break each loop
                     }
                 });
-            	if (IsValid) {
-            		guardarFamiliaVisita();
-            		guardarCarHigSan();
-            		guardarFactSocEc();
-            		guardarFuncFam();
+                if (IsValid){
+	        		guardarFamiliaVisita();
+	        		guardarCarHigSan();
+	        		guardarFactSocEc();
+	        		guardarFuncFam();
+	        		table1.fnClearTable();
                 }
             }).hide();
             
@@ -503,7 +625,6 @@ var FormWizardHSF = function () {
     		        if( $(this).is( $input.last() ) )
     		        {
     		            //Time to submit the form!!!!
-    		            //alert( 'Hooray .....' );
     		        }
     		        else
     		        {
@@ -514,57 +635,41 @@ var FormWizardHSF = function () {
             
                       
             $("#personamodalform").on("shown.bs.modal", function () { 
+            	$('a[href="#tab_1_1"]').tab('show');
             	$('#nombres').focus();
             });
             
-            $('body').on('hidden.bs.modal', '.modal', function () {
-            	$('#add_person_form').trigger("reset");
+            $("#personamodalform").on("hidden.bs.modal", function () { 
             	$('#add_person_form .alert-danger').hide();
             	$('#add_person_form .alert-success').hide();
+            	$('#add_person_form').find('input:text, input:password, textarea').val('');
+                $('#add_person_form').find('input:radio, input:checkbox').prop('checked', false);
+                $('#add_person_form').find('select').select2('val','');
+                $('#add_person_form').find('select').multiSelect('deselect_all');
+                table2.fnClearTable();
+                table3.fnClearTable();
 				$("#save-person").unbind("click");
 				$("#save-person-add").unbind("click");
-              });
-            
-            var table  = $('#lista_personas').DataTable({
-                "aLengthMenu": [
-                    [5, 10, 15, 20, -1],
-                    [5, 10, 15, 20, "Todos"] // change per page values here
-                ],
-                // set the initial value
-                "iDisplayLength": 5,
-                "sPaginationType": "bootstrap"
+				$("#dismiss-modalperson").unbind("click");
+				$('a[href="#tab_1_1"]').tab('show');
+            	$('#nombres').focus();
             });
-    		
-    		var tt = new $.fn.dataTable.TableTools( table, {
-            	"sSwfPath": "${dataTablesTTSWF}",
-            	"aButtons": [
-            	                {
-            	                    "sExtends":    "collection",
-            	                    "sButtonText": parametros.exportar,
-            	                    "aButtons": [
-            	                                 {
-            	                                     "sExtends": "csv",
-            	                                     "oSelectorOpts": { filter: 'applied', order: 'current' },
-            	                                     "mColumns": [ 0, 1, 2, 3, 4 ]
-            	                                 },
-            	                                 {
-            	                                     "sExtends": "pdf",
-            	                                     "oSelectorOpts": { filter: 'applied', order: 'current' },
-            	                                     "mColumns": [ 0, 1, 2, 3, 4 ],
-            	                                     "sPdfOrientation": "landscape",
-            	                                 }
-            	                                 ]
-            	                }
-            	            ]
-            } );
-    		 
-    	    $( tt.fnContainer() ).insertBefore('div.table-toolbar');
-
-            jQuery('#lista_personas_wrapper .dataTables_filter input').addClass("form-control input-medium"); // modify table search input
-            jQuery('#lista_personas_wrapper .dataTables_length select').addClass("form-control input-small"); // modify table per page dropdown
-            jQuery('#lista_personas_wrapper .dataTables_length select').select2({
-                showSearchInput : false //hide search box with special css class
-            }); // initialize select2 dropdown
+            
+            $("#enferform").on("shown.bs.modal", function () { 
+            	$("#save-person").click();
+            });
+            
+            $("#enferform").on("hidden.bs.modal", function () { 
+            	$('#add_enfermedad_form .alert-danger').hide();
+            	$('#add_enfermedad_form .alert-success').hide();
+            	$('#add_enfermedad_form').find('input:text, input:password, textarea').val('');
+                $('#add_enfermedad_form').find('input:radio, input:checkbox').prop('checked', false);
+                $('#add_enfermedad_form').find('select').select2('val','');
+                $('#add_enfermedad_form').find('select').multiSelect('deselect_all');
+				$("#save-enf").unbind("click");
+				$("#save-enf-add").unbind("click");
+				$("dismiss-modalenf").unbind("click");
+              });
         }
     };
 

@@ -1,4 +1,3 @@
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!-- BEGIN SIDEBAR -->
 <div class="page-sidebar-wrapper">
@@ -18,7 +17,7 @@
 					<a href="<spring:url value="/" htmlEscape="true "/>">
 					<i class="fa fa-home"></i>
 					<span class="title">
-						<fmt:message key="dashboard" />
+						<spring:message code="dashboard"/>
 					</span>
 					<span class="selected">
 					</span>
@@ -28,7 +27,7 @@
 					<a href="javascript:;">
 					<i class="fa fa-table"></i>
 					<span class="title">
-						<fmt:message key="hsf" />
+						<spring:message code="hsf"/>
 					</span>
 					<span class="arrow ">
 					</span>
@@ -37,12 +36,12 @@
 						<li class="hsfnuevo">
 							<a href="<spring:url value="/info/newHsf" htmlEscape="true "/>">
 							<i class="fa fa-file-o"></i>
-							<fmt:message key="hsf.nuevo" /></a>
+							<spring:message code="hsf.nuevo"/></a>
 						</li>
 						<li class="hsfsearch">
 							<a href="<spring:url value="/info/searchHsf" htmlEscape="true "/>">
 							<i class="fa fa-search"></i>
-							<fmt:message key="hsf.search" /></a>
+							<spring:message code="hsf.search"/></a>
 						</li>
 					</ul>
 				</li>
@@ -50,7 +49,7 @@
 					<a href="javascript:;">
 					<i class="fa fa-bar-chart-o"></i>
 					<span class="title">
-						<fmt:message key="analysis" />
+						<spring:message code="analysis"/>
 					</span>
 					<span class="arrow ">
 					</span>
@@ -59,12 +58,12 @@
 						<li class="visitday">
 							<a href="<spring:url value="/" htmlEscape="true "/>">
 							<i class="fa fa-calendar"></i>
-							<fmt:message key="visit.day" /></a>
+							<spring:message code="visit.day"/></a>
 						</li>
 						<li class="visitarea">
 							<a href="<spring:url value="/" htmlEscape="true "/>">
 							<i class="fa fa-map-marker"></i>
-							<fmt:message key="visit.area" /></a>
+							<spring:message code="visit.area"/></a>
 						</li>
 					</ul>
 				</li>
@@ -72,7 +71,7 @@
 					<a href="javascript:;">
 					<i class="fa fa-folder-open-o"></i>
 					<span class="title">
-						<fmt:message key="reports" />
+						<spring:message code="reports"/>
 					</span>
 					<span class="arrow ">
 					</span>
@@ -81,12 +80,12 @@
 						<li class="reportday">
 							<a href="<spring:url value="/" htmlEscape="true "/>">
 							<i class="fa fa-calendar"></i>
-							<fmt:message key="report.day" /></a>
+							<spring:message code="report.day"/></a>
 						</li>
 						<li class="reportarea">
 							<a href="<spring:url value="/" htmlEscape="true "/>">
 							<i class="fa fa-map-marker"></i>
-							<fmt:message key="report.area" /></a>
+							<spring:message code="report.area"/></a>
 						</li>
 					</ul>
 				</li>
@@ -94,7 +93,7 @@
 					<a href="javascript:;">
 					<i class="fa fa-dashboard"></i>
 					<span class="title">
-						<fmt:message key="monitor" />
+						<spring:message code="monitor"/>
 					</span>
 					<span class="arrow ">
 					</span>
@@ -103,12 +102,12 @@
 						<li class="monitoractivity">
 							<a href="<spring:url value="/" htmlEscape="true "/>">
 							<i class="fa fa-cogs"></i>
-							<fmt:message key="monitor.activity" /></a>
+							<spring:message code="monitor.activity"/></a>
 						</li>
 						<li class="monitornoactivity">
 							<a href="<spring:url value="/" htmlEscape="true "/>">
 							<i class="fa fa-frown-o"></i>
-							<fmt:message key="monitor.noactivity" /></a>
+							<spring:message code="monitor.noactivity"/></a>
 						</li>
 					</ul>
 				</li>
@@ -116,7 +115,7 @@
 					<a href="<spring:url value="/admin/users/" htmlEscape="true "/>">
 					<i class="fa fa-group"></i>
 					<span class="title">
-						<fmt:message key="users" />
+						<spring:message code="users"/>
 					</span>
 					</a>
 				</li>
@@ -124,7 +123,7 @@
 					<a href="<spring:url value="/logout" htmlEscape="true" />">
 					<i class="fa fa-sign-out"></i>
 					<span class="title">
-						<fmt:message key="log_out" />
+						<spring:message code="log_out"/>
 					</span>
 					</a>
 				</li>

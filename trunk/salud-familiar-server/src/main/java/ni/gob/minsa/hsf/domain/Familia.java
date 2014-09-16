@@ -29,6 +29,7 @@ public class Familia extends BaseMetaData implements Auditable{
 	private BigDecimal latitud;
 	private BigDecimal longitud;
 	private String telefonoContacto;
+	private char dispensarizada = '0';
 	
 	
 	public Familia() {
@@ -129,12 +130,41 @@ public class Familia extends BaseMetaData implements Auditable{
 		this.telefonoContacto = telefonoContacto;
 	}
 
+	@Column(name = "DISPENSARIZADA", nullable = true)
+	public char getDispensarizada() {
+		return dispensarizada;
+	}
+
+	public void setDispensarizada(char dispensarizada) {
+		this.dispensarizada = dispensarizada;
+	}
+
 	@Override
 	public boolean isFieldAuditable(String fieldname) {
-		if(fieldname.matches("created")||fieldname.matches("createdBy")||fieldname.matches("numVivienda")||fieldname.matches("numFamilia")){
+		if(fieldname.matches("created")||fieldname.matches("createdBy")){
 			return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public String toString(){
+		return idFamilia;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		
+		if ((this == other))
+			return true;
+		if ((other == null))
+			return false;
+		if (!(other instanceof Familia))
+			return false;
+		
+		Familia castOther = (Familia) other;
+
+		return (this.getIdFamilia().equals(castOther.getIdFamilia()));
 	}
 
 }
