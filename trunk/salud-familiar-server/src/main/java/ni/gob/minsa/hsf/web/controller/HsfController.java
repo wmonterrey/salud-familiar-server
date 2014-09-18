@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 
 import ni.gob.minsa.hsf.domain.CaractHigSanitarias;
 import ni.gob.minsa.hsf.domain.Enfermedades;
+import ni.gob.minsa.hsf.domain.EnfermedadesSocioCult;
 import ni.gob.minsa.hsf.domain.FactSocioEconomicos;
 import ni.gob.minsa.hsf.domain.Familia;
 import ni.gob.minsa.hsf.domain.FuncFamiliar;
@@ -30,6 +31,7 @@ import ni.gob.minsa.hsf.domain.catalogos.DepExcretas;
 import ni.gob.minsa.hsf.domain.catalogos.DepResLiq;
 import ni.gob.minsa.hsf.domain.catalogos.Discapacidad;
 import ni.gob.minsa.hsf.domain.catalogos.Electricidad;
+import ni.gob.minsa.hsf.domain.catalogos.EnfSocioC;
 import ni.gob.minsa.hsf.domain.catalogos.Escolaridad;
 import ni.gob.minsa.hsf.domain.catalogos.EtapaCicloVital;
 import ni.gob.minsa.hsf.domain.catalogos.Etnia;
@@ -59,6 +61,7 @@ import ni.gob.minsa.hsf.service.CatalogoService;
 import ni.gob.minsa.hsf.service.Cie10Service;
 import ni.gob.minsa.hsf.service.ComunidadesService;
 import ni.gob.minsa.hsf.service.EnfermedadesService;
+import ni.gob.minsa.hsf.service.EnfermedadesSocioCultService;
 import ni.gob.minsa.hsf.service.EntidadesAdtvasService;
 import ni.gob.minsa.hsf.service.FactSocioEconomicosService;
 import ni.gob.minsa.hsf.service.FamiliaService;
@@ -110,6 +113,8 @@ public class HsfController {
 	private PersonaService personaService;
 	@Resource(name="enfermedadesService")
 	private EnfermedadesService enfermedadesService;
+	@Resource(name="enfermedadesSocioCultService")
+	private EnfermedadesSocioCultService enfermedadesSocioCultService;
 	@Resource(name="cie10Service")
 	private Cie10Service cie10Service;
 	
@@ -155,6 +160,7 @@ public class HsfController {
     	List<EtapaCicloVital> etapasCicloVital = catalogoService.getEtapaCicloVital();
     	List<CrisisNormativa> crisisNormativas = catalogoService.getCrisisNormativa();
     	List<CrisisParanormativa> crisisParanormativas = catalogoService.getCrisisParanormativa();
+    	List<EnfSocioC> enfermedadessocs = catalogoService.getEnfSocioC();
     	model.addAttribute("entidades", entidades);
     	model.addAttribute("profesiones", profesiones);
     	model.addAttribute("sinons", sinons);
@@ -193,6 +199,7 @@ public class HsfController {
     	model.addAttribute("etapasCicloVital", etapasCicloVital);
     	model.addAttribute("crisisNormativas", crisisNormativas);
     	model.addAttribute("crisisParanormativas", crisisParanormativas);
+    	model.addAttribute("enfermedadessocs", enfermedadessocs);
     	return "hsf/create";
 	}
 	
@@ -252,8 +259,21 @@ public class HsfController {
 	
 	@RequestMapping( value="newCarHigSan", method=RequestMethod.POST)
 	public ResponseEntity<String> processCreationCaractHigForm( @RequestParam( value="idVisita", required=true) String idVisita
-			, @RequestParam( value="hacinamiento", required=true) String hacinamiento
-			, @RequestParam( value="animalesDom", required=true) String animalesDom
+			, @RequestParam( value="hacinamiento", required=false) String hacinamiento
+			, @RequestParam( value="animalesDom", required=false) String animalesDom
+			, @RequestParam( value="riesgoNatural", required=false) String riesgoNatural
+			, @RequestParam( value="riesgoMeteorologico", required=false) String riesgoMeteorologico
+			, @RequestParam( value="riesgoSocial", required=false) String riesgoSocial
+			, @RequestParam( value="riesgoBiologico", required=false) String riesgoBiologico
+			, @RequestParam( value="factoresMedAmb", required=false) String factoresMedAmb
+			, @RequestParam( value="combCocinar", required=false) String combCocinar
+			, @RequestParam( value="aAgua", required=false) String aAgua
+			, @RequestParam( value="cAgua", required=false) String cAgua
+			, @RequestParam( value="electricidad", required=false) String electricidad
+			, @RequestParam( value="depExcretas", required=false) String depExcretas
+			, @RequestParam( value="depBasura", required=false) String depBasura
+			, @RequestParam( value="depResLiq", required=false) String depResLiq
+			, @RequestParam( value="obsCaractHig", required=false) String obsCaractHig
 			, @RequestParam( value="idCaractHig", required=false, defaultValue="" ) String idCaractHig
 	        ) 
 	{
@@ -262,6 +282,19 @@ public class HsfController {
 		carHigSan.setVisita(visitaService.getVisita(idVisita));
 		carHigSan.setHacinamiento(hacinamiento);
 		carHigSan.setAnimalesDom(animalesDom);
+		carHigSan.setRiesgoNatural(riesgoNatural);
+		carHigSan.setRiesgoMeteorologico(riesgoMeteorologico);
+		carHigSan.setRiesgoBiologico(riesgoBiologico);
+		carHigSan.setRiesgoSocial(riesgoSocial);
+		carHigSan.setFactoresMedAmb(factoresMedAmb);
+		carHigSan.setCombCocinar(combCocinar);
+		carHigSan.setaAgua(catalogoService.getAbastecimientoAgua(aAgua));
+		carHigSan.setcAgua(catalogoService.getCalidadAgua(cAgua));
+		carHigSan.setElectricidad(catalogoService.getElectricidad(electricidad));
+		carHigSan.setDepExcretas(catalogoService.getDepExcretas(depExcretas));
+		carHigSan.setDepBasura(catalogoService.getDepBasura(depBasura));
+		carHigSan.setDepResLiq(catalogoService.getDepResLiq(depResLiq));
+		carHigSan.setObsCaractHig(obsCaractHig);
 		if (idCaractHig.equals("")){
 			idCaractHig = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
 		}
@@ -275,8 +308,15 @@ public class HsfController {
 	
 	@RequestMapping( value="newFactSocEc", method=RequestMethod.POST)
 	public ResponseEntity<String> processCreationFactSocEcForm( @RequestParam( value="idVisita", required=true) String idVisita
-			, @RequestParam( value="tipoPiso", required=true) String tipoPiso
-			, @RequestParam( value="tipoTecho", required=true) String tipoTecho
+			, @RequestParam( value="tipoPiso", required=false) String tipoPiso
+			, @RequestParam( value="tipoTecho", required=false) String tipoTecho
+			, @RequestParam( value="tipoPared", required=false) String tipoPared
+			, @RequestParam( value="culturaSanitaria", required=false) String culturaSanitaria
+			, @RequestParam( value="carPsicosociales", required=false) String carPsicosociales
+			, @RequestParam( value="satNecBasicas", required=false) String satNecBasicas
+			, @RequestParam( value="tenenciaVivienda", required=false) String tenenciaVivienda
+			, @RequestParam( value="accionesComunitarias", required=false) String accionesComunitarias
+			, @RequestParam( value="obsFactSocioEc", required=false) String obsFactSocioEc
 			, @RequestParam( value="idFactSocioEc", required=false, defaultValue="" ) String idFactSocioEc
 	        ) 
 	{
@@ -285,6 +325,13 @@ public class HsfController {
 		factSocEc.setVisita(visitaService.getVisita(idVisita));
 		factSocEc.setTipoPiso(catalogoService.getTipoPiso(tipoPiso));
 		factSocEc.setTipoTecho(catalogoService.getTipoTecho(tipoTecho));
+		factSocEc.setTipoPared(catalogoService.getTipoPared(tipoPared));
+		factSocEc.setCulturaSanitaria(catalogoService.getCulturaSanitaria(culturaSanitaria));
+		factSocEc.setCarPsicosociales(catalogoService.getCarPsicosociales(carPsicosociales));
+		factSocEc.setSatNecBasicas(satNecBasicas);
+		factSocEc.setTenenciaVivienda(catalogoService.getTenenciaVivienda(tenenciaVivienda));
+		factSocEc.setAccionesComunitarias(accionesComunitarias);
+		factSocEc.setObsFactSocioEc(obsFactSocioEc);
 		if (idFactSocioEc.equals("")){
 			idFactSocioEc = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
 		}
@@ -298,8 +345,13 @@ public class HsfController {
 	
 	@RequestMapping( value="newFuncFam", method=RequestMethod.POST)
 	public ResponseEntity<String> processCreationFuncFamForm( @RequestParam( value="idVisita", required=true) String idVisita
-			, @RequestParam( value="tamFamilia", required=true) String tamFamilia
-			, @RequestParam( value="ontogenesis", required=true) String ontogenesis
+			, @RequestParam( value="tamFamilia", required=false) String tamFamilia
+			, @RequestParam( value="ontogenesis", required=false) String ontogenesis
+			, @RequestParam( value="etapaCicloVital", required=false) String etapaCicloVital
+			, @RequestParam( value="crisisNormativa", required=false) String crisisNormativa
+			, @RequestParam( value="crisisParanormativa", required=false) String crisisParanormativa
+			, @RequestParam( value="usoMedTradicional", required=false) String usoMedTradicional
+			, @RequestParam( value="obsFuncFamiliar", required=false) String obsFuncFamiliar
 			, @RequestParam( value="idFuncFamiliar", required=false, defaultValue="" ) String idFuncFamiliar
 	        ) 
 	{
@@ -308,6 +360,11 @@ public class HsfController {
 		funcFam.setVisita(visitaService.getVisita(idVisita));
 		funcFam.setTamFamilia(catalogoService.getTamanoFam(tamFamilia));
 		funcFam.setOntogenesis(catalogoService.getOntogenesis(ontogenesis));
+		funcFam.setEtapaCicloVital(catalogoService.getEtapaCicloVital(etapaCicloVital));
+		funcFam.setCrisisNormativa(crisisNormativa);
+		funcFam.setCrisisParanormativa(crisisParanormativa);
+		funcFam.setUsoMedTradicional(usoMedTradicional);
+		funcFam.setObsFuncFamiliar(obsFuncFamiliar);
 		if (idFuncFamiliar.equals("")){
 			idFuncFamiliar = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
 		}
@@ -324,11 +381,10 @@ public class HsfController {
 			, @RequestParam(value="numPersona", required=true ) Integer numPersona
 			, @RequestParam( value="nombres", required=true ) String nombres
 			, @RequestParam( value="primerApellido", required=true ) String primerApellido
-			, @RequestParam( value="segundoApellido", required=true ) String segundoApellido
-			, @RequestParam( value="cedula", required=false, defaultValue="" ) String cedula
-			, @RequestParam( value="fechaNacimiento", required=false, defaultValue="") String fechaNacimiento
+			, @RequestParam( value="segundoApellido", required=false ) String segundoApellido
+			, @RequestParam( value="cedula", required=false) String cedula
+			, @RequestParam( value="fechaNacimiento", required=false) String fechaNacimiento
 			, @RequestParam( value="actaNacimiento", required=false) String actaNacimiento
-			, @RequestParam(value="edad", required=false, defaultValue="" ) Integer edad
 			, @RequestParam(value="etnia", required=false ) String etnia
 			, @RequestParam(value="sexo", required=false ) String sexo
 			, @RequestParam(value="escolaridad", required=false ) String escolaridad
@@ -366,7 +422,6 @@ public class HsfController {
 		Date date = formatter.parse(fechaNacimiento);
 		persona.setFechaNacimiento(date);
 		persona.setActaNacimiento(actaNacimiento);
-        persona.setEdad(edad);
         persona.setEtnia(catalogoService.getEtnia(etnia));
         persona.setSexo(catalogoService.getSexo(sexo));
         persona.setEscolaridad(catalogoService.getEscda(escolaridad));
@@ -417,6 +472,34 @@ public class HsfController {
         enf.setCreatedBy(authentication.getName());
         enf.setPasive('0');
         enfermedadesService.addEnfermedades(enf);
+		return createJsonResponse(enf);
+	}
+	
+	@RequestMapping( value="newEnfermedadSC", method=RequestMethod.POST)
+	public ResponseEntity<String> processCreationEnfermedadSCForm( @RequestParam(value="idPersonaEnfSoc", required=true ) String idPersonaEnf
+			, @RequestParam( value="enfermedadsoc", required=true ) String enfermedad
+			, @RequestParam( value="personaAtendioSoc", required=true ) String personaAtendio
+			, @RequestParam( value="fechaOcurrenciaSoc", required=true) String fechaOcurrencia
+			, @RequestParam( value="idEnfermedadSoc", required=false, defaultValue="" ) String idEnfermedad
+	        ) throws ParseException
+	{
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Persona persona = personaService.getPersona(idPersonaEnf);
+		EnfermedadesSocioCult enf = new EnfermedadesSocioCult();
+		enf.setPersona(persona);
+		enf.setEnfermedad(catalogoService.getEnfSocioC(enfermedad));
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		Date date = formatter.parse(fechaOcurrencia);
+		enf.setFechaOcurrencia(date);
+        if (idEnfermedad.equals("")){
+        	idEnfermedad = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
+		}
+        enf.setIdEnfSocioC(idEnfermedad);
+        enf.setPersonaAtendio(catalogoService.getProfesion(personaAtendio));
+        enf.setCreated(new Date());
+        enf.setCreatedBy(authentication.getName());
+        enf.setPasive('0');
+        enfermedadesSocioCultService.addEnfermedadesSocioCult(enf);
 		return createJsonResponse(enf);
 	}
 	

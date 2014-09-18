@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import ni.gob.minsa.hsf.domain.audit.Auditable;
 import ni.gob.minsa.hsf.domain.catalogos.EtapaCicloVital;
 import ni.gob.minsa.hsf.domain.catalogos.Ontogenesis;
 import ni.gob.minsa.hsf.domain.catalogos.TamanoFam;
@@ -20,7 +21,7 @@ import org.hibernate.annotations.ForeignKey;
 
 @Entity
 @Table(name = "HSF_FUNC_FAM", catalog = "HSF")
-public class FuncFamiliar extends BaseMetaData{
+public class FuncFamiliar extends BaseMetaData implements Auditable{
 	
 	
 	private String idFuncFamiliar;
@@ -136,6 +137,19 @@ public class FuncFamiliar extends BaseMetaData{
 	@Column(name = "OBSERVACIONES", nullable = true, length = 255)
 	public void setObsFuncFamiliar(String obsFuncFamiliar) {
 		this.obsFuncFamiliar = obsFuncFamiliar;
+	}
+	
+	@Override
+	public String toString(){
+		return idFuncFamiliar;
+	}
+	
+	@Override
+	public boolean isFieldAuditable(String fieldname) {
+		if(fieldname.matches("created")||fieldname.matches("createdBy")){
+			return false;
+		}
+		return true;
 	}
 
 }

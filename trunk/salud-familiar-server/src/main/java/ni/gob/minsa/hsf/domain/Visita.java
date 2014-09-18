@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import ni.gob.minsa.hsf.domain.audit.Auditable;
 import ni.gob.minsa.hsf.domain.catalogos.Profesion;
 import ni.gob.minsa.hsf.domain.estructura.BaseMetaData;
 import ni.gob.minsa.hsf.domain.estructura.Catalogo;
@@ -19,7 +20,7 @@ import org.hibernate.annotations.ForeignKey;
 
 @Entity
 @Table(name = "HSF_VISITAS", catalog = "HSF")
-public class Visita extends BaseMetaData{
+public class Visita extends BaseMetaData implements Auditable{
 	
 	private String idVisita;
 	private Familia familia;
@@ -108,6 +109,34 @@ public class Visita extends BaseMetaData{
 
 	public void setVisitaFinalizada(char visitaFinalizada) {
 		this.visitaFinalizada = visitaFinalizada;
+	}
+	
+	@Override
+	public boolean isFieldAuditable(String fieldname) {
+		if(fieldname.matches("created")||fieldname.matches("createdBy")){
+			return false;
+		}
+		return true;
+	}
+	
+	@Override
+	public String toString(){
+		return idVisita;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		
+		if ((this == other))
+			return true;
+		if ((other == null))
+			return false;
+		if (!(other instanceof Visita))
+			return false;
+		
+		Visita castOther = (Visita) other;
+
+		return (this.getIdVisita().equals(castOther.getIdVisita()));
 	}
 	
 }

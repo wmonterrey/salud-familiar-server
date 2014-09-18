@@ -42,7 +42,7 @@ var FormWizardHSFModalEnfValidation = function () {
     	                label
     	                .closest('.form-group').removeClass('has-error'); // set success class to the control group
     	                $('#add_enfermedad_form .alert-danger').hide();
-    	            	$('#add_enfermedad_form .alert-success').show();
+                    	$('#add_enfermedad_form .alert-success').hide();
     	        },
     	
     	    });
@@ -51,8 +51,6 @@ var FormWizardHSFModalEnfValidation = function () {
             	if (enfForm.valid()){
             		$('#idPersonaEnf').val($('#idPersona').val());
             		guardarEnfermedad();
-            		$('#add_enfermedad_form .alert-danger').hide();
-                	$('#add_enfermedad_form .alert-success').show();
             	}
     	    });
     	    
@@ -61,8 +59,6 @@ var FormWizardHSFModalEnfValidation = function () {
             		$('#idPersonaEnf').val($('#idPersona').val());
             		guardarEnfermedadAgregar();
 		            $('#enfermedad').focus();
-		            $('#add_enfermedad_form .alert-danger').hide();
-	            	$('#add_enfermedad_form .alert-success').hide();
             	}
     	    });
     	    
@@ -104,8 +100,6 @@ var FormWizardHSFModalEnfValidation = function () {
 							$('table#lista_enfermedades').dataTable().fnAddData( [
 							  enfermedad.enfermedad.nombreCie10, d.yyyymmdd(), enfermedad.personaAtendio.valor]);
 						}
-						successEnfForm.hide();
-		    	    	errorEnfForm.hide();
 		    	    	$('#add_enfermedad_form').find('input:text, input:password, textarea').val('');
 		                $('#add_enfermedad_form').find('input:radio, input:checkbox').prop('checked', false);
 		                $('#add_enfermedad_form').find('select').select2('val','');

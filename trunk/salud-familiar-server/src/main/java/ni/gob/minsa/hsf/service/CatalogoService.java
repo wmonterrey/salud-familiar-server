@@ -18,6 +18,7 @@ import ni.gob.minsa.hsf.domain.catalogos.DepExcretas;
 import ni.gob.minsa.hsf.domain.catalogos.DepResLiq;
 import ni.gob.minsa.hsf.domain.catalogos.Discapacidad;
 import ni.gob.minsa.hsf.domain.catalogos.Electricidad;
+import ni.gob.minsa.hsf.domain.catalogos.EnfSocioC;
 import ni.gob.minsa.hsf.domain.catalogos.Escolaridad;
 import ni.gob.minsa.hsf.domain.catalogos.EtapaCicloVital;
 import ni.gob.minsa.hsf.domain.catalogos.Etnia;
@@ -463,7 +464,7 @@ public class CatalogoService {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
 		// Create a Hibernate query (HQL)
-		Query query = session.getNamedQuery("obtenerDepBasuraPorCodigo").setString("pCodigo", depResLiq);
+		Query query = session.getNamedQuery("obtenerDepResLiqPorCodigo").setString("pCodigo", depResLiq);
 		// Retrieve all
 		return  (DepResLiq) query.uniqueResult();
 	}
@@ -687,6 +688,26 @@ public class CatalogoService {
 		Session session = sessionFactory.getCurrentSession();
 		// Create a Hibernate query (HQL)
 		Query query = session.createQuery("FROM CrisisParanormativa where pasivo = :pasivo order by orden");
+		query.setParameter("pasivo", false);
+		// Retrieve all
+		return  query.list();
+	}
+	
+	public EnfSocioC getEnfSocioC(String codigo) {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = session.getNamedQuery("obtenerEnfSocioCPorCodigo").setString("pCodigo", codigo);
+		// Retrieve all
+		return  (EnfSocioC) query.uniqueResult();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<EnfSocioC> getEnfSocioC() {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = session.createQuery("FROM EnfSocioC where pasivo = :pasivo order by orden");
 		query.setParameter("pasivo", false);
 		// Retrieve all
 		return  query.list();
