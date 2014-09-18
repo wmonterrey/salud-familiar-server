@@ -446,12 +446,12 @@
 												<div class="row">
 													<div class="col-md-6">
 														<div class="form-group">
-															<label class="control-label col-md-6"><spring:message code="hacinamiento" />:
+															<label class="control-label col-md-4"><spring:message code="hacinamiento" />:
 															<span class="required">
 																 *
 															</span>
 															</label>
-															<div class="col-md-6">
+															<div class="col-md-8">
 																<select data-placeholder="<spring:message code="select" /> <spring:message code="hacinamiento" />" name="hacinamiento" id="hacinamiento" class="form-control">
 																	<option value=""></option>
 																	<c:forEach items="${sinons}" var="sn"> 
@@ -463,12 +463,12 @@
 													</div>
 													<div class="col-md-6">
 														<div class="form-group">
-															<label class="control-label col-md-6"><spring:message code="animdom" />:
+															<label class="control-label col-md-4"><spring:message code="animdom" />:
 															<span class="required">
 																 *
 															</span>
 															</label>
-															<div class="col-md-6">
+															<div class="col-md-8">
 																<select multiple="multiple" class="multi-select" id=animalesDom name="animalesDom">
 																	<c:forEach items="${animales}" var="animal"> 
 																		<option value="${animal.codigo}">${animal.valor}</option> 
@@ -483,12 +483,12 @@
 												<div class="row">
 													<div class="col-md-6">
 														<div class="form-group">
-															<label class="control-label col-md-6"><spring:message code="risks.nat" />:
+															<label class="control-label col-md-4"><spring:message code="risks.nat" />:
 															<span class="required">
 																 *
 															</span>
 															</label>
-															<div class="col-md-6">
+															<div class="col-md-8">
 																<select multiple="multiple" class="multi-select" id=riesgoNatural name="riesgoNatural">
 																	<c:forEach items="${rgnats}" var="rgnat"> 
 																		<option value="${rgnat.codigo}">${rgnat.valor}</option> 
@@ -499,12 +499,12 @@
 													</div>
 													<div class="col-md-6">
 														<div class="form-group">
-															<label class="control-label col-md-6"><spring:message code="risks.met" />:
+															<label class="control-label col-md-4"><spring:message code="risks.met" />:
 															<span class="required">
 																 *
 															</span>
 															</label>
-															<div class="col-md-6">
+															<div class="col-md-8">
 																<select multiple="multiple" class="multi-select" id=riesgoMeteorologico name="riesgoMeteorologico">
 																	<c:forEach items="${rgmets}" var="rgmet"> 
 																		<option value="${rgmet.codigo}">${rgmet.valor}</option> 
@@ -519,12 +519,12 @@
 												<div class="row">
 													<div class="col-md-6">
 														<div class="form-group">
-															<label class="control-label col-md-6"><spring:message code="risks.bio" />:
+															<label class="control-label col-md-4"><spring:message code="risks.bio" />:
 															<span class="required">
 																 *
 															</span>
 															</label>
-															<div class="col-md-6">
+															<div class="col-md-8">
 																<select multiple="multiple" class="multi-select" id=riesgoBiologico name="riesgoBiologico">
 																	<c:forEach items="${rgbios}" var="rgbio"> 
 																		<option value="${rgbio.codigo}">${rgbio.valor}</option> 
@@ -535,12 +535,12 @@
 													</div>
 													<div class="col-md-6">
 														<div class="form-group">
-															<label class="control-label col-md-6"><spring:message code="risks.social" />:
+															<label class="control-label col-md-4"><spring:message code="risks.social" />:
 															<span class="required">
 																 *
 															</span>
 															</label>
-															<div class="col-md-6">
+															<div class="col-md-8">
 																<select multiple="multiple" class="multi-select" id=riesgoSocial name="riesgoSocial">
 																	<c:forEach items="${rgsocs}" var="rgsoc"> 
 																		<option value="${rgsoc.codigo}">${rgsoc.valor}</option> 
@@ -555,12 +555,12 @@
 												<div class="row">
 													<div class="col-md-6">
 														<div class="form-group">
-															<label class="control-label col-md-6"><spring:message code="fact.med.amb" />:
+															<label class="control-label col-md-4"><spring:message code="fact.med.amb" />:
 															<span class="required">
 																 *
 															</span>
 															</label>
-															<div class="col-md-6">
+															<div class="col-md-8">
 																<select multiple="multiple" class="multi-select" id=factoresMedAmb name="factoresMedAmb">
 																	<c:forEach items="${factoresMedAmbs}" var="factoresMedAmb"> 
 																		<option value="${factoresMedAmb.codigo}">${factoresMedAmb.valor}</option> 
@@ -571,12 +571,12 @@
 													</div>
 													<div class="col-md-6">
 														<div class="form-group">
-															<label class="control-label col-md-6"><spring:message code="comb.coc" />:
+															<label class="control-label col-md-4"><spring:message code="comb.coc" />:
 															<span class="required">
 																 *
 															</span>
 															</label>
-															<div class="col-md-6">
+															<div class="col-md-8">
 																<select multiple="multiple" class="multi-select" id=combCocinar name="combCocinar">
 																	<c:forEach items="${combCocinars}" var="combCocinar"> 
 																		<option value="${combCocinar.codigo}">${combCocinar.valor}</option> 
@@ -591,12 +591,12 @@
 												<div class="row">
 													<div class="col-md-6">
 														<div class="form-group">
-															<label class="control-label col-md-6"><spring:message code="abast.agua" />:
+															<label class="control-label col-md-4"><spring:message code="abast.agua" />:
 															<span class="required">
 																 *
 															</span>
 															</label>
-															<div class="col-md-6">
+															<div class="col-md-8">
 																<select data-placeholder="<spring:message code="select" /> <spring:message code="abast.agua" />" name="aAgua" id="aAgua" class="form-control">
 																	<option value=""></option>
 																	<c:forEach items="${abastecimientoAguas}" var="abastecimientoAgua"> 
@@ -608,12 +608,12 @@
 													</div>
 													<div class="col-md-6">
 														<div class="form-group">
-															<label class="control-label col-md-6"><spring:message code="cal.agua" />:
+															<label class="control-label col-md-4"><spring:message code="cal.agua" />:
 															<span class="required">
 																 *
 															</span>
 															</label>
-															<div class="col-md-6">
+															<div class="col-md-8">
 																<select data-placeholder="<spring:message code="select" /> <spring:message code="cal.agua" />" name="cAgua" id="cAgua" class="form-control">
 																	<option value=""></option>
 																	<c:forEach items="${calidadAguas}" var="calidadAgua"> 
@@ -629,12 +629,12 @@
 												<div class="row">
 													<div class="col-md-6">
 														<div class="form-group">
-															<label class="control-label col-md-6"><spring:message code="elect" />:
+															<label class="control-label col-md-4"><spring:message code="elect" />:
 															<span class="required">
 																 *
 															</span>
 															</label>
-															<div class="col-md-6">
+															<div class="col-md-8">
 																<select data-placeholder="<spring:message code="select" /> <spring:message code="elect" />" name="electricidad" id="electricidad" class="form-control">
 																	<option value=""></option>
 																	<c:forEach items="${electricidads}" var="electricidad"> 
@@ -646,12 +646,12 @@
 													</div>
 													<div class="col-md-6">
 														<div class="form-group">
-															<label class="control-label col-md-6"><spring:message code="dep.excretas" />:
+															<label class="control-label col-md-4"><spring:message code="dep.excretas" />:
 															<span class="required">
 																 *
 															</span>
 															</label>
-															<div class="col-md-6">
+															<div class="col-md-8">
 																<select data-placeholder="<spring:message code="select" /> <spring:message code="dep.excretas" />" name="depExcretas" id="depExcretas" class="form-control">
 																	<option value=""></option>
 																	<c:forEach items="${depExcretas}" var="depExcreta"> 
@@ -667,12 +667,12 @@
 												<div class="row">
 													<div class="col-md-6">
 														<div class="form-group">
-															<label class="control-label col-md-6"><spring:message code="dep.basura" />:
+															<label class="control-label col-md-4"><spring:message code="dep.basura" />:
 															<span class="required">
 																 *
 															</span>
 															</label>
-															<div class="col-md-6">
+															<div class="col-md-8">
 																<select data-placeholder="<spring:message code="select" /> <spring:message code="dep.basura" />" name="depBasura" id="depBasura" class="form-control">
 																	<option value=""></option>
 																	<c:forEach items="${depBasuras}" var="depBasura"> 
@@ -684,12 +684,12 @@
 													</div>
 													<div class="col-md-6">
 														<div class="form-group">
-															<label class="control-label col-md-6"><spring:message code="dep.resliq" />:
+															<label class="control-label col-md-4"><spring:message code="dep.resliq" />:
 															<span class="required">
 																 *
 															</span>
 															</label>
-															<div class="col-md-6">
+															<div class="col-md-8">
 																<select data-placeholder="<spring:message code="select" /> <spring:message code="dep.resliq" />" name="depResLiq" id="depResLiq" class="form-control">
 																	<option value=""></option>
 																	<c:forEach items="${depResLiqs}" var="depResLiq"> 
@@ -705,12 +705,12 @@
 												<div class="row">
 													<div class="col-md-12">
 														<div class="form-group">
-															<label class="control-label col-md-3"><spring:message code="obs" />:
+															<label class="control-label col-md-2"><spring:message code="obs" />:
 															<span class="required">
 																 *
 															</span>
 															</label>
-															<div class="col-md-9">
+															<div class="col-md-10">
 																<div class="input-group">
 																	<input type="text" placeholder="<spring:message code="please.enter" /> <spring:message code="obs" />" class="form-control" id="obsCaractHig" name="obsCaractHig" />
 																	<span class="input-group-addon">
@@ -1505,33 +1505,67 @@
 								</div>
 								<div class="modal-body">
 									<div class="scroller" style="height:100%" data-always-visible="1" data-rail-visible1="1">
-										<div class="portlet tabbable">
+										<div class="portlet" id="form_wizard_2">
 											<div class="portlet-title">
 												<div class="caption">
-													<i class="fa fa-plus"></i><spring:message code="person.add" />
+													<i class="fa fa-plus"></i> <spring:message code="person.add" /> -
+													<span class="step-title">
+														 <spring:message code="step" /> 1 <spring:message code="of" /> 4
+													</span>
 												</div>
-												<div class="tools">
-													
+												<div class="tools hidden-xs">
 												</div>
 											</div>
 											<div class="portlet-body form">
-												<div class=" portlet-tabs">
-													<ul class="nav nav-tabs">
-														<li>
-															<a href="#tab_1_4" data-toggle="tab"><spring:message code="tab4" /></a>
-														</li>
-														<li>
-															<a href="#tab_1_3" data-toggle="tab"><spring:message code="tab3" /></a>
-														</li>
-														<li class="">
-															<a href="#tab_1_2" data-toggle="tab"><spring:message code="tab2" /></a>
-														</li>
-														<li class="active">
-															<a href="#tab_1_1" data-toggle="tab"><spring:message code="tab1" /></a>
-														</li>
-													</ul>
-													<!-- BEGIN FORM-->
-													<form action="#" class="form-horizontal" data-role="form" id="add_person_form">
+												<!-- BEGIN FORM-->
+												<form action="#" class="form-horizontal" data-role="form" id="add_person_form">
+													<div class="form-wizard">
+														<ul class="nav nav-pills nav-justified steps hidden-xs">
+															<li>
+																<a href="#tab2_1" data-toggle="tab" class="step">
+																<span class="number">
+																	 1
+																</span>
+																<span class="desc">
+																	<i class="fa fa-check"></i> <spring:message code="tab1" />
+																</span>
+																</a>
+															</li>
+															<li>
+																<a href="#tab2_2" data-toggle="tab" class="step">
+																<span class="number">
+																	 2
+																</span>
+																<span class="desc">
+																	<i class="fa fa-check"></i> <spring:message code="tab2" />
+																</span>
+																</a>
+															</li>
+															<li>
+																<a href="#tab2_3" data-toggle="tab" class="step">
+																<span class="number">
+																	 3
+																</span>
+																<span class="desc">
+																	<i class="fa fa-check"></i> <spring:message code="tab3" />
+																</span>
+																</a>
+															</li>
+															<li>
+																<a href="#tab2_4" data-toggle="tab" class="step">
+																<span class="number">
+																	 4
+																</span>
+																<span class="desc">
+																	<i class="fa fa-check"></i> <spring:message code="tab4" />
+																</span>
+																</a>
+															</li>
+														</ul>
+														<div id="bar" class="progress progress-striped" data-role="progressbar">
+															<div class="progress-bar progress-bar-success">
+															</div>
+														</div>
 														<div class="alert alert-danger display-none">
 															<button class="close" data-close="alert"></button>
 															<spring:message code="form.errors" />
@@ -1542,7 +1576,7 @@
 														</div>
 														<div class="form-body">
 															<div class="tab-content persona">
-																<div class="tab-pane active" id="tab_1_1">
+																<div class="tab-pane active" id="tab2_1">
 																	<div class="row">
 																		<div class="col-md-6">
 																			<div class="form-group" hidden="true">
@@ -1714,24 +1748,67 @@
 																					 *
 																				</span>
 																				</label>
-																				<div class="col-md-2">
+																				<div class="col-md-6">
 																					<div class="input-group">
-																						<input type="text" id="edad" name="edad" placeholder="<spring:message code="please.enter" /> <spring:message code="person.age" />" class="form-control"/>
+																						<input type="text" id="edad" name="edad" readonly placeholder="<spring:message code="please.enter" /> <spring:message code="person.age" />" class="form-control"/>
 																						<span class="input-group-addon">
-																							<i class="fa fa-sort-numeric-asc"></i>
+																							<i class="fa fa-sort-alpha-asc"></i>
 																						</span>
 																					</div>
 																				</div>
-																				<div class="col-md-4">
+																			</div>
+																		</div>
+																	</div>
+																	<!-- END ROW -->
+																	<!-- START ROW -->
+																	<div class="row" hidden="true">
+																		<div class="col-md-4">
+																			<div class="form-group">
+																				<label class="control-label col-md-6"><spring:message code="person.age" />:
+																				<span class="required">
+																					 *
+																				</span>
+																				</label>
+																				<div class="col-md-6">
 																					<div class="input-group">
-																						<div class="radio-list">
-																							<label class="radio-inline">
-																							<input type="radio" name="radiosMedEdad" id="radiosMedEdad1" value="a">Años</label>
-																							<label class="radio-inline">
-																							<input type="radio" name="radiosMedEdad" id="radiosMedEdad2" value="m">Meses</label>
-																							<label class="radio-inline">
-																							<input type="radio" name="radiosMedEdad" id="radiosMedEdad3" value="d">Días</label>
-																						</div>
+																						<input type="text" id="edada" name="edada" readonly placeholder="<spring:message code="please.enter" /> <spring:message code="person.age" />" class="form-control"/>
+																						<span class="input-group-addon">
+																							<i class="fa fa-sort-alpha-asc"></i>
+																						</span>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																		<div class="col-md-4">
+																			<div class="form-group">
+																				<label class="control-label col-md-6"><spring:message code="person.age" />:
+																				<span class="required">
+																					 *
+																				</span>
+																				</label>
+																				<div class="col-md-6">
+																					<div class="input-group">
+																						<input type="text" id="edadm" name="edadm" readonly placeholder="<spring:message code="please.enter" /> <spring:message code="person.age" />" class="form-control"/>
+																						<span class="input-group-addon">
+																							<i class="fa fa-sort-alpha-asc"></i>
+																						</span>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																		<div class="col-md-4">
+																			<div class="form-group">
+																				<label class="control-label col-md-6"><spring:message code="person.age" />:
+																				<span class="required">
+																					 *
+																				</span>
+																				</label>
+																				<div class="col-md-6">
+																					<div class="input-group">
+																						<input type="text" id="edadd" name="edadd" readonly placeholder="<spring:message code="please.enter" /> <spring:message code="person.age" />" class="form-control"/>
+																						<span class="input-group-addon">
+																							<i class="fa fa-sort-alpha-asc"></i>
+																						</span>
 																					</div>
 																				</div>
 																			</div>
@@ -1739,7 +1816,7 @@
 																	</div>
 																	<!-- END ROW -->
 																</div>
-																<div class="tab-pane" id="tab_1_2">
+																<div class="tab-pane" id="tab2_2">
 																	<!-- START ROW -->
 																	<div class="row">
 																		<div class="col-md-6">
@@ -1847,7 +1924,7 @@
 																				</span>
 																				</label>
 																				<div class="col-md-6">
-																					<select data-placeholder="<spring:message code="select" /> <spring:message code="person.pregnant" />" name="embarazada" id="embarazada" class="form-control">
+																					<select disabled data-placeholder="<spring:message code="select" /> <spring:message code="person.pregnant" />" name="embarazada" id="embarazada" class="form-control">
 																						<option value=""></option>
 																						<c:forEach items="${sinons}" var="sn"> 
 																							<option value="${sn.codigo}">${sn.valor}</option> 
@@ -1864,7 +1941,7 @@
 																				</span>
 																				</label>
 																				<div class="col-md-6">
-																					<select data-placeholder="<spring:message code="select" /> <spring:message code="person.cpn" />" name="cpnActualizado" id="cpnActualizado" class="form-control">
+																					<select disabled data-placeholder="<spring:message code="select" /> <spring:message code="person.cpn" />" name="cpnActualizado" id="cpnActualizado" class="form-control">
 																						<option value=""></option>
 																						<c:forEach items="${sinons}" var="sn"> 
 																							<option value="${sn.codigo}">${sn.valor}</option> 
@@ -1885,7 +1962,7 @@
 																				</span>
 																				</label>
 																				<div class="col-md-6">
-																					<select data-placeholder="<spring:message code="select" /> <spring:message code="person.mef" />" name="mujerEdadFertil" id="mujerEdadFertil" class="form-control">
+																					<select disabled data-placeholder="<spring:message code="select" /> <spring:message code="person.mef" />" name="mujerEdadFertil" id="mujerEdadFertil" class="form-control">
 																						<option value=""></option>
 																						<c:forEach items="${sinons}" var="sn"> 
 																							<option value="${sn.codigo}">${sn.valor}</option> 
@@ -1902,7 +1979,7 @@
 																				</span>
 																				</label>
 																				<div class="col-md-6">
-																					<select data-placeholder="<spring:message code="select" /> <spring:message code="person.pf" />" name="planFamiliar" id="planFamiliar" class="form-control">
+																					<select disabled data-placeholder="<spring:message code="select" /> <spring:message code="person.pf" />" name="planFamiliar" id="planFamiliar" class="form-control">
 																						<option value=""></option>
 																						<c:forEach items="${sinons}" var="sn"> 
 																							<option value="${sn.codigo}">${sn.valor}</option> 
@@ -1940,7 +2017,7 @@
 																				</span>
 																				</label>
 																				<div class="col-md-6">
-																					<select data-placeholder="<spring:message code="select" /> <spring:message code="person.vpdc" />" name="men1AVPCD" id="men1AVPCD" class="form-control">
+																					<select disabled data-placeholder="<spring:message code="select" /> <spring:message code="person.vpdc" />" name="men1AVPCD" id="men1AVPCD" class="form-control">
 																						<option value=""></option>
 																						<c:forEach items="${sinons}" var="sn"> 
 																							<option value="${sn.codigo}">${sn.valor}</option> 
@@ -1952,17 +2029,17 @@
 																	</div>
 																	<!-- END ROW -->
 																</div>
-																<div class="tab-pane" id="tab_1_3">
+																<div class="tab-pane" id="tab2_3">
 																	<!-- START ROW -->
 																	<div class="row">
 																		<div class="col-md-6">
 																			<div class="form-group">
-																				<label class="control-label col-md-6"><spring:message code="person.frm" />:
+																				<label class="control-label col-md-4"><spring:message code="person.frm" />:
 																				<span class="required">
 																					 *
 																				</span>
 																				</label>
-																				<div class="col-md-6">
+																				<div class="col-md-8">
 																					<select multiple="multiple" class="multi-select" id=factRiesgoMod name="factRiesgoMod">
 																						<c:forEach items="${frms}" var="frm"> 
 																							<option value="${frm.codigo}">${frm.valor}</option> 
@@ -1973,12 +2050,12 @@
 																		</div>
 																		<div class="col-md-6">
 																			<div class="form-group">
-																				<label class="control-label col-md-6"><spring:message code="person.frnm" />:
+																				<label class="control-label col-md-4"><spring:message code="person.frnm" />:
 																				<span class="required">
 																					 *
 																				</span>
 																				</label>
-																				<div class="col-md-6">
+																				<div class="col-md-8">
 																					<select multiple="multiple" class="multi-select" id=factRiesgoNoMod name="factRiesgoNoMod">
 																						<c:forEach items="${frnms}" var="frnm"> 
 																							<option value="${frnm.codigo}">${frnm.valor}</option> 
@@ -1993,12 +2070,12 @@
 																	<div class="row">
 																		<div class="col-md-6">
 																			<div class="form-group">
-																				<label class="control-label col-md-6"><spring:message code="person.frs" />:
+																				<label class="control-label col-md-4"><spring:message code="person.frs" />:
 																				<span class="required">
 																					 *
 																				</span>
 																				</label>
-																				<div class="col-md-6">
+																				<div class="col-md-8">
 																					<select multiple="multiple" class="multi-select" id=factRiesgoSocial name="factRiesgoSocial">
 																						<c:forEach items="${frss}" var="frs"> 
 																							<option value="${frs.codigo}">${frs.valor}</option> 
@@ -2009,12 +2086,12 @@
 																		</div>
 																		<div class="col-md-6">
 																			<div class="form-group">
-																				<label class="control-label col-md-6"><spring:message code="person.disc" />:
+																				<label class="control-label col-md-4"><spring:message code="person.disc" />:
 																				<span class="required">
 																					 *
 																				</span>
 																				</label>
-																				<div class="col-md-6">
+																				<div class="col-md-8">
 																					<select multiple="multiple" class="multi-select" id=discapacidades name="discapacidades">
 																						<c:forEach items="${discps}" var="discp"> 
 																							<option value="${discp.codigo}">${discp.valor}</option> 
@@ -2026,7 +2103,7 @@
 																	</div>
 																	<!-- END ROW -->
 																</div>
-																<div class="tab-pane" id="tab_1_4">
+																<div class="tab-pane" id="tab2_4">
 																	<!-- START ROW -->
 																	<div class="row">
 																		<div class="col-md-6">
@@ -2087,7 +2164,7 @@
 																			<div class="portlet">
 																				<div class="portlet-title">
 																					<div class="caption">
-																						<i class="fa fa-stethoscope"></i><spring:message code="enf" /> <spring:message code="enfsoc.list" />
+																						<i class="fa fa-stethoscope"></i><spring:message code="enf.list" /> <spring:message code="enfsoc.list" />
 																					</div>
 																					<div class="tools">
 																					</div>
@@ -2119,16 +2196,30 @@
 																	<!-- START ROW -->
 																	<div class="row modal-footer">
 																		<button type="button" id="save-person" class="btn btn-info"><spring:message code="save" /></button>
-																		<button type="button" id="save-person-add" class="btn btn-success"><spring:message code="saveadd" /></button>
-																		<button type="button" id="dismiss-modalperson" data-dismiss="modal" class="btn btn-danger"><spring:message code="end" /></button>
 																	</div>
 																	<!-- END ROW -->
 																</div>
 															</div>
 														</div>
-													</form>
-													<!-- END FORM-->
-												</div>
+														<div class="form-actions fluid">
+															<div class="row">
+																<div class="col-md-12">
+																	<div class="col-md-offset-3 col-md-9">
+																		<a href="javascript:;" class="btn btn-default button-previous">
+																		<i class="m-icon-swapleft"></i><spring:message code="back" /></a>
+																		<a href="javascript:;" class="btn btn-info button-next">
+																		<spring:message code="continue" /> <i class="m-icon-swapright m-icon-white"></i>
+																		</a>
+																		<a href="javascript:;" class="btn btn-success button-submit">
+																		<spring:message code="end" /> <i class="m-icon-swapright m-icon-white"></i>
+																		</a>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</form>
+												<!-- END FORM-->
 											</div>
 										</div>
 									</div>
@@ -2257,14 +2348,14 @@
 						<div class="modal-dialog modal-wide">
 							<div class="modal-content">
 								<div class="modal-header">
-									<h4 class="modal-title"><i class="fa fa-male"></i><i class="fa fa-female"></i> <spring:message code="family.info" /></h4>
+									<h4 class="modal-title"><i class="fa fa-stethoscope"></i> <spring:message code="enf.list" /></h4>
 								</div>
 								<div class="modal-body">
 									<div class="scroller" style="height:50%" data-always-visible="1" data-rail-visible1="1">
 										<div class="portlet">
 											<div class="portlet-title">
 												<div class="caption">
-													<i class="fa fa-plus"></i><spring:message code="person.add" />
+													<i class="fa fa-plus"></i><spring:message code="add" /> <spring:message code="enf" />
 												</div>
 												<div class="tools">
 													
@@ -2272,7 +2363,7 @@
 											</div>
 											<div class="portlet-body form">
 												<!-- BEGIN FORM-->
-												<form action="#" class="form-horizontal" data-role="form" id="add_enfersoc_form">
+												<form action="#" class="form-horizontal" data-role="form" id="add_enfermedadsoc_form">
 													<div class="alert alert-danger display-none">
 														<button class="close" data-close="alert"></button>
 														<spring:message code="form.errors" />
@@ -2282,6 +2373,81 @@
 														<spring:message code="form.success" />
 													</div>
 													<div class="form-body">
+														<div class="form-group" hidden="true">
+															<label class="control-label col-md-6"><spring:message code="nopersona" />:
+															<span class="required">
+																 *
+															</span>
+															</label>
+															<div class="col-md-6">
+																<div class="input-group">
+																	<input type="text" id="idPersonaEnfSoc" name="idPersonaEnfSoc" class="form-control"/>
+																	<span class="input-group-addon">
+																		<i class="fa fa-sort-alpha-asc"></i>
+																	</span>
+																</div>
+															</div>
+														</div>
+														<div class="form-group" hidden="true">
+															<label class="control-label col-md-6"><spring:message code="enf" />:
+															<span class="required">
+																 *
+															</span>
+															</label>
+															<div class="col-md-6">
+																<div class="input-group">
+																	<input type="text" id="idEnfermedadSoc" name="idEnfermedadSoc" class="form-control"/>
+																	<span class="input-group-addon">
+																		<i class="fa fa-sort-alpha-asc"></i>
+																	</span>
+																</div>
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-3"><spring:message code="enf" />:
+															<span class="required">
+																 *
+															</span>
+															</label>
+															<div class="col-md-6">
+																<select data-placeholder="<spring:message code="select" /> <spring:message code="enf" />" name="enfermedadsoc" id="enfermedadsoc" class="form-control">
+																	<option value=""></option>
+																	<c:forEach items="${enfermedadessocs}" var="enfermedassoc"> 
+																		<option value="${enfermedassoc.codigo}">${enfermedassoc.valor}</option> 
+																	</c:forEach>
+																</select>
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-3"><spring:message code="enf.fec" />:
+															<span class="required">
+																 *
+															</span>
+															</label>
+															<div class="col-md-6">
+																<div class="input-group date date-picker" data-date-format="dd-mm-yyyy" data-date-end-date="+0d">
+																	<input id="fechaOcurrenciaSoc" name="fechaOcurrenciaSoc" type="text" class="form-control" placeholder="<spring:message code="please.enter" /> <spring:message code="enf.fec" />">
+																	<span class="input-group-btn">
+																		<button class="btn btn-info" type="button"><i class="fa fa-calendar"></i></button>
+																	</span>
+																</div>
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-3"><spring:message code="enf.atn" />:
+															<span class="required">
+																 *
+															</span>
+															</label>
+															<div class="col-md-6">
+																<select data-placeholder="<spring:message code="select" /> <spring:message code="enf.atn" />" name="personaAtendioSoc" id="personaAtendioSoc" class="form-control">
+																	<option value=""></option>
+																	<c:forEach items="${profesiones}" var="profesion"> 
+																		<option value="${profesion.codigo}">${profesion.valor}</option> 
+																	</c:forEach>
+																</select>
+															</div>
+														</div>
 													</div>
 												</form>
 											</div>
@@ -2337,6 +2503,8 @@
 <script src="${hsfWizard2}"></script>
 <spring:url value="/resources/scripts/hsf-wizard-modal-enf.js" var="hsfWizard3" />
 <script src="${hsfWizard3}"></script>
+<spring:url value="/resources/scripts/hsf-wizard-modal-enfsoc.js" var="hsfWizard4" />
+<script src="${hsfWizard4}"></script>
 <spring:url value="/resources/plugins/jquery-validation/localization/messages_{language}.js" var="jQValidationLoc">
 	<spring:param name="language" value="${pageContext.request.locale.language}" />
 </spring:url>				
@@ -2396,6 +2564,14 @@
 			, processError: "${processError}"
 			};
 		FormWizardHSFModalEnfValidation.init(parametros3);
+	}
+	function validarEnf2()
+	{
+		var parametros4 = {addEnfermedadSCUrl: "${addEnfermedadSCUrl}"
+			, processSuccess: "${processSuccess}"
+			, processError: "${processError}"
+			};
+		FormWizardHSFModalEnfSocValidation.init(parametros4);
 	}
 </script>
 <!-- END JAVASCRIPTS -->

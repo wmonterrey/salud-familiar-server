@@ -163,17 +163,19 @@ Initializable {
 	            	if (obj.isFieldAuditable(propertyName)){
 		                newPropValue = event.getPersister().getPropertyValue(event.getEntity(), propertyName, entityMode);  
 		                if (newPropValue != null) {  
-		                    // collections will fire their own events  
+			                // collections will fire their own events  
 		                    if (!(newPropValue instanceof Collection)) {  
-		                        oldPropValue = event.getPersister().getPropertyValue(existingEntity, propertyName, entityMode); 
-		                        if(!newPropValue.equals(oldPropValue)){
-			                        if (LOG.isDebugEnabled()) {  
-			                            LOG.debug("{} for: {}, ID: {}, property: {}, old value: {}, new value: {}, actor: {}, date: {}", new Object[] { OPERATION_TYPE_UPDATE, entityName, entityId, propertyName, oldPropValue, newPropValue, actorId, transTime });  
-			                        }  
-			                        session.insert(new AuditTrail(entityId.toString(), entityName, propertyName, oldPropValue != null ? oldPropValue.toString() : null, newPropValue != null ? newPropValue  
-			                                .toString() : null, OPERATION_TYPE_UPDATE, actorId, transTime));  
+		                        oldPropValue = event.getPersister().getPropertyValue(existingEntity, propertyName, entityMode);
+		                        if(!(oldPropValue == null && newPropValue.equals(""))){
+			                        if(!newPropValue.equals(oldPropValue)){
+				                        if (LOG.isDebugEnabled()) {  
+				                            LOG.debug("{} for: {}, ID: {}, property: {}, old value: {}, new value: {}, actor: {}, date: {}", new Object[] { OPERATION_TYPE_UPDATE, entityName, entityId, propertyName, oldPropValue, newPropValue, actorId, transTime });  
+				                        }  
+				                        session.insert(new AuditTrail(entityId.toString(), entityName, propertyName, oldPropValue != null ? oldPropValue.toString() : null, newPropValue != null ? newPropValue  
+				                                .toString() : null, OPERATION_TYPE_UPDATE, actorId, transTime));  
+			                        }
 		                        }
-		                    }  
+		                	}
 		                }  
 	            	}
 	            }  

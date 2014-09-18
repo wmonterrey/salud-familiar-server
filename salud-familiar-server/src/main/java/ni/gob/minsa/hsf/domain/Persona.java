@@ -41,7 +41,6 @@ public class Persona extends BaseMetaData implements Auditable, Serializable{
     private String cedula;
     private Date fechaNacimiento;
     private String actaNacimiento;
-    private Integer edad;
     private Etnia etnia;
     private Sexo sexo;
     private Escolaridad escolaridad;
@@ -179,16 +178,6 @@ public class Persona extends BaseMetaData implements Auditable, Serializable{
 
 	public void setActaNacimiento(String actaNacimiento) {
 		this.actaNacimiento = actaNacimiento;
-	}
-
-	@Column(name = "EDAD", nullable = true)
-	public Integer getEdad() {
-		return edad;
-	}
-
-
-	public void setEdad(Integer edad) {
-		this.edad = edad;
 	}
 
 	@ManyToOne(fetch=FetchType.LAZY,targetEntity=Catalogo.class)
@@ -423,6 +412,26 @@ public class Persona extends BaseMetaData implements Auditable, Serializable{
 			return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public String toString(){
+		return idPersona;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		
+		if ((this == other))
+			return true;
+		if ((other == null))
+			return false;
+		if (!(other instanceof Persona))
+			return false;
+		
+		Persona castOther = (Persona) other;
+
+		return (this.getIdPersona().equals(castOther.getIdPersona()));
 	}
 
 }

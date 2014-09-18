@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import ni.gob.minsa.hsf.domain.audit.Auditable;
 import ni.gob.minsa.hsf.domain.catalogos.Profesion;
 import ni.gob.minsa.hsf.domain.estructura.BaseMetaData;
 import ni.gob.minsa.hsf.domain.estructura.Catalogo;
@@ -20,7 +21,7 @@ import org.hibernate.annotations.ForeignKey;
 
 @Entity
 @Table(name = "HSF_ENFERMEDADES", catalog = "HSF")
-public class Enfermedades extends BaseMetaData {
+public class Enfermedades extends BaseMetaData implements Auditable{
 	
 	
 	private String idEnfermedad;
@@ -82,6 +83,19 @@ public class Enfermedades extends BaseMetaData {
 
 	public void setPersonaAtendio(Profesion personaAtendio) {
 		this.personaAtendio = personaAtendio;
+	}
+	
+	@Override
+	public boolean isFieldAuditable(String fieldname) {
+		if(fieldname.matches("created")||fieldname.matches("createdBy")){
+			return false;
+		}
+		return true;
+	}
+	
+	@Override
+	public String toString(){
+		return idEnfermedad;
 	}
 
 }

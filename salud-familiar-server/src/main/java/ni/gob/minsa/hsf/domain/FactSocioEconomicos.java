@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import ni.gob.minsa.hsf.domain.audit.Auditable;
 import ni.gob.minsa.hsf.domain.catalogos.CarPsicosociales;
 import ni.gob.minsa.hsf.domain.catalogos.CulturaSanitaria;
 import ni.gob.minsa.hsf.domain.catalogos.TenenciaVivienda;
@@ -23,7 +24,7 @@ import org.hibernate.annotations.ForeignKey;
 
 @Entity
 @Table(name = "HSF_FACT_SOCIOEC", catalog = "HSF")
-public class FactSocioEconomicos extends BaseMetaData{
+public class FactSocioEconomicos extends BaseMetaData implements Auditable{
 	
 	
 	private String idFactSocioEc;
@@ -154,5 +155,18 @@ public class FactSocioEconomicos extends BaseMetaData{
 
 	public void setObsFactSocioEc(String obsFactSocioEc) {
 		this.obsFactSocioEc = obsFactSocioEc;
+	}
+	
+	@Override
+	public String toString(){
+		return idFactSocioEc;
+	}
+	
+	@Override
+	public boolean isFieldAuditable(String fieldname) {
+		if(fieldname.matches("created")||fieldname.matches("createdBy")){
+			return false;
+		}
+		return true;
 	}
 }

@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import ni.gob.minsa.hsf.domain.audit.Auditable;
 import ni.gob.minsa.hsf.domain.catalogos.AbastecimientoAgua;
 import ni.gob.minsa.hsf.domain.catalogos.CalidadAgua;
 import ni.gob.minsa.hsf.domain.catalogos.DepBasura;
@@ -23,13 +24,11 @@ import org.hibernate.annotations.ForeignKey;
 
 @Entity
 @Table(name = "HSF_CARACT_HIG", catalog = "HSF")
-public class CaractHigSanitarias extends BaseMetaData{
+public class CaractHigSanitarias extends BaseMetaData implements Auditable{
 	
 	
 	private String idCaractHig;
 	private Visita visita;
-    private int numPersonas;
-    private int numCuartos;
     private String hacinamiento;
     private String animalesDom;
     private String riesgoNatural;
@@ -70,24 +69,6 @@ public class CaractHigSanitarias extends BaseMetaData{
 
 	public void setVisita(Visita visita) {
 		this.visita = visita;
-	}
-	
-	@Column(name = "NUM_PERSONAS")
-	public int getNumPersonas() {
-		return numPersonas;
-	}
-
-	public void setNumPersonas(int numPersonas) {
-		this.numPersonas = numPersonas;
-	}
-	
-	@Column(name = "NUM_CUARTOS")
-	public int getNumCuartos() {
-		return numCuartos;
-	}
-
-	public void setNumCuartos(int numCuartos) {
-		this.numCuartos = numCuartos;
 	}
 
 	@Column(name = "HACINAMIENTO", nullable = true, length = 2)
@@ -235,6 +216,19 @@ public class CaractHigSanitarias extends BaseMetaData{
 
 	public void setObsCaractHig(String obsCaractHig) {
 		this.obsCaractHig = obsCaractHig;
+	}
+	
+	@Override
+	public String toString(){
+		return idCaractHig;
+	}
+	
+	@Override
+	public boolean isFieldAuditable(String fieldname) {
+		if(fieldname.matches("created")||fieldname.matches("createdBy")){
+			return false;
+		}
+		return true;
 	}
 
 }

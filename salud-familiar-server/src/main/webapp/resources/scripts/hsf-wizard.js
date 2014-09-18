@@ -253,6 +253,15 @@ var FormWizardHSF = function () {
             var form = $('#submit_form');
             var error = $('.alert-danger', form);
             var success = $('.alert-success', form);
+            
+            jQuery.validator.addMethod("noNingunoyOtro", function(value, select) { 
+            	var isValid = true;
+            	var number = $('option:selected', select).size();
+                if (number > 1 && select.options[select.options.length-1].selected) {
+                	isValid = false;
+                }
+                return isValid;
+	      	}, "Invalido");
                        
             form.validate({
                 errorElement: 'span', //default input error message container
@@ -306,25 +315,32 @@ var FormWizardHSF = function () {
                         required: true
                     },
                     animalesDom: {
-                    	required: true
+                    	required: true,
+                    	noNingunoyOtro:true
                     },
                     riesgoNatural: {
-                    	required: true
+                    	required: true,
+                    	noNingunoyOtro:true
                     },
                     riesgoMeteorologico: {
-                    	required: true
+                    	required: true,
+                    	noNingunoyOtro:true
                     },
                     riesgoBiologico: {
-                    	required: true
+                    	required: true,
+                    	noNingunoyOtro:true
                     },
                     riesgoSocial: {
-                    	required: true
+                    	required: true,
+                    	noNingunoyOtro:true
                     },
                     factoresMedAmb: {
-                    	required: true
+                    	required: true,
+                    	noNingunoyOtro:true
                     },
                     combCocinar: {
-                    	required: true
+                    	required: true,
+                    	noNingunoyOtro:true
                     },
                     aAgua: {
                     	required: true
@@ -366,7 +382,8 @@ var FormWizardHSF = function () {
                     	required: true
                     },
                     accionesComunitarias: {
-                    	required: true
+                    	required: true,
+                    	noNingunoyOtro:true
                     },
                     tamFamilia: {
                     	required: true
@@ -378,10 +395,12 @@ var FormWizardHSF = function () {
                     	required: true
                     },
                     crisisNormativa: {
-                    	required: true
+                    	required: true,
+                    	noNingunoyOtro:true
                     },
                     crisisParanormativa: {
-                    	required: true
+                    	required: true,
+                    	noNingunoyOtro:true
                     },
                     usoMedTradicional: {
                     	required: true
@@ -532,6 +551,16 @@ var FormWizardHSF = function () {
 	        		guardarFactSocEc();
 	        		guardarFuncFam();
 	        		table1.fnClearTable();
+	        		form.find('input:text, input:password, textarea').val('');
+	        		form.find('input:radio, input:checkbox').prop('checked', false);
+	        		form.find('select').select2('val','');
+	        		form.find('select').multiSelect('deselect_all');
+	        		jQuery('li', $('#form_wizard_1')).removeClass("done");
+	        		$('a[href="#tab1"]').tab('show');	
+	        		$('#silais').focus();
+	        		$('#form_wizard_1').find('.button-submit').hide();
+	        		$('#form_wizard_1').find('.button-previous').hide();
+	        		$('#form_wizard_1').find('.button-next').show();
                 }
             }).hide();
             
@@ -635,7 +664,7 @@ var FormWizardHSF = function () {
             
                       
             $("#personamodalform").on("shown.bs.modal", function () { 
-            	$('a[href="#tab_1_1"]').tab('show');
+            	$('a[href="#tab2_1"]').tab('show');
             	$('#nombres').focus();
             });
             
@@ -651,7 +680,7 @@ var FormWizardHSF = function () {
 				$("#save-person").unbind("click");
 				$("#save-person-add").unbind("click");
 				$("#dismiss-modalperson").unbind("click");
-				$('a[href="#tab_1_1"]').tab('show');
+				$('a[href="#tab2_1"]').tab('show');
             	$('#nombres').focus();
             });
             
@@ -666,9 +695,26 @@ var FormWizardHSF = function () {
                 $('#add_enfermedad_form').find('input:radio, input:checkbox').prop('checked', false);
                 $('#add_enfermedad_form').find('select').select2('val','');
                 $('#add_enfermedad_form').find('select').multiSelect('deselect_all');
+                $('#enfermedad').select2('data', null);
 				$("#save-enf").unbind("click");
 				$("#save-enf-add").unbind("click");
 				$("dismiss-modalenf").unbind("click");
+              });
+            
+            $("#enfersocform").on("shown.bs.modal", function () { 
+            	$("#save-person").click();
+            });
+            
+            $("#enfersocform").on("hidden.bs.modal", function () { 
+            	$('#add_enfermedadsoc_form .alert-danger').hide();
+            	$('#add_enfermedadsoc_form .alert-success').hide();
+            	$('#add_enfermedadsoc_form').find('input:text, input:password, textarea').val('');
+                $('#add_enfermedadsoc_form').find('input:radio, input:checkbox').prop('checked', false);
+                $('#add_enfermedadsoc_form').find('select').select2('val','');
+                $('#add_enfermedadsoc_form').find('select').multiSelect('deselect_all');
+				$("#save-enfsoc").unbind("click");
+				$("#save-enfsoc-add").unbind("click");
+				$("dismiss-modalenfsoc").unbind("click");
               });
         }
     };
