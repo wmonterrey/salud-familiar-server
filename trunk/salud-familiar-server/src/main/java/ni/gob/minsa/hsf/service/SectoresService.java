@@ -46,7 +46,8 @@ public class SectoresService {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
 		// Create a Hibernate query (HQL)
-		Query query = session.createQuery("from Sectores secs where secs.municipio = "+ municipio +" order by secs.nombre");
+		Query query = session.createQuery("from Sectores secs where secs.municipio = :municipio order by secs.nombre");
+		query.setParameter("municipio", municipio);
 		// Retrieve all
 		return  query.list();
 	}

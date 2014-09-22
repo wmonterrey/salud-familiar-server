@@ -2528,6 +2528,9 @@
 <spring:url value="/info/newCarHigSan" var="addCarHigSanUrl"/>
 <spring:url value="/info/newFactSocEc" var="addFactSocEcUrl"/>
 <spring:url value="/info/newFuncFam" var="addFuncFamUrl"/>
+<spring:url value="/opciones/municipios" var="opcMuniUrl"/>
+<spring:url value="/opciones/sectores" var="opcSectUrl"/>
+<spring:url value="/opciones/comunidades" var="opcComuUrl"/>
 
 <script>
     $(function () {
@@ -2544,6 +2547,9 @@
 				, addCarHigSanUrl: "${addCarHigSanUrl}"
 				, addFactSocEcUrl: "${addFactSocEcUrl}"
 				, addFuncFamUrl: "${addFuncFamUrl}"
+				, opcMuniUrl: "${opcMuniUrl}"
+				, opcSectUrl: "${opcSectUrl}"
+				, opcComuUrl: "${opcComuUrl}"
 				, processSuccess: "${processSuccess}"
 				, processError: "${processError}"
 				,language:"${pageContext.request.locale.language}" };

@@ -15,7 +15,7 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 @Entity
-@Table(name = "COMUNIDADES", catalog = "HSF")
+@Table(name = "comunidades", catalog = "hsf")
 public class Comunidades implements Serializable{
 
 	/**

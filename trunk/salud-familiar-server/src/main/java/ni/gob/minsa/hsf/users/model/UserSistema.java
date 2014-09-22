@@ -34,7 +34,7 @@ import org.hibernate.validator.constraints.Email;
  **/
 
 @Entity
-@Table(name = "HSF_USUARIOS_SISTEMA", catalog = "HSF")
+@Table(name = "hsf_usuarios_sistema", catalog = "hsf")
 public class UserSistema implements Auditable {
 	private String username;
 	private Date created;

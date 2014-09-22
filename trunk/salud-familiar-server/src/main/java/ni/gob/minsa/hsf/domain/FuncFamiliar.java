@@ -20,7 +20,7 @@ import org.hibernate.annotations.ForeignKey;
 
 
 @Entity
-@Table(name = "HSF_FUNC_FAM", catalog = "HSF")
+@Table(name = "hsf_func_fam", catalog = "hsf")
 public class FuncFamiliar extends BaseMetaData implements Auditable{
 	
 	

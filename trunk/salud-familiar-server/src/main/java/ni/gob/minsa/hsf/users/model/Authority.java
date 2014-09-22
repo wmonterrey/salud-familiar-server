@@ -17,7 +17,7 @@ import org.hibernate.annotations.ForeignKey;
  **/
 
 @Entity
-@Table(name = "HSF_USUARIOS_ROLES", catalog = "HSF")
+@Table(name = "hsf_usuarios_roles", catalog = "hsf")
 public class Authority {
 	
 	private AuthorityId authId;

@@ -35,7 +35,8 @@ public class ComunidadesService {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
 		// Create a Hibernate query (HQL)
-		Query query = session.createQuery("FROM Comunidades c where c.sector = '"+ sector  +"' order by c.nombre");
+		Query query = session.createQuery("FROM Comunidades c where c.sector = :sector order by c.nombre");
+		query.setParameter("sector", sector);
 		// Retrieve all
 		return  query.list();
 	}

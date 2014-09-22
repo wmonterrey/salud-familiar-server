@@ -82,6 +82,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.google.gson.Gson;
 
 /**
@@ -118,6 +120,27 @@ public class HsfController {
 	@Resource(name="cie10Service")
 	private Cie10Service cie10Service;
 	
+	@RequestMapping(value = "searchHsf", method = RequestMethod.GET)
+    public String initSearchForm(Model model) throws ParseException { 	
+    	logger.debug("Buscar una HSF");
+    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas();
+    	model.addAttribute("entidades", entidades);
+    	return "hsf/search";
+	}
+	
+	/**
+     * Retorna una lista de visitas. Acepta una solicitud GET para JSON
+     * @return Un arreglo JSON de unidades
+     */
+    @RequestMapping(value = "hsfs", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody List<Visita> fetchMunicipiosJson(@RequestParam(value = "entidadId", required = false, defaultValue="0") long entidad) {
+        logger.info("Obteniendo las visitas en JSON");
+        List<Visita> visitas = visitaService.getVisitas();
+        if (visitas == null){
+        	logger.debug("Nulo");
+        }
+        return visitas;	
+    }
 	
 	@RequestMapping(value = "newHsf", method = RequestMethod.GET)
     public String initCreationForm(Model model) throws ParseException { 	
@@ -245,6 +268,7 @@ public class HsfController {
 		MovilInfo movilInfo = new MovilInfo();
 		WebAuthenticationDetails wad  = (WebAuthenticationDetails) authentication.getDetails();
 		movilInfo.setDeviceid(wad.getRemoteAddress());
+		movilInfo.setEstado('1');
 		if (idVisita.equals("")){
 			idVisita = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
 		}

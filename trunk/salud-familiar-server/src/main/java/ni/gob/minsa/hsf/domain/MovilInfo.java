@@ -15,7 +15,7 @@ public class MovilInfo implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	//Metadata del formulario movil
-	private String estado;
+	private char estado='0';
 	private String deviceid;
 	private String phonenumber;
 	
@@ -23,7 +23,7 @@ public class MovilInfo implements Serializable{
 		
 	}
 	
-	public MovilInfo(String estado
+	public MovilInfo(char estado
 			, String deviceid,
 			String phonenumber, Date today){
 		
@@ -32,12 +32,12 @@ public class MovilInfo implements Serializable{
 		this.setPhonenumber(phonenumber);
 	}
 	
-	@Column(name = "ESTADO", nullable = true, length = 15)
-	public String getEstado() {
+	@Column(name = "ESTADO", nullable = true)
+	public char getEstado() {
 		return estado;
 	}
 
-	public void setEstado(String estado) {
+	public void setEstado(char estado) {
 		this.estado = estado;
 	}
 
@@ -57,6 +57,27 @@ public class MovilInfo implements Serializable{
 
 	public void setPhonenumber(String phonenumber) {
 		this.phonenumber = phonenumber;
+	}
+	
+	@Override
+	public String toString(){
+		return estado+deviceid;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		
+		if ((this == other))
+			return true;
+		if ((other == null))
+			return false;
+		if (!(other instanceof MovilInfo))
+			return false;
+		
+		MovilInfo castOther = (MovilInfo) other;
+
+		return ((this.getEstado()==(castOther.getEstado()))
+				&&(this.getDeviceid().equals(castOther.getDeviceid())));
 	}
 
 }

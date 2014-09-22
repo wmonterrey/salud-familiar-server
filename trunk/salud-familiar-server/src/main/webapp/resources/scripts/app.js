@@ -906,11 +906,14 @@ var App = function () {
         // wrapper function to  block element(indicate loading)
         blockUI: function (el, centerY) {
             var el = jQuery(el);
+            var loc = window.location;
+            var pathName = loc.pathname.substring(0,loc.pathname.indexOf('/', 1)+1);
+            var mess = '<img src=' + pathName + 'resources/img/ajax-loading.gif align="">';
             if (el.height() <= 400) {
                 centerY = true;
             }
             el.block({
-                message: '<img src="resources/img/ajax-loading.gif" align="">',
+                message: mess,
                 centerY: centerY != undefined ? centerY : true,
                 css: {
                     top: '10%',

@@ -14,7 +14,7 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 @Entity
-@Table(name = "SECTORES", catalog = "HSF")
+@Table(name = "sectores", catalog = "hsf")
 public class Sectores {
 
 	private Integer sectorId;
