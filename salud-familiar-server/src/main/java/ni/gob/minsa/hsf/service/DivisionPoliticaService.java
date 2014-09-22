@@ -42,7 +42,8 @@ public class DivisionPoliticaService {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
 		// Create a Hibernate query (HQL)
-		Query query = session.createQuery("FROM  Divisionpolitica dp where dp.dependenciaSilais = "+entidad+ " order by dp.nombre");
+		Query query = session.createQuery("FROM  Divisionpolitica dp where dp.dependenciaSilais = :entidad order by dp.nombre");
+		query.setParameter("entidad", entidad);
 		// Retrieve all
 		return  query.list();
 	}

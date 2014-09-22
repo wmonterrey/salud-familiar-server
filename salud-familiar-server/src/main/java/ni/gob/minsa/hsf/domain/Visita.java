@@ -19,7 +19,7 @@ import org.hibernate.annotations.ForeignKey;
 
 
 @Entity
-@Table(name = "HSF_VISITAS", catalog = "HSF")
+@Table(name = "hsf_visitas", catalog = "hsf")
 public class Visita extends BaseMetaData implements Auditable{
 	
 	private String idVisita;

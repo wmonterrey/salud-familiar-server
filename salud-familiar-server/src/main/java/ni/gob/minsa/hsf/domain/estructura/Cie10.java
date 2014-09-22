@@ -13,7 +13,7 @@ import javax.persistence.*;
 })
 
 @Entity
-@Table(name="SIM_CIE10",schema="HSF")
+@Table(name="sim_cie10",schema="hsf")
 public class Cie10  implements Serializable {
 
      /**

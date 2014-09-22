@@ -23,7 +23,7 @@ import ni.gob.minsa.hsf.domain.estructura.Catalogo;
 
 
 @Entity
-@Table(name = "HSF_PERSONAS", catalog = "HSF")
+@Table(name = "hsf_personas", catalog = "hsf")
 public class Persona extends BaseMetaData implements Auditable, Serializable{
 	
 	/**

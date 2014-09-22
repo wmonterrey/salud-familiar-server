@@ -17,7 +17,7 @@ import ni.gob.minsa.hsf.domain.poblacion.Comunidades;
 
 
 @Entity
-@Table(name = "HSF_FAMILIAS", catalog = "HSF", uniqueConstraints = @UniqueConstraint(columnNames = "COD_FAMILIA"))
+@Table(name = "hsf_familias", catalog = "hsf", uniqueConstraints = @UniqueConstraint(columnNames = "COD_FAMILIA"))
 public class Familia extends BaseMetaData implements Auditable{
 	
 	private String idFamilia;

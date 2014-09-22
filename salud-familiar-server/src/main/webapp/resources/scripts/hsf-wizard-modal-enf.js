@@ -5,6 +5,7 @@ var FormWizardHSFModalEnfValidation = function () {
         init: function (parametros) {
         	
         	var enfForm = $('#add_enfermedad_form');
+        	var pageContent = $('.page-content');
     	    
     	    var validatorEnf = enfForm.validate({
     	        doNotHideMessage: true, //this option enables to show the error/success messages on tab switch.
@@ -49,16 +50,20 @@ var FormWizardHSFModalEnfValidation = function () {
     	    
     	    $('#save-enf').click(function() {
             	if (enfForm.valid()){
+            		App.blockUI(pageContent, false);
             		$('#idPersonaEnf').val($('#idPersona').val());
             		guardarEnfermedad();
+            		App.unblockUI(pageContent);
             	}
     	    });
     	    
     	    $('#save-enf-add').click(function() {
             	if (enfForm.valid()){
+            		App.blockUI(pageContent, false);
             		$('#idPersonaEnf').val($('#idPersona').val());
             		guardarEnfermedadAgregar();
 		            $('#enfermedad').focus();
+		            App.unblockUI(pageContent);
             	}
     	    });
     	    

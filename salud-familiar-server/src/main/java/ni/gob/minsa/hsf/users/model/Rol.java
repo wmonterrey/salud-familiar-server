@@ -18,7 +18,7 @@ import org.hibernate.annotations.IndexColumn;
  **/
 
 @Entity
-@Table(name = "HSF_ROLES", catalog = "HSF")
+@Table(name = "hsf_roles", catalog = "hsf")
 public class Rol {
 	private String authority;
 	private Set<Authority> authorities;

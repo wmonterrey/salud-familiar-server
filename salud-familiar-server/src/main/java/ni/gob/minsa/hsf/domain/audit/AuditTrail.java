@@ -11,7 +11,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name = "HSF_AUDIT_TRAIL", catalog = "HSF")
+@Table(name = "hsf_audit_trail", catalog = "hsf")
 public class AuditTrail {
 	
 	private int id;

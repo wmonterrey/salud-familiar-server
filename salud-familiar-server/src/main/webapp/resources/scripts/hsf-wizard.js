@@ -175,6 +175,7 @@ var FormWizardHSF = function () {
                 return;
             }
             
+            var pageContent = $('.page-content');
             handleDatePickers(parametros.language);
             handleInputMasks();
             handleMultiSelect();
@@ -195,7 +196,8 @@ var FormWizardHSF = function () {
 
             $('#silais').change(
             		function() {
-            			$.getJSON('/hsf/opciones/municipios', {
+            			App.blockUI(pageContent, false);
+            			$.getJSON(parametros.opcMuniUrl, {
             				entidadId : $('#silais').val(),
             				ajax : 'true'
             			}, function(data) {
@@ -210,12 +212,14 @@ var FormWizardHSF = function () {
             				}
             				html += '</option>';
             				$('#municipio').html(html);
+            				App.unblockUI(pageContent);
             			});
                     });
             
             $('#municipio').change(
             		function() {
-            			$.getJSON('/hsf/opciones/sectores', {
+            			App.blockUI(pageContent, false);
+            			$.getJSON(parametros.opcSectUrl, {
             				municipioId : $('#municipio').val(),
             				ajax : 'true'
             			}, function(data) {
@@ -229,12 +233,14 @@ var FormWizardHSF = function () {
             				}
             				html += '</option>';
             				$('#sector').html(html);
+            				App.unblockUI(pageContent);
             			});
                     });
             
             $('#sector').change(
             		function() {
-            			$.getJSON('/hsf/opciones/comunidades', {
+            			App.blockUI(pageContent, false);
+            			$.getJSON(parametros.opcComuUrl, {
             				sectorId : $('#sector').val(),
             				ajax : 'true'
             			}, function(data) {
@@ -247,6 +253,7 @@ var FormWizardHSF = function () {
             				}
             				html += '</option>';
             				$('#comunidad').html(html);
+            				App.unblockUI(pageContent);
             			});
                     });
             
@@ -501,7 +508,9 @@ var FormWizardHSF = function () {
                         return false;
                     }
                     else {
+                    	App.blockUI(pageContent, false);
                     	guardarHSF(index + 1);
+                    	App.unblockUI(pageContent);
                     }
                     handleTitle(tab, navigation, clickedIndex);
                 },
@@ -513,7 +522,9 @@ var FormWizardHSF = function () {
                         return false;
                     }
                     else{
+                    	App.blockUI(pageContent, false);
                     	guardarHSF(index);
+                    	App.unblockUI(pageContent);
                     }
                     handleTitle(tab, navigation, index);
                 },
@@ -551,13 +562,13 @@ var FormWizardHSF = function () {
 	        		guardarFactSocEc();
 	        		guardarFuncFam();
 	        		table1.fnClearTable();
+	        		
 	        		form.find('input:text, input:password, textarea').val('');
 	        		form.find('input:radio, input:checkbox').prop('checked', false);
 	        		form.find('select').select2('val','');
 	        		form.find('select').multiSelect('deselect_all');
 	        		jQuery('li', $('#form_wizard_1')).removeClass("done");
 	        		$('a[href="#tab1"]').tab('show');	
-	        		$('#silais').focus();
 	        		$('#form_wizard_1').find('.button-submit').hide();
 	        		$('#form_wizard_1').find('.button-previous').hide();
 	        		$('#form_wizard_1').find('.button-next').show();

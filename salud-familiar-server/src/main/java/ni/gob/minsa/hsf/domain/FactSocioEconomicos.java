@@ -23,7 +23,7 @@ import org.hibernate.annotations.ForeignKey;
 
 
 @Entity
-@Table(name = "HSF_FACT_SOCIOEC", catalog = "HSF")
+@Table(name = "hsf_fact_socioec", catalog = "hsf")
 public class FactSocioEconomicos extends BaseMetaData implements Auditable{
 	
 	

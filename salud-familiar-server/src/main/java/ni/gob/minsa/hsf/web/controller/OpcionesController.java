@@ -76,7 +76,7 @@ public class OpcionesController {
      * @return Un arreglo JSON de unidades
      */
     @RequestMapping(value = "municipios", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody List<Divisionpolitica> fetchMunicipiosJson(@RequestParam(value = "entidadId", required = true) long entidad) {
+    public @ResponseBody List<Divisionpolitica> fetchMunicipiosJson(@RequestParam(value = "entidadId", required = false, defaultValue="0" ) long entidad) {
         logger.info("Obteniendo los municipios en JSON");
         List<Divisionpolitica> municipios = divPoliticaService.getMunicipios(entidad);
         if (municipios == null){

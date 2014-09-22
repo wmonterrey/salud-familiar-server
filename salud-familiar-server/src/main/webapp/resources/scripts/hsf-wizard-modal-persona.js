@@ -26,6 +26,7 @@ var FormWizardHSFModalPersonaValidation = function () {
         init: function (parametros) {
         	
         	handleInputMasks();
+        	var pageContent = $('.page-content');
         	var personForm = $('#add_person_form');
     	    if ($('#noPersonasFamilia').val()==''){
     	    	$('#numPersona').val(1);
@@ -221,10 +222,12 @@ var FormWizardHSFModalPersonaValidation = function () {
                     }
                 });
                 if (IsValid){
+                	App.blockUI(pageContent, false);
                 	$('#idFamiliaPerson').val($('#idFamilia').val());
                 	guardarPersona();
                 	jQuery('li', $('#form_wizard_2')).removeClass("done");
                 	$('#personamodalform').modal('hide');
+                	App.unblockUI(pageContent);
                 }
             }).hide();
     	    
@@ -241,8 +244,10 @@ var FormWizardHSFModalPersonaValidation = function () {
                     }
                 });
                 if (IsValid){
+                	App.blockUI(pageContent, false);
                 	$('#idFamiliaPerson').val($('#idFamilia').val());
                 	guardarPersona();
+                	App.unblockUI(pageContent);
                 }
     	    });
     	    
