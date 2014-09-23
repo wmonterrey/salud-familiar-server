@@ -45,28 +45,6 @@
 						</li>
 					</ul>
 				</li>
-				<li class="analysis">
-					<a href="javascript:;">
-					<i class="fa fa-bar-chart-o"></i>
-					<span class="title">
-						<spring:message code="analysis"/>
-					</span>
-					<span class="arrow ">
-					</span>
-					</a>
-					<ul class="sub-menu">
-						<li class="visitday">
-							<a href="<spring:url value="/" htmlEscape="true "/>">
-							<i class="fa fa-calendar"></i>
-							<spring:message code="visit.day"/></a>
-						</li>
-						<li class="visitarea">
-							<a href="<spring:url value="/" htmlEscape="true "/>">
-							<i class="fa fa-map-marker"></i>
-							<spring:message code="visit.area"/></a>
-						</li>
-					</ul>
-				</li>
 				<li class="reports">
 					<a href="javascript:;">
 					<i class="fa fa-folder-open-o"></i>

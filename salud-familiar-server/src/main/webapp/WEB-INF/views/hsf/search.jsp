@@ -24,7 +24,7 @@
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
-<body class="page-header-fixed page-footer-fixed">
+<body class="page-header-fixed page-sidebar-closed page-footer-fixed">
 <!-- BEGIN HEADER -->
 <jsp:include page="../fragments/bodyHeader.jsp" />
 <!-- END HEADER -->
@@ -251,7 +251,7 @@
 									<th class="hidden-xs"><spring:message code="personnel" /></th>
 									<th><spring:message code="novivienda" /></th>
 									<th><spring:message code="nofamilia" /></th>
-									<th><spring:message code="actions" /></th>
+									<th></th>
 								</tr>
 							</thead>
 							</table>
@@ -312,6 +312,7 @@
 <spring:url value="/opciones/sectores" var="opcSectUrl"/>
 <spring:url value="/opciones/comunidades" var="opcComuUrl"/>
 <spring:url value="/info/hsfs" var="hsfsUrl"/>
+<spring:url value="/info/visit" var="visitUrl"/>
 
 <script>
     $(function () {
@@ -326,6 +327,7 @@
 			, opcSectUrl: "${opcSectUrl}"
 			, opcComuUrl: "${opcComuUrl}"
 			, hsfsUrl: "${hsfsUrl}"
+			, visitUrl: "${visitUrl}"
 			, processSuccess: "${processSuccess}"
 			, processError: "${processError}"
 			,language:"${pageContext.request.locale.language}" };

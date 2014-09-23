@@ -29,6 +29,17 @@ public class PersonaService {
 		return  query.list();
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<Persona> getPersonas(String idFamilia) {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = session.createQuery("FROM Persona per where per.familia.idFamilia = :idFamilia");
+		query.setParameter("idFamilia", idFamilia);
+		// Retrieve all
+		return  query.list();
+	}
+	
 	public Persona getPersona(String idPersona) {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();

@@ -57,4 +57,13 @@ public class DivisionPoliticaService {
 		return dp;
 	}
 	
+	public Divisionpolitica getDivisionpolitica(String codDivPolitica) {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery("FROM Divisionpolitica dp where dp.codigoNacional = :codDivPolitica");
+		query.setParameter("codDivPolitica", codDivPolitica);
+		Divisionpolitica dp = (Divisionpolitica) query.uniqueResult();
+		return dp;
+	}
+	
 }

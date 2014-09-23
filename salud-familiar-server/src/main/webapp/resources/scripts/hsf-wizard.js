@@ -201,9 +201,12 @@ var FormWizardHSF = function () {
             				entidadId : $('#silais').val(),
             				ajax : 'true'
             			}, function(data) {
-            				$("#municipio").select2("val", "");
-            				$("#sector").select2("val", "");
-            				$("#comunidad").select2("val", "");
+            				$("#municipio").select2('data',null);
+            				$("#sector").select2('data',null);
+            				$("#comunidad").select2('data',null);
+            				$("#municipio").empty();
+            				$("#sector").empty();
+            				$("#comunidad").empty();
             				var html='<option value=""></option>';
             				var len = data.length;
             				for ( var i = 0; i < len; i++) {
@@ -223,8 +226,10 @@ var FormWizardHSF = function () {
             				municipioId : $('#municipio').val(),
             				ajax : 'true'
             			}, function(data) {
-            				$("#sector").select2("val", "");
-            				$("#comunidad").select2("val", "");
+            				$("#sector").select2('data',null);
+            				$("#comunidad").select2('data',null);
+            				$("#sector").empty();
+            				$("#comunidad").empty();
             				var html='<option value=""></option>';
             				var len = data.length;
             				for ( var i = 0; i < len; i++) {
@@ -244,7 +249,8 @@ var FormWizardHSF = function () {
             				sectorId : $('#sector').val(),
             				ajax : 'true'
             			}, function(data) {
-            				$("#comunidad").select2("val", "");
+            				$("#comunidad").select2('data',null);
+            				$("#comunidad").empty();
             				var html='<option value=""></option>';
             				var len = data.length;
             				for ( var i = 0; i < len; i++) {
