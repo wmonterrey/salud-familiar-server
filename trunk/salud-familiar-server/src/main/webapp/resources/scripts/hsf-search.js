@@ -78,9 +78,12 @@ var SearchHSF = function () {
             				entidadId : $('#silais').val(),
             				ajax : 'true'
             			}, function(data) {
-            				$("#municipio").select2("val", "");
-            				$("#sector").select2("val", "");
-            				$("#comunidad").select2("val", "");
+            				$("#municipio").select2('data',null);
+            				$("#sector").select2('data',null);
+            				$("#comunidad").select2('data',null);
+            				$("#municipio").empty();
+            				$("#sector").empty();
+            				$("#comunidad").empty();
             				var html='<option value=""></option>';
             				var len = data.length;
             				for ( var i = 0; i < len; i++) {
@@ -100,8 +103,10 @@ var SearchHSF = function () {
             				municipioId : $('#municipio').val(),
             				ajax : 'true'
             			}, function(data) {
-            				$("#sector").select2("val", "");
-            				$("#comunidad").select2("val", "");
+            				$("#sector").select2('data',null);
+            				$("#comunidad").select2('data',null);
+            				$("#sector").empty();
+            				$("#comunidad").empty();
             				var html='<option value=""></option>';
             				var len = data.length;
             				for ( var i = 0; i < len; i++) {
@@ -121,7 +126,8 @@ var SearchHSF = function () {
             				sectorId : $('#sector').val(),
             				ajax : 'true'
             			}, function(data) {
-            				$("#comunidad").select2("val", "");
+            				$("#comunidad").select2('data',null);
+            				$("#comunidad").empty();
             				var html='<option value=""></option>';
             				var len = data.length;
             				for ( var i = 0; i < len; i++) {
@@ -145,16 +151,16 @@ var SearchHSF = function () {
                 rules: {
                     //Datos generales
                 	silais: {
-                        required: false
+                        required: true
                     },
                     municipio: {
-                        required: false
+                        required: true
                     },
                     sector: {
-                        required: false
+                        required: true
                     },
                     comunidad: {
-                        required: false
+                        required: true
                     },
                     numVivienda: {
                     	min:1,
@@ -203,6 +209,7 @@ var SearchHSF = function () {
                 submitHandler: function (form) {
                     success.hide();
                     error.hide();
+                    table1.fnClearTable();
                     //add here some ajax code to submit your form or just call form.submit() if you want to submit the form without ajax
                     getHSFs();
                 }
@@ -210,18 +217,20 @@ var SearchHSF = function () {
             
             function getHSFs() {
     			App.blockUI(pageContent, false);
-    			var loc = window.location;
-    	        var pathName = loc.pathname.substring(0,loc.pathname.indexOf('/', 1)+1);
     			$.getJSON(parametros.hsfsUrl, {
-    				entidadId : $('#silais').val(),
+    				codComunidad : $('#comunidad').val(),
+    				numVivienda : $('#numVivienda').val(),
+    				numFamilia : $('#numFamilia').val(),
+    				numFicha : $('#numFicha').val(),
+    				fechaVisita : $('#fechaVisita').val(),
     				ajax : 'true'
     			}, function(data) {
     				var len = data.length;
     				for ( var i = 0; i < len; i++) {
     					var d = new Date(data[i].fechaVisita);
-						var usuarioUrl = pathName + 'admin/users/'+data[i].idVisita;
+						var visitaUrl = parametros.visitUrl + '/'+data[i].idVisita;
 						table1.fnAddData(
-    							[d.yyyymmdd(), data[i].numFicha, data[i].personaVisita, data[i].familia.numVivienda, data[i].familia.numFamilia, '<a href='+ usuarioUrl + ' class="btn btn-default btn-xs"><i class="fa fa-search"></i></a>']);
+    							[d.yyyymmdd(), data[i].numFicha, data[i].personaVisita, data[i].familia.numVivienda, data[i].familia.numFamilia, '<a href='+ visitaUrl + ' class="btn btn-default btn-xs"><i class="fa fa-search"></i></a>']);
     				}
     				App.unblockUI(pageContent);
     			})

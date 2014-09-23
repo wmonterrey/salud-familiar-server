@@ -56,10 +56,13 @@ import ni.gob.minsa.hsf.domain.catalogos.TipoPared;
 import ni.gob.minsa.hsf.domain.catalogos.TipoPiso;
 import ni.gob.minsa.hsf.domain.catalogos.TipoTecho;
 import ni.gob.minsa.hsf.domain.estructura.EntidadesAdtvas;
+import ni.gob.minsa.hsf.domain.poblacion.Divisionpolitica;
+import ni.gob.minsa.hsf.domain.poblacion.Sectores;
 import ni.gob.minsa.hsf.service.CaractHigSanitariasService;
 import ni.gob.minsa.hsf.service.CatalogoService;
 import ni.gob.minsa.hsf.service.Cie10Service;
 import ni.gob.minsa.hsf.service.ComunidadesService;
+import ni.gob.minsa.hsf.service.DivisionPoliticaService;
 import ni.gob.minsa.hsf.service.EnfermedadesService;
 import ni.gob.minsa.hsf.service.EnfermedadesSocioCultService;
 import ni.gob.minsa.hsf.service.EntidadesAdtvasService;
@@ -67,7 +70,9 @@ import ni.gob.minsa.hsf.service.FactSocioEconomicosService;
 import ni.gob.minsa.hsf.service.FamiliaService;
 import ni.gob.minsa.hsf.service.FuncFamiliarService;
 import ni.gob.minsa.hsf.service.PersonaService;
+import ni.gob.minsa.hsf.service.SectoresService;
 import ni.gob.minsa.hsf.service.VisitaService;
+import ni.gob.minsa.hsf.users.model.UserSistema;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,10 +84,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 
@@ -97,8 +104,12 @@ public class HsfController {
 	private static final Logger logger = LoggerFactory.getLogger(HsfController.class);
 	@Resource(name="entidadAdtvaService")
 	private EntidadesAdtvasService entidadAdtvaService;
+	@Resource(name="divPoliticaService")
+	private DivisionPoliticaService divPoliticaService;
 	@Resource(name="comunidadService")
 	private ComunidadesService comunidadService;
+	@Resource(name="sectorService")
+	private SectoresService sectorService;
 	@Resource(name="catalogoService")
 	private CatalogoService catalogoService;
 	@Resource(name="familiaService")
@@ -131,15 +142,48 @@ public class HsfController {
 	/**
      * Retorna una lista de visitas. Acepta una solicitud GET para JSON
      * @return Un arreglo JSON de unidades
+	 * @throws ParseException 
      */
     @RequestMapping(value = "hsfs", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody List<Visita> fetchMunicipiosJson(@RequestParam(value = "entidadId", required = false, defaultValue="0") long entidad) {
+    public @ResponseBody List<Visita> fetchMunicipiosJson(@RequestParam(value = "codComunidad", required = true) String comunidad,
+    		@RequestParam(value = "numVivienda", required = false, defaultValue = "") Integer numVivienda,
+    		@RequestParam(value = "numFamilia", required = false, defaultValue = "") Integer numFamilia,
+    		@RequestParam(value = "numFicha", required = false, defaultValue = "") Integer numFicha,
+    		@RequestParam( value="fechaVisita", required=false, defaultValue = "") String fechaVisita) throws ParseException {
         logger.info("Obteniendo las visitas en JSON");
-        List<Visita> visitas = visitaService.getVisitas();
+        List<Visita> visitas = visitaService.getVisitas(comunidad, numVivienda, numFamilia, numFicha, fechaVisita);
         if (visitas == null){
         	logger.debug("Nulo");
         }
         return visitas;	
+    }
+    
+    /**
+     * Custom handler for displaying a visit.
+     *
+     * @param idVisit the ID of the visit to display
+     * @return a ModelMap with the model attributes for the view
+     */
+    @RequestMapping("visit/{idVisita}")
+    public ModelAndView showUser(@PathVariable("idVisita") String idVisita) {
+        ModelAndView mav = new ModelAndView("hsf/visit");
+        Visita visita = this.visitaService.getVisita(idVisita);
+        Sectores sector = this.sectorService.getSector(visita.getFamilia().getComunidad().getSector());
+        Divisionpolitica municipio = this.divPoliticaService.getDivisionpolitica(sector.getMunicipio());
+        EntidadesAdtvas silais = this.entidadAdtvaService.getEntidadesAdtvas(municipio.getDependenciaSilais());
+        CaractHigSanitarias carHigSan = this.caractHigSanitariasService.getVisitaCaractHigSanitarias(idVisita);
+        FactSocioEconomicos factSocEc = this.factSocioEconomicosService.getVisitaFactSocioEconomicos(idVisita);
+        FuncFamiliar funcFam = this.funcFamiliarService.getVisitaFuncFamiliar(idVisita);
+        List<Persona> personas = this.personaService.getPersonas(visita.getFamilia().getIdFamilia());
+        mav.addObject("visita",visita);
+        mav.addObject("sector",sector);
+        mav.addObject("municipio",municipio);
+        mav.addObject("silais",silais);
+        mav.addObject("carHigSan",carHigSan);
+        mav.addObject("factSocEc",factSocEc);
+        mav.addObject("funcFam",funcFam);
+        mav.addObject("personas",personas);
+        return mav;
     }
 	
 	@RequestMapping(value = "newHsf", method = RequestMethod.GET)

@@ -60,4 +60,13 @@ public class SectoresService {
 		return sector;
 	}
 	
+	public Sectores getSector(String codSector) {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery("FROM Sectores s where s.codigo = :codSector");
+		query.setParameter("codSector",codSector);
+		Sectores sector = (Sectores) query.uniqueResult();
+		return sector;
+	}
+	
 }

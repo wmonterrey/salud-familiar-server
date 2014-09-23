@@ -26,7 +26,7 @@
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
-<body class="page-header-fixed page-footer-fixed page-sidebar-closed">
+<body class="page-header-fixed page-sidebar-closed page-footer-fixed">
 <!-- BEGIN HEADER -->
 <jsp:include page="../fragments/bodyHeader.jsp" />
 <!-- END HEADER -->
@@ -402,7 +402,6 @@
         																<th><spring:message code="person.gd" /></th>
 																	</tr>
 																</thead>
-																	
 																</table>
 																</div>
 															</div>

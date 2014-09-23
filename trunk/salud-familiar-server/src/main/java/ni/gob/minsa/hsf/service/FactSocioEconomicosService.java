@@ -37,6 +37,15 @@ public class FactSocioEconomicosService {
 		return factSocEc;
 	}
 	
+	public FactSocioEconomicos getVisitaFactSocioEconomicos(String idVisita) {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery("FROM FactSocioEconomicos fse where fse.visita.idVisita = :idVisita");
+		query.setParameter("idVisita", idVisita);
+		FactSocioEconomicos factSocEc = (FactSocioEconomicos) query.uniqueResult();
+		return factSocEc;
+	}
+	
 	public void addFactSocioEconomicos(FactSocioEconomicos factSocEc) {
 		Session session = sessionFactory.getCurrentSession();
 		session.saveOrUpdate(factSocEc);
