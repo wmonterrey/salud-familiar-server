@@ -360,7 +360,7 @@
 															</span>
 															</label>
 															<div class="col-md-6">
-																<div class="input-group date date-picker" data-date-format="dd-mm-yyyy" data-date-end-date="+0d">
+																<div class="input-group date date-picker" data-date-format="dd/MM/yyyy" data-date-end-date="+0d">
 																	<input id="fechaVisita" name="fechaVisita" type="text" class="form-control" placeholder="<spring:message code="please.enter" /> <spring:message code="visit.date" />">
 																	<span class="input-group-btn">
 																		<button class="btn btn-info" type="button"><i class="fa fa-calendar"></i></button>
@@ -1710,7 +1710,7 @@
 																				</span>
 																				</label>
 																				<div class="col-md-6">
-																					<div class="input-group date date-picker" data-date-format="dd-mm-yyyy" data-date-end-date="+0d">
+																					<div class="input-group date date-picker" data-date-format="dd/MM/yyyy" data-date-end-date="+0d">
 																						<input id="fechaNacimiento" name="fechaNacimiento" type="text" class="form-control" placeholder="<spring:message code="please.enter" /> <spring:message code="birthdate" />">
 																						<span class="input-group-btn">
 																							<button class="btn btn-info" type="button"><i class="fa fa-calendar"></i></button>
@@ -2304,7 +2304,7 @@
 															</span>
 															</label>
 															<div class="col-md-6">
-																<div class="input-group date date-picker" data-date-format="dd-mm-yyyy" data-date-end-date="+0d">
+																<div class="input-group date date-picker" data-date-format="dd/MM/yyyy" data-date-end-date="+0d">
 																	<input id="fechaOcurrencia" name="fechaOcurrencia" type="text" class="form-control" placeholder="<spring:message code="please.enter" /> <spring:message code="enf.fec" />">
 																	<span class="input-group-btn">
 																		<button class="btn btn-info" type="button"><i class="fa fa-calendar"></i></button>
@@ -2424,7 +2424,7 @@
 															</span>
 															</label>
 															<div class="col-md-6">
-																<div class="input-group date date-picker" data-date-format="dd-mm-yyyy" data-date-end-date="+0d">
+																<div class="input-group date date-picker" data-date-format="dd/MM/yyyy" data-date-end-date="+0d">
 																	<input id="fechaOcurrenciaSoc" name="fechaOcurrenciaSoc" type="text" class="form-control" placeholder="<spring:message code="please.enter" /> <spring:message code="enf.fec" />">
 																	<span class="input-group-btn">
 																		<button class="btn btn-info" type="button"><i class="fa fa-calendar"></i></button>
@@ -2482,16 +2482,31 @@
 <script type="text/javascript" src="${jQValidation}"></script>
 <spring:url value="/resources/plugins/jquery-validation/dist/additional-methods.min.js" var="jQValidationAdd" />
 <script type="text/javascript" src="${jQValidationAdd}"></script>
+<spring:url value="/resources/plugins/jquery-validation/localization/messages_{language}.js" var="jQValidationLoc">
+	<spring:param name="language" value="${pageContext.request.locale.language}" />
+</spring:url>				
+<script src="${jQValidationLoc}"/></script>
 <spring:url value="/resources/plugins/bootstrap-wizard/jquery.bootstrap.wizard.min.js" var="jQBWizard" />
 <script type="text/javascript" src="${jQBWizard}"></script>
 <spring:url value="/resources/plugins/select2/select2.min.js" var="selectDos" />
 <script type="text/javascript" src="${selectDos}"></script>
+<spring:url value="/resources/plugins/select2/select2_locale_{language}.js" var="Select2Loc">
+	<spring:param name="language" value="${pageContext.request.locale.language}" />
+</spring:url>				
+<script src="${Select2Loc}"/></script>
 <spring:url value="/resources/plugins/jquery-multi-select/js/jquery.multi-select.js" var="jQueryMultiSelect" />
 <script type="text/javascript" src="${jQueryMultiSelect}"></script>
 <spring:url value="/resources/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js" var="datepicker" />
 <script type="text/javascript" src="${datepicker}"></script>
 <spring:url value="/resources/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js" var="inputmask" />
 <script type="text/javascript" src="${inputmask}"></script>
+<spring:url value="/resources/plugins/data-tables/jquery.dataTables.js" var="jQueryDataTables" />
+<script type="text/javascript" src="${jQueryDataTables}"></script>
+<spring:url value="/resources/plugins/data-tables/DT_bootstrap.js" var="dataTablesBS" />
+<script type="text/javascript" src="${dataTablesBS}"></script>
+<spring:url value="/resources/plugins/data-tables/TableTools/js/dataTables.tableTools.js" var="dataTablesTT" />
+<script type="text/javascript" src="${dataTablesTT}"></script>
+<spring:url value="/resources/plugins/data-tables/TableTools/swf/copy_csv_xls_pdf.swf" var="dataTablesTTSWF" />
 <!-- END PAGE LEVEL PLUGINS -->
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <spring:url value="/resources/scripts/app.js" var="App" />
@@ -2504,21 +2519,6 @@
 <script src="${hsfWizard3}"></script>
 <spring:url value="/resources/scripts/hsf-wizard-modal-enfsoc.js" var="hsfWizard4" />
 <script src="${hsfWizard4}"></script>
-<spring:url value="/resources/plugins/jquery-validation/localization/messages_{language}.js" var="jQValidationLoc">
-	<spring:param name="language" value="${pageContext.request.locale.language}" />
-</spring:url>				
-<script src="${jQValidationLoc}"/></script>
-<spring:url value="/resources/plugins/select2/select2_locale_{language}.js" var="Select2Loc">
-	<spring:param name="language" value="${pageContext.request.locale.language}" />
-</spring:url>				
-<script src="${Select2Loc}"/></script>
-<spring:url value="/resources/plugins/data-tables/jquery.dataTables.js" var="jQueryDataTables" />
-<script type="text/javascript" src="${jQueryDataTables}"></script>
-<spring:url value="/resources/plugins/data-tables/DT_bootstrap.js" var="dataTablesBS" />
-<script type="text/javascript" src="${dataTablesBS}"></script>
-<spring:url value="/resources/plugins/data-tables/TableTools/js/dataTables.tableTools.js" var="dataTablesTT" />
-<script type="text/javascript" src="${dataTablesTT}"></script>
-<spring:url value="/resources/plugins/data-tables/TableTools/swf/copy_csv_xls_pdf.swf" var="dataTablesTTSWF" />
 <!-- END PAGE LEVEL SCRIPTS -->
 <spring:url value="/info/newPersona" var="addPersonUrl"/>
 <spring:url value="/info/newEnfermedad" var="addEnfermedadUrl"/>
