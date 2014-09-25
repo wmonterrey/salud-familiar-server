@@ -50,6 +50,27 @@
 			<!-- BEGIN PAGE CONTENT-->
 			<c:set var="processSuccess"><spring:message code="process.success" /></c:set>
 			<c:set var="processError"><spring:message code="process.error" /></c:set>
+			<spring:url value="/info/editHsf/{idVisita}" var="edit1Url">
+				<spring:param name="idVisita" value="${visita.idVisita}" />
+			</spring:url>
+			<spring:url value="/info/editChs/{idCaractHig}" var="edit2Url">
+				<spring:param name="idCaractHig" value="${carHigSan.idCaractHig}" />
+			</spring:url>
+			<spring:url value="/info/editFse/{idFactSocioEc}" var="edit3Url">
+				<spring:param name="idFactSocioEc" value="${factSocEc.idFactSocioEc}" />
+			</spring:url>
+			<spring:url value="/info/editFf/{idFuncFamiliar}" var="edit4Url">
+				<spring:param name="idFuncFamiliar" value="${funcFam.idFuncFamiliar}" />
+			</spring:url>
+			<spring:url value="/info/editChs/{idCaractHig}" var="add2Url">
+				<spring:param name="idCaractHig" value="${visita.idVisita}" />
+			</spring:url>
+			<spring:url value="/info/editFse/{idFactSocioEc}" var="add3Url">
+				<spring:param name="idFactSocioEc" value="${visita.idVisita}" />
+			</spring:url>
+			<spring:url value="/info/editFf/{idFuncFamiliar}" var="add4Url">
+				<spring:param name="idFuncFamiliar" value="${visita.idVisita}" />
+			</spring:url>
 			<div class="row">
 				<div class="col-md-12">
 					<div class="portlet" id="form_vist">
@@ -151,7 +172,7 @@
 									<!-- START ROW -->
 									<div class="row">
 										<div class="col-md-12 modal-footer">
-											<a href="#" class="btn btn-info"><i class="fa fa-edit"></i> <spring:message code="edit" /></a>
+											<a href="${fn:escapeXml(edit1Url)}" class="btn btn-success"><i class="fa fa-edit"></i> <spring:message code="edit" /></a>
 										</div>
 									</div>
 									<!-- END ROW -->
@@ -174,6 +195,9 @@
 												</tr>
 											</thead>
 											<c:forEach items="${personas}" var="persona">
+												<spring:url value="/info/editPersona/{idPersona}" var="edit5Url">
+													<spring:param name="idPersona" value="${persona.idPersona}" />
+												</spring:url>
 												<tr>
 													<td><c:out value="${persona.numPersona}" /></td>
 													<td><c:out value="${persona.nombres}" /></td>
@@ -182,7 +206,7 @@
 													<td><c:out value="${persona.cedula}" /></td>
 													<td><c:out value="${persona.fechaNacimiento}" /></td>
 													<td><c:out value="${persona.grupoDisp}" /></td>
-													<td><a href="${fn:escapeXml(editUrl)}" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></a></td>
+													<td><a href="${fn:escapeXml(edit5Url)}" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></a></td>
 												</tr>
 											</c:forEach>
 											</table>
@@ -197,7 +221,12 @@
 											<div class="form-group">
 												<label class="control-label col-md-6"><spring:message code="hacinamiento" /></label>
 												<div class="col-md-6">
-													<p class="form-control-static"><c:out value="${carHigSan.hacinamiento}" /></p>
+													<c:forEach items="${sinons}" var="snns">
+														<c:if test="${snns.codigo eq carHigSan.hacinamiento}">
+															<c:set var="hac" value="${snns.valor}"/>
+														</c:if>
+													</c:forEach>
+													<p class="form-control-static"><c:out value="${hac}"/></p>
 												</div>
 											</div>
 										</div>
@@ -205,7 +234,13 @@
 											<div class="form-group">
 												<label class="control-label col-md-6"><spring:message code="animdom" /></label>
 												<div class="col-md-6">
-													<p class="form-control-static"><c:out value="${carHigSan.animalesDom}" /></p>
+													<c:forEach items="${animales}" var="animal">
+														<c:if test="${fn:contains(carHigSan.animalesDom, animal.codigo)}">
+															<c:set var="adom" value="${adom}, ${animal.valor}"/>
+														</c:if>
+													</c:forEach>
+													<c:set var="adom" value="${fn:substring(adom, 2, fn:length(adom))}" />
+													<p class="form-control-static"><c:out value="${adom}" /></p>
 												</div>
 											</div>
 										</div>
@@ -213,7 +248,13 @@
 											<div class="form-group">
 												<label class="control-label col-md-6"><spring:message code="risks.nat" /></label>
 												<div class="col-md-6">
-													<p class="form-control-static"><c:out value="${carHigSan.riesgoNatural}" /></p>
+													<c:forEach items="${rgnats}" var="rgnat">
+														<c:if test="${fn:contains(carHigSan.riesgoNatural, rgnat.codigo)}">
+															<c:set var="riesgnat" value="${riesgnat}, ${rgnat.valor}"/>
+														</c:if>
+													</c:forEach>
+													<c:set var="riesgnat" value="${fn:substring(riesgnat, 2, fn:length(riesgnat))}" />
+													<p class="form-control-static"><c:out value="${riesgnat}"/></p>
 												</div>
 											</div>
 										</div>
@@ -225,7 +266,13 @@
 											<div class="form-group">
 												<label class="control-label col-md-6"><spring:message code="risks.met" /></label>
 												<div class="col-md-6">
-													<p class="form-control-static"><c:out value="${carHigSan.riesgoMeteorologico}" /></p>
+													<c:forEach items="${rgmets}" var="rgmet">
+														<c:if test="${fn:contains(carHigSan.riesgoMeteorologico, rgmet.codigo)}">
+															<c:set var="riesgmet" value="${riesgmet}, ${rgmet.valor}"/>
+														</c:if>
+													</c:forEach>
+													<c:set var="riesgmet" value="${fn:substring(riesgmet, 2, fn:length(riesgmet))}" />
+													<p class="form-control-static"><c:out value="${riesgmet}" /></p>
 												</div>
 											</div>
 										</div>
@@ -233,7 +280,13 @@
 											<div class="form-group">
 												<label class="control-label col-md-6"><spring:message code="risks.bio" /></label>
 												<div class="col-md-6">
-													<p class="form-control-static"><c:out value="${carHigSan.riesgoBiologico}" /></p>
+													<c:forEach items="${rgbios}" var="rgbio">
+														<c:if test="${fn:contains(carHigSan.riesgoBiologico, rgbio.codigo)}">
+															<c:set var="riesgbio" value="${riesgbio}, ${rgbio.valor}"/>
+														</c:if>
+													</c:forEach>
+													<c:set var="riesgbio" value="${fn:substring(riesgbio, 2, fn:length(riesgbio))}" />
+													<p class="form-control-static"><c:out value="${riesgbio}" /></p>
 												</div>
 											</div>
 										</div>
@@ -241,7 +294,13 @@
 											<div class="form-group">
 												<label class="control-label col-md-6"><spring:message code="risks.social" /></label>
 												<div class="col-md-6">
-													<p class="form-control-static"><c:out value="${carHigSan.riesgoSocial}" /></p>
+													<c:forEach items="${rgsocs}" var="rgsoc">
+														<c:if test="${fn:contains(carHigSan.riesgoSocial, rgsoc.codigo)}">
+															<c:set var="riesgsoc" value="${riesgsoc}, ${rgsoc.valor}"/>
+														</c:if>
+													</c:forEach>
+													<c:set var="riesgsoc" value="${fn:substring(riesgsoc, 2, fn:length(riesgsoc))}" />
+													<p class="form-control-static"><c:out value="${riesgsoc}" /></p>
 												</div>
 											</div>
 										</div>
@@ -253,7 +312,13 @@
 											<div class="form-group">
 												<label class="control-label col-md-6"><spring:message code="fact.med.amb" /></label>
 												<div class="col-md-6">
-													<p class="form-control-static"><c:out value="${carHigSan.factoresMedAmb}" /></p>
+													<c:forEach items="${factoresMedAmbs}" var="factoresMedAmb">
+														<c:if test="${fn:contains(carHigSan.factoresMedAmb, factoresMedAmb.codigo)}">
+															<c:set var="factmed" value="${factmed}, ${factoresMedAmb.valor}"/>
+														</c:if>
+													</c:forEach>
+													<c:set var="factmed" value="${fn:substring(factmed, 2, fn:length(factmed))}" />
+													<p class="form-control-static"><c:out value="${factmed}" /></p>
 												</div>
 											</div>
 										</div>
@@ -261,7 +326,13 @@
 											<div class="form-group">
 												<label class="control-label col-md-6"><spring:message code="comb.coc" /></label>
 												<div class="col-md-6">
-													<p class="form-control-static"><c:out value="${carHigSan.combCocinar}" /></p>
+													<c:forEach items="${combCocinars}" var="combCocinar">
+														<c:if test="${fn:contains(carHigSan.combCocinar, combCocinar.codigo)}">
+															<c:set var="combcoc" value="${combcoc}, ${combCocinar.valor}"/>
+														</c:if>
+													</c:forEach>
+													<c:set var="combcoc" value="${fn:substring(combcoc, 2, fn:length(combcoc))}" />
+													<p class="form-control-static"><c:out value="${combcoc}" /></p>
 												</div>
 											</div>
 										</div>
@@ -334,7 +405,12 @@
 									<!-- START ROW -->
 									<div class="row">
 										<div class="col-md-12 modal-footer">
-											<a href="#" class="btn btn-info"><i class="fa fa-edit"></i> <spring:message code="edit" /></a>
+											<c:if test="${carHigSan.idCaractHig == null}">
+												<a href="${fn:escapeXml(add2Url)}" class="btn btn-info"><i class="fa fa-plus"></i> <spring:message code="add" /></a>
+											</c:if>
+											<c:if test="${carHigSan.idCaractHig != null}">
+												<a href="${fn:escapeXml(edit2Url)}" class="btn btn-success"><i class="fa fa-edit"></i> <spring:message code="edit" /></a>
+											</c:if>
 										</div>
 									</div>
 									<!-- END ROW -->
@@ -389,7 +465,12 @@
 											<div class="form-group">
 												<label class="control-label col-md-6"><spring:message code="nec.basicas" /></label>
 												<div class="col-md-6">
-													<p class="form-control-static"><c:out value="${factSocEc.satNecBasicas}" /></p>
+													<c:forEach items="${sinons}" var="snns">
+														<c:if test="${snns.codigo eq factSocEc.satNecBasicas}">
+															<c:set var="sat" value="${snns.valor}"/>
+														</c:if>
+													</c:forEach>
+													<p class="form-control-static"><c:out value="${sat}" /></p>
 												</div>
 											</div>
 										</div>
@@ -409,7 +490,13 @@
 											<div class="form-group">
 												<label class="control-label col-md-6"><spring:message code="acc.com" /></label>
 												<div class="col-md-6">
-													<p class="form-control-static"><c:out value="${factSocEc.accionesComunitarias}" /></p>
+													<c:forEach items="${accionesComunitarias}" var="accionComunitaria">
+														<c:if test="${fn:contains(factSocEc.accionesComunitarias, accionComunitaria.codigo)}">
+															<c:set var="acccom" value="${acccom}, ${accionComunitaria.valor}"/>
+														</c:if>
+													</c:forEach>
+													<c:set var="acccom" value="${fn:substring(acccom, 2, fn:length(acccom))}" />
+													<p class="form-control-static"><c:out value="${acccom}" /></p>
 												</div>
 											</div>
 										</div>
@@ -426,7 +513,12 @@
 									<!-- START ROW -->
 									<div class="row">
 										<div class="col-md-12 modal-footer">
-											<a href="#" class="btn btn-info"><i class="fa fa-edit"></i> <spring:message code="edit" /></a>
+											<c:if test="${factSocEc.idFactSocioEc == null}">
+												<a href="${fn:escapeXml(add3Url)}" class="btn btn-info"><i class="fa fa-plus"></i> <spring:message code="add" /></a>
+											</c:if>
+											<c:if test="${factSocEc.idFactSocioEc != null}">
+												<a href="${fn:escapeXml(edit3Url)}" class="btn btn-success"><i class="fa fa-edit"></i> <spring:message code="edit" /></a>
+											</c:if>
 										</div>
 									</div>
 									<!-- END ROW -->
@@ -465,7 +557,13 @@
 											<div class="form-group">
 												<label class="control-label col-md-6"><spring:message code="crisis.norm" /></label>
 												<div class="col-md-6">
-													<p class="form-control-static"><c:out value="${funcFam.crisisNormativa}" /></p>
+													<c:forEach items="${crisisNormativas}" var="crisisNormativa">
+														<c:if test="${fn:contains(funcFam.crisisNormativa, crisisNormativa.codigo)}">
+															<c:set var="crinor" value="${crinor}, ${crisisNormativa.valor}"/>
+														</c:if>
+													</c:forEach>
+													<c:set var="crinor" value="${fn:substring(crinor, 2, fn:length(crinor))}" />
+													<p class="form-control-static"><c:out value="${crinor}" /></p>
 												</div>
 											</div>
 										</div>
@@ -473,7 +571,13 @@
 											<div class="form-group">
 												<label class="control-label col-md-6"><spring:message code="crisis.para" /></label>
 												<div class="col-md-6">
-													<p class="form-control-static"><c:out value="${funcFam.crisisParanormativa}" /></p>
+													<c:forEach items="${crisisParanormativas}" var="crisisParanormativa">
+														<c:if test="${fn:contains(funcFam.crisisParanormativa, crisisParanormativa.codigo)}">
+															<c:set var="criparnor" value="${criparnor}, ${crisisParanormativa.valor}"/>
+														</c:if>
+													</c:forEach>
+													<c:set var="criparnor" value="${fn:substring(criparnor, 2, fn:length(criparnor))}" />
+													<p class="form-control-static"><c:out value="${criparnor}" /></p>
 												</div>
 											</div>
 										</div>
@@ -481,7 +585,12 @@
 											<div class="form-group">
 												<label class="control-label col-md-6"><spring:message code="med.trad" /></label>
 												<div class="col-md-6">
-													<p class="form-control-static"><c:out value="${funcFam.usoMedTradicional}" /></p>
+													<c:forEach items="${sinons}" var="snns">
+														<c:if test="${snns.codigo eq funcFam.usoMedTradicional}">
+															<c:set var="medtra" value="${snns.valor}"/>
+														</c:if>
+													</c:forEach>
+													<p class="form-control-static"><c:out value="${medtra}" /></p>
 												</div>
 											</div>
 										</div>
@@ -490,7 +599,12 @@
 									<!-- START ROW -->
 									<div class="row">
 										<div class="col-md-12 modal-footer">
-											<a href="#" class="btn btn-info"><i class="fa fa-edit"></i> <spring:message code="edit" /></a>
+											<c:if test="${funcFam.idFuncFamiliar == null}">
+												<a href="${fn:escapeXml(add4Url)}" class="btn btn-info"><i class="fa fa-plus"></i> <spring:message code="add" /></a>
+											</c:if>
+											<c:if test="${funcFam.idFuncFamiliar != null}">
+												<a href="${fn:escapeXml(edit4Url)}" class="btn btn-success"><i class="fa fa-edit"></i> <spring:message code="edit" /></a>
+											</c:if>
 										</div>
 									</div>
 									<!-- END ROW -->

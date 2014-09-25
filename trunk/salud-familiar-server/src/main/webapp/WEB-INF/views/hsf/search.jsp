@@ -200,7 +200,7 @@
 											<label class="control-label col-md-6"><spring:message code="visit.date" />:
 											</label>
 											<div class="col-md-6">
-												<div class="input-group date date-picker" data-date-format="dd-mm-yyyy" data-date-end-date="+0d">
+												<div class="input-group date date-picker" data-date-format="dd/MM/yyyy" data-date-end-date="+0d">
 													<input id="fechaVisita" name="fechaVisita" type="text" class="form-control" placeholder="<spring:message code="please.enter" /> <spring:message code="visit.date" />">
 													<span class="input-group-btn">
 														<button class="btn btn-info" type="button"><i class="fa fa-calendar"></i></button>
@@ -285,12 +285,6 @@
 <script type="text/javascript" src="${datepicker}"></script>
 <spring:url value="/resources/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js" var="inputmask" />
 <script type="text/javascript" src="${inputmask}"></script>
-<!-- END PAGE LEVEL PLUGINS -->
-<!-- BEGIN PAGE LEVEL SCRIPTS -->
-<spring:url value="/resources/scripts/app.js" var="App" />
-<script src="${App}" type="text/javascript"></script>
-<spring:url value="/resources/scripts/hsf-search.js" var="hsfSearch" />
-<script src="${hsfSearch}"></script>
 <spring:url value="/resources/plugins/jquery-validation/localization/messages_{language}.js" var="jQValidationLoc">
 	<spring:param name="language" value="${pageContext.request.locale.language}" />
 </spring:url>				
@@ -306,13 +300,19 @@
 <spring:url value="/resources/plugins/data-tables/TableTools/js/dataTables.tableTools.js" var="dataTablesTT" />
 <script type="text/javascript" src="${dataTablesTT}"></script>
 <spring:url value="/resources/plugins/data-tables/TableTools/swf/copy_csv_xls_pdf.swf" var="dataTablesTTSWF" />
+<!-- END PAGE LEVEL PLUGINS -->
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<spring:url value="/resources/scripts/app.js" var="App" />
+<script src="${App}" type="text/javascript"></script>
+<spring:url value="/resources/scripts/hsf-search.js" var="hsfSearch" />
+<script src="${hsfSearch}"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 
 <spring:url value="/opciones/municipios" var="opcMuniUrl"/>
 <spring:url value="/opciones/sectores" var="opcSectUrl"/>
 <spring:url value="/opciones/comunidades" var="opcComuUrl"/>
 <spring:url value="/info/hsfs" var="hsfsUrl"/>
-<spring:url value="/info/visit" var="visitUrl"/>
+<spring:url value="/info/viewHsf" var="visitUrl"/>
 
 <script>
     $(function () {
