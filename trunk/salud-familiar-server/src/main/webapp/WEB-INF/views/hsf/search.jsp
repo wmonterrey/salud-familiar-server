@@ -24,7 +24,7 @@
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
-<body class="page-header-fixed page-sidebar-fixed page-footer-fixed">
+<body class="page-header-fixed page-sidebar-closed page-sidebar-fixed page-footer-fixed">
 <!-- BEGIN HEADER -->
 <jsp:include page="../fragments/bodyHeader.jsp" />
 <!-- END HEADER -->
@@ -233,10 +233,10 @@
 							<thead>
 								<tr>
 									<th><spring:message code="comunity" /></th>
-									<th><spring:message code="novivienda" /></th>
+									<th><spring:message code="noviv" /></th>
 									<th><spring:message code="nofamilia" /></th>
 									<th><spring:message code="noficha" /></th>
-									<th class="hidden-xs"><spring:message code="address" /></th>
+									<th class="hidden-xs"><spring:message code="shortadd" /></th>
 									<th><spring:message code="dispen" /></th>
 									<th><spring:message code="finished" /></th>
 									<th></th>
