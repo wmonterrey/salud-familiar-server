@@ -50,8 +50,8 @@
 			</div>
 			<!-- END PAGE HEADER-->
 			<!-- BEGIN PAGE CONTENT-->
-			<spring:url value="/info/viewHsf/{idVisita}" var="visitaUrl">
-				<spring:param name="idVisita" value="${identVisita}" />
+			<spring:url value="/info/viewHsf/{idFamilia}" var="familiaUrl">
+				<spring:param name="idFamilia" value="${identFamilia}" />
 			</spring:url>
 			<c:set var="processSuccess"><spring:message code="process.success" /></c:set>
 			<c:set var="processError"><spring:message code="process.error" /></c:set>
@@ -77,7 +77,7 @@
 									</div>
 									<!-- START ROW -->
 									<div class="row">
-										<div class="col-md-6">
+										<div class="col-md-4">
 											<div class="form-group" hidden="true">
 												<label class="control-label col-md-4"><spring:message code="step5" />:
 												<span class="required">
@@ -89,7 +89,7 @@
 												</div>
 											</div>
 										</div>
-										<div class="col-md-6">
+										<div class="col-md-4">
 											<div class="form-group" hidden="true">
 												<label class="control-label col-md-4"><spring:message code="noficha" />:
 												<span class="required">
@@ -97,7 +97,20 @@
 												</span>
 												</label>
 												<div class="col-md-8">
-													<input type="text" value="${identVisita}" id="idVisita" name="idVisita" class="form-control"/>
+													<input type="text" value="${identFamilia}" id="idFamilia" name="idFamilia" class="form-control"/>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group" hidden="true">
+												<label class="control-label col-md-6"><spring:message code="visit.date" />:
+												<span class="required">
+													 *
+												</span>
+												</label>
+												<div class="col-md-6">
+													<fmt:formatDate  value="${fechaDeVisita}" var="parsedEmpDate" pattern="dd/MM/yyyy" />
+													<input type="text" value="<c:out value="${parsedEmpDate}" />" id="fechaVisita" name="fechaVisita" class="form-control"/>
 												</div>
 											</div>
 										</div>
@@ -282,7 +295,7 @@
 								<div class="form-actions fluid">
 									<div class="col-md-offset-9 col-md-3">
 										<button id="guardar" type="submit" class="btn btn-success"><spring:message code="save" /></button>
-						            	<a href="${fn:escapeXml(visitaUrl)}" class="btn btn-danger"><spring:message code="end" /></a>
+						            	<a href="${fn:escapeXml(familiaUrl)}" class="btn btn-danger"><spring:message code="end" /></a>
 									</div>
 								</div>
 							</form>

@@ -1,8 +1,5 @@
 package ni.gob.minsa.hsf.service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -33,34 +30,32 @@ public class VisitaService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Visita> getVisitas(String comunidad, Integer numVivienda, Integer numFamilia, Integer numFicha, String fechaVisita) throws ParseException {
+	public List<Visita> getVisitas(String idFamilia) {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
 		// Create a Hibernate query (HQL)
-		Date visitDate = null;
-		String strQuery = "FROM Visita vis where vis.familia.comunidad.codigo = :codComunidad";
-		if (numVivienda != null) strQuery = strQuery + " and vis.familia.numVivienda = :numVivienda";
-		if (numFamilia != null) strQuery = strQuery + " and vis.familia.numFamilia = :numFamilia";
-		if (numFicha != null) strQuery = strQuery + " and vis.numFicha = :numFicha";
-		if (!fechaVisita.equals("")){
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-			visitDate = formatter.parse(fechaVisita);
-			strQuery = strQuery + " and vis.fechaVisita = :fechaVisita";
-		}
-		Query query = session.createQuery(strQuery);
-		query.setParameter("codComunidad", comunidad);
-		if (numVivienda != null) query.setParameter("numVivienda", numVivienda);
-		if (numFamilia != null) query.setParameter("numFamilia", numFamilia);
-		if (numFicha != null) query.setParameter("numFicha", numFicha);
-		if (!fechaVisita.equals("")) query.setDate("fechaVisita", visitDate);
+		Query query = session.createQuery("FROM Visita v where v.familia.idFamilia = :idFamilia");
+		query.setParameter("idFamilia", idFamilia);
 		// Retrieve all
 		return  query.list();
+	}
+		
+	public Visita getUltimaVisita(String idFamilia) {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = session.createQuery("FROM Visita v where v.familia.idFamilia = :idFamilia order by v.fechaVisita DESC");
+		query.setParameter("idFamilia", idFamilia);
+		query.setMaxResults(1);
+		Visita visita = (Visita) query.uniqueResult();
+		return visita;
 	}
 	
 	public Visita getVisita(String idVisita) {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery("FROM Visita v where v.idVisita = '"+ idVisita + "'");
+		Query query = session.createQuery("FROM Visita v where v.idVisita = :idVisita");
+		query.setParameter("idVisita", idVisita);
 		Visita visita = (Visita) query.uniqueResult();
 		return visita;
 	}

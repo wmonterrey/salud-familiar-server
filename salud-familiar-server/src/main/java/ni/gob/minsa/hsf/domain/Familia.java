@@ -25,11 +25,13 @@ public class Familia extends BaseMetaData implements Auditable{
 	private Comunidades comunidad;
 	private Integer numVivienda;
 	private Integer numFamilia;
+	private Integer numFicha;
 	private String direccion;
 	private BigDecimal latitud;
 	private BigDecimal longitud;
 	private String telefonoContacto;
 	private char dispensarizada = '0';
+	private char infoCompleta = '0';
 	
 	
 	public Familia() {
@@ -93,6 +95,15 @@ public class Familia extends BaseMetaData implements Auditable{
 	public void setNumFamilia(Integer numFamilia) {
 		this.numFamilia = numFamilia;
 	}
+	
+	@Column(name = "NUM_FICHA", nullable = true)
+	public Integer getNumFicha() {
+		return numFicha;
+	}
+
+	public void setNumFicha(Integer numFicha) {
+		this.numFicha = numFicha;
+	}
 
 	@Column(name = "DIRECCION", nullable = true, length = 500)
 	public String getDireccion() {
@@ -138,6 +149,15 @@ public class Familia extends BaseMetaData implements Auditable{
 	public void setDispensarizada(char dispensarizada) {
 		this.dispensarizada = dispensarizada;
 	}
+	
+	@Column(name = "INFO_COMPLETA", nullable = true)
+	public char getInfoCompleta() {
+		return infoCompleta;
+	}
+
+	public void setInfoCompleta(char infoCompleta) {
+		this.infoCompleta = infoCompleta;
+	}
 
 	@Override
 	public boolean isFieldAuditable(String fieldname) {
@@ -146,7 +166,7 @@ public class Familia extends BaseMetaData implements Auditable{
 		}
 		return true;
 	}
-	
+
 	@Override
 	public String toString(){
 		return idFamilia;

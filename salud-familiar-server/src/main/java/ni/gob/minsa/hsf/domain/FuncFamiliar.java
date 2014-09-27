@@ -1,5 +1,7 @@
 package ni.gob.minsa.hsf.domain;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -25,7 +27,8 @@ public class FuncFamiliar extends BaseMetaData implements Auditable{
 	
 	
 	private String idFuncFamiliar;
-	private Visita visita;
+	private Familia familia;
+	private Date fechaUltimaVisita;
 	private TamanoFam tamFamilia;
 	private Ontogenesis ontogenesis;
 	private EtapaCicloVital etapaCicloVital;
@@ -51,16 +54,24 @@ public class FuncFamiliar extends BaseMetaData implements Auditable{
 		this.idFuncFamiliar = idFuncFamiliar;
 	}
 
-
 	@OneToOne(optional=false)
-	@JoinColumn(name="ID_VISITA")
+	@JoinColumn(name="ID_FAMILIA")
 	@ForeignKey(name = "FUNCFAM_VISITAS_FK")
-	public Visita getVisita() {
-		return visita;
+	public Familia getFamilia() {
+		return familia;
 	}
 
-	public void setVisita(Visita visita) {
-		this.visita = visita;
+	public void setFamilia(Familia familia) {
+		this.familia = familia;
+	}
+	
+	@Column(name = "FECHA_ULTIMA_VISITA", nullable = false)
+	public Date getFechaUltimaVisita() {
+		return fechaUltimaVisita;
+	}
+
+	public void setFechaUltimaVisita(Date fechaUltimaVisita) {
+		this.fechaUltimaVisita = fechaUltimaVisita;
 	}
 	
 	@ManyToOne(fetch=FetchType.LAZY,targetEntity=Catalogo.class)

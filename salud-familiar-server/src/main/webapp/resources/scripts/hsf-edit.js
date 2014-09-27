@@ -34,15 +34,9 @@ var FormEditHSF = function () {
             "repeat": 6,
             "greedy": false
         });
-        
-        $("#fechaVisita").inputmask("d/m/y", {
-            "placeholder": "dd/mm/yyyy"
-        }); //multi-char placeholder
     };
    
     var handleSelect2 = function () {
-    	$("#personaVisitaProfesion").select2({
-        });
         $("#silais").select2({
         });
         $("#municipio").select2({
@@ -166,16 +160,6 @@ var FormEditHSF = function () {
                     numFicha: {
                     	min:1,
                         required: true
-                    },
-                    personaVisita: {
-                    	minlength:10,
-                        required: true
-                    },
-                    personaVisitaProfesion: {
-                        required: true
-                    },
-                    fechaVisita: {
-                        required: true
                     }
                 },
                 
@@ -208,19 +192,19 @@ var FormEditHSF = function () {
                 submitHandler: function (form) {
                     error.hide();
                     //add here some ajax code to submit your form or just call form.submit() if you want to submit the form without ajax
-                    guardarFamiliaVisita();
+                    guardarFamilia();
                 }
             });
             
             
-            function guardarFamiliaVisita()
+            function guardarFamilia()
         	{
             	App.blockUI(pageContent, false);
-            	$.post( parametros.addFamiliaVisitaUrl
+            	$.post( parametros.editFamiliaUrl
     		            , $('#edit-hsf-form').serialize()
     		            , function( data )
     		            {
-    						visita = JSON.parse(data);
+    						familia = JSON.parse(data);
     						App.unblockUI(pageContent);
     						toastr.success(parametros.processSuccess);
     		            }

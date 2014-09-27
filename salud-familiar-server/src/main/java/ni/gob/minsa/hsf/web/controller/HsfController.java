@@ -212,7 +212,7 @@ public class HsfController {
 	}
 	
 	@RequestMapping( value="newFamiliaVisita", method=RequestMethod.POST)
-	public ResponseEntity<String> processCreationFamiliaForm( @RequestParam(value="comunidad", required=true ) String comunidad
+	public ResponseEntity<String> processCreationFamiliaVisitaForm( @RequestParam(value="comunidad", required=true ) String comunidad
 			, @RequestParam( value="numVivienda", required=true ) Integer numVivienda
 			, @RequestParam( value="numFamilia", required=true ) Integer numFamilia
 			, @RequestParam( value="direccion", required=true ) String direccion
@@ -221,15 +221,14 @@ public class HsfController {
 			, @RequestParam( value="numFicha", required=true ) Integer numFicha
 			, @RequestParam( value="personaVisita", required=true) String personaVisita
 			, @RequestParam( value="personaVisitaProfesion", required=true) String personaVisitaProfesion
-			, @RequestParam( value="fechaVisita", required=true) String fechaVisita
-			
-	        ) throws ParseException
+			, @RequestParam( value="fechaVisita", required=true) String fechaVisita) throws ParseException
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Familia familia = new Familia();
 		familia.setComunidad(comunidadService.getComunidad(comunidad));
 		familia.setNumVivienda(numVivienda);
 		familia.setNumFamilia(numFamilia);
+		familia.setNumFicha(numFicha);
 		familia.setDireccion(direccion);
 		familia.setCodFamilia(comunidad+"-"+numVivienda+"-"+numFamilia);
 		if (idFamilia.equals("")){
@@ -238,7 +237,7 @@ public class HsfController {
 		familia.setIdFamilia(idFamilia);
 		familia.setCreatedBy(authentication.getName());
 		familia.setCreated(new Date());
-		familia.setPasive('0');
+		familia.setInfoCompleta(estaCompleta(idFamilia));
 		familiaService.addFamilia(familia);
 		
 		
@@ -247,27 +246,80 @@ public class HsfController {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		Date date = formatter.parse(fechaVisita);
 		visita.setFechaVisita(date);
-		visita.setNumFicha(numFicha);
 		visita.setPersonaVisita(personaVisita);
 		visita.setPersonaVisitaProfesion(catalogoService.getProfesion(personaVisitaProfesion));
 		MovilInfo movilInfo = new MovilInfo();
 		WebAuthenticationDetails wad  = (WebAuthenticationDetails) authentication.getDetails();
 		movilInfo.setDeviceid(wad.getRemoteAddress());
-		movilInfo.setEstado('1');
 		if (idVisita.equals("")){
 			idVisita = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
 		}
 		visita.setIdVisita(idVisita);
 		visita.setCreatedBy(authentication.getName());
 		visita.setCreated(new Date());
-		visita.setPasive('0');
+		visita.setMovilInfo(movilInfo);
+		visitaService.addVisita(visita);
+		return createJsonResponse(visita);
+	}
+	
+	private char estaCompleta(String idFamilia) {
+		Familia familia = this.familiaService.getFamilia(idFamilia);
+		CaractHigSanitarias carHigSan = this.caractHigSanitariasService.getCaractHigSanitariasFamilia(idFamilia);
+        FactSocioEconomicos factSocEc = this.factSocioEconomicosService.getFactSocioEconomicosFamilia(idFamilia);
+        FuncFamiliar funcFam = this.funcFamiliarService.getFuncFamiliarFamilia(idFamilia);
+        List<Persona> personas = this.personaService.getPersonas(idFamilia);
+        List<Visita> visitas = this.visitaService.getVisitas(idFamilia);
+        if(familia!=null && carHigSan!=null && factSocEc!=null && funcFam!=null && personas!=null && visitas!=null){
+        	return '1';
+        }
+        else{
+        	return '0';
+        }
+	}
+
+	@RequestMapping( value="editFamilia", method=RequestMethod.POST)
+	public ResponseEntity<String> processEditionFamiliaForm( @RequestParam(value="comunidad", required=true ) String comunidad
+			, @RequestParam( value="numVivienda", required=true ) Integer numVivienda
+			, @RequestParam( value="numFamilia", required=true ) Integer numFamilia
+			, @RequestParam( value="direccion", required=true ) String direccion
+			, @RequestParam( value="idFamilia", required=true) String idFamilia
+			, @RequestParam( value="numFicha", required=true ) Integer numFicha) throws ParseException
+	{
+		Familia familia = this.familiaService.getFamilia(idFamilia);
+		familia.setComunidad(comunidadService.getComunidad(comunidad));
+		familia.setNumVivienda(numVivienda);
+		familia.setNumFamilia(numFamilia);
+		familia.setNumFicha(numFicha);
+		familia.setDireccion(direccion);
+		familia.setCodFamilia(comunidad+"-"+numVivienda+"-"+numFamilia);
+		familia.setInfoCompleta(estaCompleta(idFamilia));
+		familiaService.addFamilia(familia);
+		return createJsonResponse(familia);
+	}
+	
+	@RequestMapping( value="editVisita", method=RequestMethod.POST)
+	public ResponseEntity<String> processEditionVisitaForm(@RequestParam( value="idVisita", required=true) String idVisita
+			, @RequestParam( value="personaVisita", required=true) String personaVisita
+			, @RequestParam( value="personaVisitaProfesion", required=true) String personaVisitaProfesion
+			, @RequestParam( value="fechaVisita", required=true) String fechaVisita) throws ParseException
+	{
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Visita visita = this.visitaService.getVisita(idVisita);
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		Date date = formatter.parse(fechaVisita);
+		visita.setFechaVisita(date);
+		visita.setPersonaVisita(personaVisita);
+		visita.setPersonaVisitaProfesion(catalogoService.getProfesion(personaVisitaProfesion));
+		MovilInfo movilInfo = new MovilInfo();
+		WebAuthenticationDetails wad  = (WebAuthenticationDetails) authentication.getDetails();
+		movilInfo.setDeviceid(wad.getRemoteAddress());
 		visita.setMovilInfo(movilInfo);
 		visitaService.addVisita(visita);
 		return createJsonResponse(visita);
 	}
 	
 	@RequestMapping( value="newCarHigSan", method=RequestMethod.POST)
-	public ResponseEntity<String> processCreationCaractHigForm( @RequestParam( value="idVisita", required=true) String idVisita
+	public ResponseEntity<String> processCreationCaractHigForm( @RequestParam( value="idFamilia", required=true) String idFamilia
 			, @RequestParam( value="hacinamiento", required=false) String hacinamiento
 			, @RequestParam( value="animalesDom", required=false) String animalesDom
 			, @RequestParam( value="riesgoNatural", required=false) String riesgoNatural
@@ -283,12 +335,20 @@ public class HsfController {
 			, @RequestParam( value="depBasura", required=false) String depBasura
 			, @RequestParam( value="depResLiq", required=false) String depResLiq
 			, @RequestParam( value="obsCaractHig", required=false) String obsCaractHig
-			, @RequestParam( value="idCaractHig", required=false, defaultValue="" ) String idCaractHig
-	        ) 
+			, @RequestParam( value="fechaVisita", required=true) String fechaVisita
+			, @RequestParam( value="idCaractHig", required=false, defaultValue="" ) String idCaractHig) throws ParseException 
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		CaractHigSanitarias carHigSan =  new CaractHigSanitarias();
-		carHigSan.setVisita(visitaService.getVisita(idVisita));
+		if (idCaractHig.equals("")){
+			idCaractHig = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
+			carHigSan.setCreated(new Date());
+			carHigSan.setCreatedBy(authentication.getName());
+		}
+		else{
+			carHigSan =  this.caractHigSanitariasService.getCaractHigSanitarias(idCaractHig);
+		}
+		carHigSan.setFamilia(familiaService.getFamilia(idFamilia));
 		carHigSan.setHacinamiento(hacinamiento);
 		carHigSan.setAnimalesDom(animalesDom);
 		carHigSan.setRiesgoNatural(riesgoNatural);
@@ -304,19 +364,16 @@ public class HsfController {
 		carHigSan.setDepBasura(catalogoService.getDepBasura(depBasura));
 		carHigSan.setDepResLiq(catalogoService.getDepResLiq(depResLiq));
 		carHigSan.setObsCaractHig(obsCaractHig);
-		if (idCaractHig.equals("")){
-			idCaractHig = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
-		}
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		Date date = formatter.parse(fechaVisita);
+		carHigSan.setFechaUltimaVisita(date);
 		carHigSan.setIdCaractHig(idCaractHig);
-		carHigSan.setCreated(new Date());
-		carHigSan.setCreatedBy(authentication.getName());
-		carHigSan.setPasive('0');
 		caractHigSanitariasService.addCaractHigSanitarias(carHigSan);
 		return createJsonResponse(carHigSan);
 	}
 	
 	@RequestMapping( value="newFactSocEc", method=RequestMethod.POST)
-	public ResponseEntity<String> processCreationFactSocEcForm( @RequestParam( value="idVisita", required=true) String idVisita
+	public ResponseEntity<String> processCreationFactSocEcForm( @RequestParam( value="idFamilia", required=true) String idFamilia
 			, @RequestParam( value="tipoPiso", required=false) String tipoPiso
 			, @RequestParam( value="tipoTecho", required=false) String tipoTecho
 			, @RequestParam( value="tipoPared", required=false) String tipoPared
@@ -326,12 +383,21 @@ public class HsfController {
 			, @RequestParam( value="tenenciaVivienda", required=false) String tenenciaVivienda
 			, @RequestParam( value="accionesComunitarias", required=false) String accionesComunitarias
 			, @RequestParam( value="obsFactSocioEc", required=false) String obsFactSocioEc
+			, @RequestParam( value="fechaVisita", required=true) String fechaVisita
 			, @RequestParam( value="idFactSocioEc", required=false, defaultValue="" ) String idFactSocioEc
-	        ) 
+	        ) throws ParseException 
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		FactSocioEconomicos factSocEc =  new FactSocioEconomicos();
-		factSocEc.setVisita(visitaService.getVisita(idVisita));
+		if (idFactSocioEc.equals("")){
+			idFactSocioEc = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
+			factSocEc.setCreated(new Date());
+			factSocEc.setCreatedBy(authentication.getName());
+		}
+		else{
+			factSocEc =  this.factSocioEconomicosService.getFactSocioEconomicos(idFactSocioEc);
+		}
+		factSocEc.setFamilia(familiaService.getFamilia(idFamilia));
 		factSocEc.setTipoPiso(catalogoService.getTipoPiso(tipoPiso));
 		factSocEc.setTipoTecho(catalogoService.getTipoTecho(tipoTecho));
 		factSocEc.setTipoPared(catalogoService.getTipoPared(tipoPared));
@@ -341,19 +407,16 @@ public class HsfController {
 		factSocEc.setTenenciaVivienda(catalogoService.getTenenciaVivienda(tenenciaVivienda));
 		factSocEc.setAccionesComunitarias(accionesComunitarias);
 		factSocEc.setObsFactSocioEc(obsFactSocioEc);
-		if (idFactSocioEc.equals("")){
-			idFactSocioEc = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
-		}
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		Date date = formatter.parse(fechaVisita);
+		factSocEc.setFechaUltimaVisita(date);
 		factSocEc.setIdFactSocioEc(idFactSocioEc);
-		factSocEc.setCreated(new Date());
-		factSocEc.setCreatedBy(authentication.getName());
-		factSocEc.setPasive('0');
 		factSocioEconomicosService.addFactSocioEconomicos(factSocEc);
 		return createJsonResponse(factSocEc);
 	}
 	
 	@RequestMapping( value="newFuncFam", method=RequestMethod.POST)
-	public ResponseEntity<String> processCreationFuncFamForm( @RequestParam( value="idVisita", required=true) String idVisita
+	public ResponseEntity<String> processCreationFuncFamForm( @RequestParam( value="idFamilia", required=true) String idFamilia
 			, @RequestParam( value="tamFamilia", required=false) String tamFamilia
 			, @RequestParam( value="ontogenesis", required=false) String ontogenesis
 			, @RequestParam( value="etapaCicloVital", required=false) String etapaCicloVital
@@ -361,12 +424,21 @@ public class HsfController {
 			, @RequestParam( value="crisisParanormativa", required=false) String crisisParanormativa
 			, @RequestParam( value="usoMedTradicional", required=false) String usoMedTradicional
 			, @RequestParam( value="obsFuncFamiliar", required=false) String obsFuncFamiliar
+			, @RequestParam( value="fechaVisita", required=true) String fechaVisita
 			, @RequestParam( value="idFuncFamiliar", required=false, defaultValue="" ) String idFuncFamiliar
-	        ) 
+	        ) throws ParseException 
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		FuncFamiliar funcFam =  new FuncFamiliar();
-		funcFam.setVisita(visitaService.getVisita(idVisita));
+		if (idFuncFamiliar.equals("")){
+			idFuncFamiliar = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
+			funcFam.setCreated(new Date());
+			funcFam.setCreatedBy(authentication.getName());
+		}
+		else{
+			funcFam =  this.funcFamiliarService.getFuncFamiliar(idFuncFamiliar);
+		}
+		funcFam.setFamilia(familiaService.getFamilia(idFamilia));
 		funcFam.setTamFamilia(catalogoService.getTamanoFam(tamFamilia));
 		funcFam.setOntogenesis(catalogoService.getOntogenesis(ontogenesis));
 		funcFam.setEtapaCicloVital(catalogoService.getEtapaCicloVital(etapaCicloVital));
@@ -374,13 +446,10 @@ public class HsfController {
 		funcFam.setCrisisParanormativa(crisisParanormativa);
 		funcFam.setUsoMedTradicional(usoMedTradicional);
 		funcFam.setObsFuncFamiliar(obsFuncFamiliar);
-		if (idFuncFamiliar.equals("")){
-			idFuncFamiliar = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
-		}
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		Date date = formatter.parse(fechaVisita);
+		funcFam.setFechaUltimaVisita(date);
 		funcFam.setIdFuncFamiliar(idFuncFamiliar);
-		funcFam.setCreated(new Date());
-		funcFam.setCreatedBy(authentication.getName());
-		funcFam.setPasive('0');
 		funcFamiliarService.addFuncFamiliar(funcFam);
 		return createJsonResponse(funcFam);
 	}
@@ -414,11 +483,16 @@ public class HsfController {
 	        ) throws ParseException
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Familia familia = familiaService.getFamilia(idFamiliaPerson);    
 		Persona persona = new Persona();
 		if (idPersona.equals("")){
-        	idPersona = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
+			idPersona = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
+			persona.setCreated(new Date());
+			persona.setCreatedBy(authentication.getName());
 		}
+		else{
+			persona =  this.personaService.getPersona(idPersona);
+		}
+		Familia familia = familiaService.getFamilia(idFamiliaPerson);    
 		persona.setIdPersona(idPersona);
 		persona.setFamilia(familia);
         persona.setCodPersona(familia.getCodFamilia()+"-"+numPersona);
@@ -447,10 +521,6 @@ public class HsfController {
         persona.setFactRiesgoSocial(factRiesgoSocial);
         persona.setDiscapacidades(discapacidades);
         persona.setGrupoDisp(catalogoService.getGrupoDispensarial(grupoDisp));
-        persona.setFallecido('0');
-        persona.setCreated(new Date());
-        persona.setPasive('0');
-        persona.setCreatedBy(authentication.getName());
         personaService.addPersona(persona);
 		
 		return createJsonResponse(persona);
@@ -465,21 +535,23 @@ public class HsfController {
 	        ) throws ParseException
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Persona persona = personaService.getPersona(idPersonaEnf);
 		Enfermedades enf = new Enfermedades();
+		if (idEnfermedad.equals("")){
+			idEnfermedad = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
+			enf.setCreated(new Date());
+			enf.setCreatedBy(authentication.getName());
+		}
+		else{
+			enf =  this.enfermedadesService.getEnfermedades(idEnfermedad);
+		}
+		Persona persona = personaService.getPersona(idPersonaEnf);
 		enf.setPersona(persona);
 		enf.setEnfermedad(cie10Service.getCie10(enfermedad));
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		Date date = formatter.parse(fechaOcurrencia);
 		enf.setFechaOcurrencia(date);
-        if (idEnfermedad.equals("")){
-        	idEnfermedad = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
-		}
         enf.setIdEnfermedad(idEnfermedad);
         enf.setPersonaAtendio(catalogoService.getProfesion(personaAtendio));
-        enf.setCreated(new Date());
-        enf.setCreatedBy(authentication.getName());
-        enf.setPasive('0');
         enfermedadesService.addEnfermedades(enf);
 		return createJsonResponse(enf);
 	}
@@ -493,41 +565,55 @@ public class HsfController {
 	        ) throws ParseException
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Persona persona = personaService.getPersona(idPersonaEnf);
 		EnfermedadesSocioCult enf = new EnfermedadesSocioCult();
+		if (idEnfermedad.equals("")){
+			idEnfermedad = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
+			enf.setCreated(new Date());
+			enf.setCreatedBy(authentication.getName());
+		}
+		else{
+			enf =  this.enfermedadesSocioCultService.getEnfermedadesSocioCult(idEnfermedad);
+		}
+		Persona persona = personaService.getPersona(idPersonaEnf);
 		enf.setPersona(persona);
 		enf.setEnfermedad(catalogoService.getEnfSocioC(enfermedad));
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		Date date = formatter.parse(fechaOcurrencia);
 		enf.setFechaOcurrencia(date);
-        if (idEnfermedad.equals("")){
-        	idEnfermedad = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
-		}
         enf.setIdEnfSocioC(idEnfermedad);
         enf.setPersonaAtendio(catalogoService.getProfesion(personaAtendio));
-        enf.setCreated(new Date());
-        enf.setCreatedBy(authentication.getName());
-        enf.setPasive('0');
         enfermedadesSocioCultService.addEnfermedadesSocioCult(enf);
 		return createJsonResponse(enf);
 	}
 	
-    @RequestMapping(value = "editHsf/{idVisita}", method = RequestMethod.GET)
-	public String initUpdateVisitForm(@PathVariable("idVisita") String idVisita, Model model) {
-    	Visita visita = this.visitaService.getVisita(idVisita);
-		if(visita!=null){
+    @RequestMapping(value = "editHsf/{idFamilia}", method = RequestMethod.GET)
+	public String initUpdateFamForm(@PathVariable("idFamilia") String idFamilia, Model model) {
+    	Familia familia = this.familiaService.getFamilia(idFamilia);
+		if(familia!=null){
 			List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas();
-			Sectores sector = this.sectorService.getSector(visita.getFamilia().getComunidad().getSector());
+			Sectores sector = this.sectorService.getSector(familia.getComunidad().getSector());
 	        Divisionpolitica municipio = this.divPoliticaService.getDivisionpolitica(sector.getMunicipio());
 	        EntidadesAdtvas silais = this.entidadAdtvaService.getEntidadesAdtvas(municipio.getDependenciaSilais());
-	        List<Profesion> profesiones = catalogoService.getProfesiones();
-			model.addAttribute("visita",visita);
+			model.addAttribute("familia",familia);
 			model.addAttribute("entidades",entidades);
 			model.addAttribute("sector",sector);
 			model.addAttribute("municipio",municipio);
 			model.addAttribute("silais",silais);
+			return "hsf/editFamilia";
+		}
+		else{
+			return "404";
+		}
+	}
+    
+    @RequestMapping(value = "editVisita/{idVisita}", method = RequestMethod.GET)
+	public String initUpdateVisitForm(@PathVariable("idVisita") String idVisita, Model model) {
+    	Visita visita = this.visitaService.getVisita(idVisita);
+		if(visita!=null){
+	        List<Profesion> profesiones = catalogoService.getProfesiones();
+			model.addAttribute("visita",visita);
 			model.addAttribute("profesiones",profesiones);
-			return "hsf/editVisit";
+			return "hsf/editVisita";
 		}
 		else{
 			return "404";
@@ -537,17 +623,20 @@ public class HsfController {
     @RequestMapping(value = "editChs/{idCaractHig}", method = RequestMethod.GET)
 	public String initUpdateCHSForm(@PathVariable("idCaractHig") String idCaractHig, Model model) {
     	CaractHigSanitarias chs = this.caractHigSanitariasService.getCaractHigSanitarias(idCaractHig);
-    	Visita visita = this.visitaService.getVisita(idCaractHig);
-    	if(chs==null && visita ==null){
+    	Familia familia = this.familiaService.getFamilia(idCaractHig);
+    	Visita visita = this.visitaService.getUltimaVisita(idCaractHig);
+    	if(chs==null && familia ==null){
     		return "404";
     	}
 		else{
 			if(chs==null){
 				chs= new CaractHigSanitarias();
-				model.addAttribute("identVisita",visita.getIdVisita());
+				model.addAttribute("identFamilia",familia.getIdFamilia());
+				model.addAttribute("fechaDeVisita",visita.getFechaVisita());
 			}
 			else{
-				model.addAttribute("identVisita",chs.getVisita().getIdVisita());
+				model.addAttribute("identFamilia",chs.getFamilia().getIdFamilia());
+				model.addAttribute("fechaDeVisita",chs.getFechaUltimaVisita());
 			}
 			List<SiNoNs> sinons = this.catalogoService.getSiNoNs();
 			List<AnimalesDomesticos> animales = catalogoService.getAnimalesDomesticos();
@@ -585,17 +674,20 @@ public class HsfController {
     @RequestMapping(value = "editFse/{idFactSocioEc}", method = RequestMethod.GET)
 	public String initUpdateFSEForm(@PathVariable("idFactSocioEc") String idFactSocioEc, Model model) {
     	FactSocioEconomicos fse = this.factSocioEconomicosService.getFactSocioEconomicos(idFactSocioEc);
-    	Visita visita = this.visitaService.getVisita(idFactSocioEc);
-		if(fse==null && visita ==null){
+    	Familia familia = this.familiaService.getFamilia(idFactSocioEc);
+    	Visita visita = this.visitaService.getUltimaVisita(idFactSocioEc);
+		if(fse==null && familia ==null){
 			return "404";
     	}
 		else{
 			if(fse==null){
 				fse= new FactSocioEconomicos();
-				model.addAttribute("identVisita",visita.getIdVisita());
+				model.addAttribute("identFamilia",familia.getIdFamilia());
+				model.addAttribute("fechaDeVisita",visita.getFechaVisita());
 			}
 			else{
-				model.addAttribute("identVisita",fse.getVisita().getIdVisita());
+				model.addAttribute("identFamilia",fse.getFamilia().getIdFamilia());
+				model.addAttribute("fechaDeVisita",fse.getFechaUltimaVisita());
 			}
 			List<SiNoNs> sinons = catalogoService.getSiNoNs();
 			List<TipoPiso> pisos = catalogoService.getTipoPiso();
@@ -621,17 +713,20 @@ public class HsfController {
     @RequestMapping(value = "editFf/{idFuncFamiliar}", method = RequestMethod.GET)
 	public String initUpdateFFForm(@PathVariable("idFuncFamiliar") String idFuncFamiliar, Model model) {
     	FuncFamiliar ff = this.funcFamiliarService.getFuncFamiliar(idFuncFamiliar);
-    	Visita visita = this.visitaService.getVisita(idFuncFamiliar);
-    	if(ff==null && visita==null){
+    	Familia familia = this.familiaService.getFamilia(idFuncFamiliar);
+    	Visita visita = this.visitaService.getUltimaVisita(idFuncFamiliar);
+    	if(ff==null && familia==null){
 			return "404";
     	}
     	else{
 			if(ff==null){
 				ff= new FuncFamiliar();
-				model.addAttribute("identVisita",visita.getIdVisita());
+				model.addAttribute("identFamilia",familia.getIdFamilia());
+				model.addAttribute("fechaDeVisita",visita.getFechaVisita());
 			}
 			else{
-				model.addAttribute("identVisita",ff.getVisita().getIdVisita());
+				model.addAttribute("identFamilia",ff.getFamilia().getIdFamilia());
+				model.addAttribute("fechaDeVisita",ff.getFechaUltimaVisita());
 			}
 			List<SiNoNs> sinons = catalogoService.getSiNoNs();
 			List<TamanoFam> tamanos = catalogoService.getTamanoFam();
@@ -664,17 +759,16 @@ public class HsfController {
 	 * @throws ParseException 
      */
     @RequestMapping(value = "hsfs", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody List<Visita> fetchMunicipiosJson(@RequestParam(value = "codComunidad", required = true) String comunidad,
+    public @ResponseBody List<Familia> fetchFamiliasJson(@RequestParam(value = "codComunidad", required = true) String comunidad,
     		@RequestParam(value = "numVivienda", required = false, defaultValue = "") Integer numVivienda,
     		@RequestParam(value = "numFamilia", required = false, defaultValue = "") Integer numFamilia,
-    		@RequestParam(value = "numFicha", required = false, defaultValue = "") Integer numFicha,
-    		@RequestParam( value="fechaVisita", required=false, defaultValue = "") String fechaVisita) throws ParseException {
+    		@RequestParam(value = "numFicha", required = false, defaultValue = "") Integer numFicha) throws ParseException {
         logger.info("Obteniendo las visitas en JSON");
-        List<Visita> visitas = visitaService.getVisitas(comunidad, numVivienda, numFamilia, numFicha, fechaVisita);
-        if (visitas == null){
+        List<Familia> familias = familiaService.getFamilias(comunidad, numVivienda, numFamilia, numFicha);
+        if (familias == null){
         	logger.debug("Nulo");
         }
-        return visitas;	
+        return familias;	
     }
     
     /**
@@ -683,17 +777,18 @@ public class HsfController {
      * @param idVisit the ID of the visit to display
      * @return a ModelMap with the model attributes for the view
      */
-    @RequestMapping("viewHsf/{idVisita}")
-    public String showVisit(@PathVariable("idVisita") String idVisita, Model model) {
-        Visita visita = this.visitaService.getVisita(idVisita);
-        if(visita!=null){
-	        Sectores sector = this.sectorService.getSector(visita.getFamilia().getComunidad().getSector());
+    @RequestMapping("viewHsf/{idFamilia}")
+    public String showVisit(@PathVariable("idFamilia") String idFamilia, Model model) {
+        Familia familia = this.familiaService.getFamilia(idFamilia);
+        if(familia!=null){
+	        Sectores sector = this.sectorService.getSector(familia.getComunidad().getSector());
 	        Divisionpolitica municipio = this.divPoliticaService.getDivisionpolitica(sector.getMunicipio());
 	        EntidadesAdtvas silais = this.entidadAdtvaService.getEntidadesAdtvas(municipio.getDependenciaSilais());
-	        CaractHigSanitarias carHigSan = this.caractHigSanitariasService.getVisitaCaractHigSanitarias(idVisita);
-	        FactSocioEconomicos factSocEc = this.factSocioEconomicosService.getVisitaFactSocioEconomicos(idVisita);
-	        FuncFamiliar funcFam = this.funcFamiliarService.getVisitaFuncFamiliar(idVisita);
-	        List<Persona> personas = this.personaService.getPersonas(visita.getFamilia().getIdFamilia());
+	        CaractHigSanitarias carHigSan = this.caractHigSanitariasService.getCaractHigSanitariasFamilia(idFamilia);
+	        FactSocioEconomicos factSocEc = this.factSocioEconomicosService.getFactSocioEconomicosFamilia(idFamilia);
+	        FuncFamiliar funcFam = this.funcFamiliarService.getFuncFamiliarFamilia(idFamilia);
+	        List<Persona> personas = this.personaService.getPersonas(idFamilia);
+	        List<Visita> visitas = this.visitaService.getVisitas(idFamilia);
 	        List<SiNoNs> sinons = this.catalogoService.getSiNoNs();
 	        List<AnimalesDomesticos> animales = this.catalogoService.getAnimalesDomesticos();
 	        List<RiesgoNatural> rgnats = this.catalogoService.getRiesgoNatural();
@@ -705,7 +800,7 @@ public class HsfController {
 	    	List<AccionesComunitarias> accionesComunitarias = this.catalogoService.getAccionesComunitarias();
 	    	List<CrisisNormativa> crisisNormativas = this.catalogoService.getCrisisNormativa();
 	    	List<CrisisParanormativa> crisisParanormativas = this.catalogoService.getCrisisParanormativa();
-	        model.addAttribute("visita",visita);
+	        model.addAttribute("familia",familia);
 	        model.addAttribute("sector",sector);
 	        model.addAttribute("municipio",municipio);
 	        model.addAttribute("silais",silais);
@@ -713,6 +808,7 @@ public class HsfController {
 	        model.addAttribute("factSocEc",factSocEc);
 	        model.addAttribute("funcFam",funcFam);
 	        model.addAttribute("personas",personas);
+	        model.addAttribute("visitas",visitas);
 	        model.addAttribute("sinons",sinons);
 	        model.addAttribute("animales",animales);
 	        model.addAttribute("rgnats",rgnats);
@@ -724,7 +820,7 @@ public class HsfController {
 	        model.addAttribute("accionesComunitarias",accionesComunitarias);
 	        model.addAttribute("crisisNormativas",crisisNormativas);
 	        model.addAttribute("crisisParanormativas",crisisParanormativas);
-	        return "hsf/visit";
+	        return "hsf/familia";
         }
 		else{
 			return "404";

@@ -50,8 +50,8 @@
 			</div>
 			<!-- END PAGE HEADER-->
 			<!-- BEGIN PAGE CONTENT-->
-			<spring:url value="/info/viewHsf/{idVisita}" var="visitaUrl">
-				<spring:param name="idVisita" value="${visita.idVisita}" />
+			<spring:url value="/info/viewHsf/{idFamilia}" var="familiaUrl">
+				<spring:param name="idFamilia" value="${familia.idFamilia}" />
 			</spring:url>
 			<c:set var="processSuccess"><spring:message code="process.success" /></c:set>
 			<c:set var="processError"><spring:message code="process.error" /></c:set>
@@ -77,7 +77,7 @@
 									</div>
 									<!-- START ROW -->
 									<div class="row">
-										<div class="col-md-6">
+										<div class="col-md-4">
 											<div class="form-group" hidden="true">
 												<label class="control-label col-md-6"><spring:message code="nofamilia" />:
 												<span class="required">
@@ -85,19 +85,7 @@
 												</span>
 												</label>
 												<div class="col-md-6">
-													<input type="text" value="${visita.familia.idFamilia}" id="idFamilia" name="idFamilia" class="form-control"/>
-												</div>
-											</div>
-										</div>
-										<div class="col-md-6">
-											<div class="form-group" hidden="true">
-												<label class="control-label col-md-6"><spring:message code="noficha" />:
-												<span class="required">
-													 *
-												</span>
-												</label>
-												<div class="col-md-6">
-													<input type="text" value="${visita.idVisita}" id="idVisita" name="idVisita" class="form-control"/>
+													<input type="text" value="${familia.idFamilia}" id="idFamilia" name="idFamilia" class="form-control"/>
 												</div>
 											</div>
 										</div>
@@ -169,7 +157,7 @@
 												</label>
 												<div class="col-md-6">
 													<select data-placeholder="<spring:message code="select" /> <spring:message code="comunity" />" name="comunidad" id="comunidad" class="form-control">
-														<option selected value="${visita.familia.comunidad.codigo}">${visita.familia.comunidad.nombre}</option>
+														<option selected value="${familia.comunidad.codigo}">${familia.comunidad.nombre}</option>
 													</select>
 												</div>
 											</div>
@@ -187,7 +175,7 @@
 												</label>
 												<div class="col-md-6">
 													<div class="input-group">
-														<input type="text" placeholder="<spring:message code="please.enter" /> <spring:message code="novivienda" />" value="${visita.familia.numVivienda}" class="form-control" id="numVivienda" name="numVivienda" />
+														<input type="text" placeholder="<spring:message code="please.enter" /> <spring:message code="novivienda" />" value="${familia.numVivienda}" class="form-control" id="numVivienda" name="numVivienda" />
 														<span class="input-group-addon">
 															<i class="fa fa-sort-numeric-asc"></i>
 														</span>
@@ -204,7 +192,7 @@
 												</label>
 												<div class="col-md-6">
 													<div class="input-group">
-														<input type="text" placeholder="<spring:message code="please.enter" /> <spring:message code="nofamilia" />" value="${visita.familia.numFamilia}" class="form-control" id="numFamilia" name="numFamilia"/>
+														<input type="text" placeholder="<spring:message code="please.enter" /> <spring:message code="nofamilia" />" value="${familia.numFamilia}" class="form-control" id="numFamilia" name="numFamilia"/>
 														<span class="input-group-addon">
 															<i class="fa fa-sort-numeric-asc"></i>
 														</span>
@@ -216,16 +204,16 @@
 									<!-- END ROW -->
 									<!-- START ROW -->
 									<div class="row">
-										<div class="col-md-12">
+										<div class="col-md-6">
 											<div class="form-group">
-												<label class="control-label col-md-3"><spring:message code="address" />:
+												<label class="control-label col-md-6"><spring:message code="address" />:
 												<span class="required">
 													 *
 												</span>
 												</label>
-												<div class="col-md-9">
+												<div class="col-md-6">
 													<div class="input-group">
-														<input type="text" placeholder="<spring:message code="please.enter" /> <spring:message code="address" />" value="${visita.familia.direccion}" class="form-control" id="direccion" name="direccion" />
+														<input type="text" placeholder="<spring:message code="please.enter" /> <spring:message code="address" />" value="${familia.direccion}" class="form-control" id="direccion" name="direccion" />
 														<span class="input-group-addon">
 															<i class="fa fa-sort-alpha-asc"></i>
 														</span>
@@ -233,11 +221,6 @@
 												</div>
 											</div>
 										</div>
-									</div>
-									<!-- END ROW -->
-									<div class="form-section"></div>
-									<!-- START ROW -->
-									<div class="row">
 										<div class="col-md-6">
 											<div class="form-group">
 												<label class="control-label col-md-6"><spring:message code="noficha" />:
@@ -247,70 +230,9 @@
 												</label>
 												<div class="col-md-6">
 													<div class="input-group">
-														<input type="text" placeholder="<spring:message code="please.enter" /> <spring:message code="noficha" />" value="${visita.numFicha}" class="form-control" id="numFicha" name="numFicha"/>
+														<input type="text" placeholder="<spring:message code="please.enter" /> <spring:message code="noficha" />" value="${familia.numFicha}" class="form-control" id="numFicha" name="numFicha"/>
 														<span class="input-group-addon">
 															<i class="fa fa-sort-numeric-asc"></i>
-														</span>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="col-md-6">
-											<div class="form-group">
-												<label class="control-label col-md-6"><spring:message code="personnel" />:
-												<span class="required">
-													 *
-												</span>
-												</label>
-												<div class="col-md-6">
-													<div class="input-group">
-														<input type="text" placeholder="<spring:message code="please.enter" /> <spring:message code="personnel" />" value="${visita.personaVisita}" class="form-control" id="personaVisita" name="personaVisita"/>
-														<span class="input-group-addon">
-															<i class="fa fa-sort-alpha-asc"></i>
-														</span>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<!-- END ROW -->
-									<!-- START ROW -->
-									<div class="row">
-										<div class="col-md-6">
-											<div class="form-group">
-												<label class="control-label col-md-6"><spring:message code="profession" />:
-												<span class="required">
-													 *
-												</span>
-												</label>
-												<div class="col-md-6">
-													<select data-placeholder="<spring:message code="select" /> <spring:message code="profession" />" name="personaVisitaProfesion" id="personaVisitaProfesion" class="form-control">
-														<c:forEach items="${profesiones}" var="profesion">
-															<c:choose> 
-																<c:when test="${profesion.codigo eq visita.personaVisitaProfesion.codigo}">
-																	<option selected value="${profesion.codigo}">${profesion.valor}</option>
-																</c:when>
-																<c:otherwise>
-																	<option value="${profesion.codigo}">${profesion.valor}</option>
-																</c:otherwise>
-															</c:choose> 
-														</c:forEach>
-													</select>
-												</div>
-											</div>
-										</div>
-										<div class="col-md-6">
-											<div class="form-group">
-												<label class="control-label col-md-6"><spring:message code="visit.date" />:
-												<span class="required">
-													 *
-												</span>
-												</label>
-												<div class="col-md-6">
-													<div class="input-group date date-picker" data-date-format="dd/MM/yyyy" data-date-end-date="+0d">
-														<input id="fechaVisita" name="fechaVisita" type="text" value="<fmt:formatDate value="${visita.fechaVisita}" pattern="dd/MM/yyyy" />" class="form-control" placeholder="<spring:message code="please.enter" /> <spring:message code="visit.date" />">
-														<span class="input-group-btn">
-															<button class="btn btn-info" type="button"><i class="fa fa-calendar"></i></button>
 														</span>
 													</div>
 												</div>
@@ -322,7 +244,7 @@
 								<div class="form-actions fluid">
 									<div class="col-md-offset-9 col-md-3">
 										<button id="guardar" type="submit" class="btn btn-success"><spring:message code="save" /></button>
-						            	<a href="${fn:escapeXml(visitaUrl)}" class="btn btn-danger"><spring:message code="end" /></a>
+						            	<a href="${fn:escapeXml(familiaUrl)}" class="btn btn-danger"><spring:message code="end" /></a>
 									</div>
 								</div>
 							</form>
@@ -369,7 +291,7 @@
 <spring:url value="/resources/scripts/hsf-edit.js" var="hsfEdit" />
 <script src="${hsfEdit}"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
-<spring:url value="/info/newFamiliaVisita" var="addFamiliaVisitaUrl"/>
+<spring:url value="/info/editFamilia" var="editFamiliaUrl"/>
 <script>
     $(function () {
     	$("li.hsf").removeClass("hsf").addClass("active");
@@ -379,7 +301,7 @@
 <script>
 	jQuery(document).ready(function() {
 		App.init();
-		var parametros1 = {addFamiliaVisitaUrl: "${addFamiliaVisitaUrl}"
+		var parametros1 = {editFamiliaUrl: "${editFamiliaUrl}"
 			, processSuccess: "${processSuccess}"
 			, processError: "${processError}"
 			,language:"${pageContext.request.locale.language}" };

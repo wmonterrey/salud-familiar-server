@@ -563,10 +563,11 @@ var FormWizardHSF = function () {
                     }
                 });
                 if (IsValid){
+                	guardarFuncFam();
+                	guardarFactSocEc();
+                	guardarCarHigSan();
 	        		guardarFamiliaVisita();
-	        		guardarCarHigSan();
-	        		guardarFactSocEc();
-	        		guardarFuncFam();
+	        		
 	        		table1.fnClearTable();
 	        		
 	        		form.find('input:text, input:password, textarea').val('');

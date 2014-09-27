@@ -50,8 +50,8 @@
 			<!-- BEGIN PAGE CONTENT-->
 			<c:set var="processSuccess"><spring:message code="process.success" /></c:set>
 			<c:set var="processError"><spring:message code="process.error" /></c:set>
-			<spring:url value="/info/editHsf/{idVisita}" var="edit1Url">
-				<spring:param name="idVisita" value="${visita.idVisita}" />
+			<spring:url value="/info/editHsf/{idFamilia}" var="edit1Url">
+				<spring:param name="idFamilia" value="${familia.idFamilia}" />
 			</spring:url>
 			<spring:url value="/info/editChs/{idCaractHig}" var="edit2Url">
 				<spring:param name="idCaractHig" value="${carHigSan.idCaractHig}" />
@@ -63,13 +63,13 @@
 				<spring:param name="idFuncFamiliar" value="${funcFam.idFuncFamiliar}" />
 			</spring:url>
 			<spring:url value="/info/editChs/{idCaractHig}" var="add2Url">
-				<spring:param name="idCaractHig" value="${visita.idVisita}" />
+				<spring:param name="idCaractHig" value="${familia.idFamilia}" />
 			</spring:url>
 			<spring:url value="/info/editFse/{idFactSocioEc}" var="add3Url">
-				<spring:param name="idFactSocioEc" value="${visita.idVisita}" />
+				<spring:param name="idFactSocioEc" value="${familia.idFamilia}" />
 			</spring:url>
 			<spring:url value="/info/editFf/{idFuncFamiliar}" var="add4Url">
-				<spring:param name="idFuncFamiliar" value="${visita.idVisita}" />
+				<spring:param name="idFuncFamiliar" value="${familia.idFamilia}" />
 			</spring:url>
 			<div class="row">
 				<div class="col-md-12">
@@ -119,7 +119,7 @@
 											<div class="form-group">
 												<label class="control-label col-md-6"><spring:message code="comunity" /></label>
 												<div class="col-md-6">
-													<p class="form-control-static"><c:out value="${visita.familia.comunidad}" /></p>
+													<p class="form-control-static"><c:out value="${familia.comunidad}" /></p>
 												</div>
 											</div>
 										</div>
@@ -127,7 +127,7 @@
 											<div class="form-group">
 												<label class="control-label col-md-6"><spring:message code="novivienda" /></label>
 												<div class="col-md-6">
-													<p class="form-control-static"><c:out value="${visita.familia.numVivienda}" /></p>
+													<p class="form-control-static"><c:out value="${familia.numVivienda}" /></p>
 												</div>
 											</div>
 										</div>
@@ -135,7 +135,7 @@
 											<div class="form-group">
 												<label class="control-label col-md-6"><spring:message code="nofamilia" /></label>
 												<div class="col-md-6">
-													<p class="form-control-static"><c:out value="${visita.familia.numFamilia}" /></p>
+													<p class="form-control-static"><c:out value="${familia.numFamilia}" /></p>
 												</div>
 											</div>
 										</div>
@@ -145,25 +145,25 @@
 									<div class="row">	
 										<div class="col-md-4">
 											<div class="form-group">
+												<label class="control-label col-md-6"><spring:message code="address" /></label>
+												<div class="col-md-6">
+													<p class="form-control-static"><c:out value="${familia.direccion}" /></p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
 												<label class="control-label col-md-6"><spring:message code="noficha" /></label>
 												<div class="col-md-6">
-													<p class="form-control-static"><c:out value="${visita.numFicha}" /></p>
+													<p class="form-control-static"><c:out value="${familia.numFicha}" /></p>
 												</div>
 											</div>
 										</div>
 										<div class="col-md-4">
 											<div class="form-group">
-												<label class="control-label col-md-6"><spring:message code="personnel" /></label>
+												<label class="control-label col-md-6"><spring:message code="dispen" /></label>
 												<div class="col-md-6">
-													<p class="form-control-static"><c:out value="${visita.personaVisita}" /></p>
-												</div>
-											</div>
-										</div>
-										<div class="col-md-4">
-											<div class="form-group">
-												<label class="control-label col-md-6"><spring:message code="visit.date" /></label>
-												<div class="col-md-6">
-													<p class="form-control-static"><c:out value="${visita.fechaVisita}" /></p>
+													<p class="form-control-static"><c:out value="${familia.dispensarizada}" /></p>
 												</div>
 											</div>
 										</div>
@@ -173,6 +173,36 @@
 									<div class="row">
 										<div class="col-md-12 modal-footer">
 											<a href="${fn:escapeXml(edit1Url)}" class="btn btn-success"><i class="fa fa-edit"></i> <spring:message code="edit" /></a>
+										</div>
+									</div>
+									<!-- END ROW -->
+									<h4 class="form-section"><spring:message code="visit.list" /></h4>
+									<!-- START ROW -->
+									<div class="row">
+										<div class="col-md-12">
+											<div class="table-responsive">
+											<table class="table table-striped table-hover table-bordered" id="lista_visitas">
+											<thead>
+												<tr>
+													<th><spring:message code="visit.date" /></th>
+													<th><spring:message code="personnel" /></th>
+													<th><spring:message code="profession" /></th>
+													<th></th>
+												</tr>
+											</thead>
+											<c:forEach items="${visitas}" var="visita">
+												<spring:url value="/info/editVisita/{idVisita}" var="edit6Url">
+													<spring:param name="idVisita" value="${visita.idVisita}" />
+												</spring:url>
+												<tr>
+													<td><c:out value="${visita.fechaVisita}" /></td>
+													<td><c:out value="${visita.personaVisita}" /></td>
+													<td><c:out value="${visita.personaVisitaProfesion}" /></td>
+													<td><a href="${fn:escapeXml(edit6Url)}" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></a></td>
+												</tr>
+											</c:forEach>
+											</table>
+											</div>
 										</div>
 									</div>
 									<!-- END ROW -->
