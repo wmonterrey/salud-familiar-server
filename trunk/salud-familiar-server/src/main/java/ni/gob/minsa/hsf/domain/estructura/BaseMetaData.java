@@ -4,8 +4,6 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @MappedSuperclass  
 public class BaseMetaData  
@@ -15,7 +13,6 @@ public class BaseMetaData
 	private String createdBy;
 	private char pasive = '0';
 
-	@Temporal( TemporalType.TIMESTAMP)
 	@Column(name="FECHA_REGISTRO")
 	public Date getCreated() {
 		return created;

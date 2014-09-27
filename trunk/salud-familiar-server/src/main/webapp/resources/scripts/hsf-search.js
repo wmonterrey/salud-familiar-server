@@ -34,10 +34,6 @@ var SearchHSF = function () {
             "repeat": 6,
             "greedy": false
         });
-        
-        $("#fechaVisita").inputmask("d/m/y", {
-            "placeholder": "dd/mm/yyyy"
-        }); //multi-char placeholder
     };
 
     
@@ -63,7 +59,7 @@ var SearchHSF = function () {
             var table1 = $('#resultados').dataTable( {  
                 "aoColumns" : [   
                                null,   
-                               {sClass: "aw-right" },null,{sClass: "aw-right" },{sClass: "aw-right" },null  
+                               {sClass: "aw-right" },{sClass: "aw-right" },{sClass: "aw-right" },null,{sClass: "aw-right" },{sClass: "aw-right" },null  
                            ]   } );
     		$('#resultados_wrapper .dataTables_filter input').addClass("form-control input-medium"); // modify table search input
             $('#resultados_wrapper .dataTables_length select').addClass("form-control input-small"); // modify table per page dropdown
@@ -173,10 +169,7 @@ var SearchHSF = function () {
                     numFicha: {
                     	min:1,
                         required: false
-                    },
-                    fechaVisita: {
-                        required: false
-                    },
+                    }
                 },
 
                 invalidHandler: function (event, validator) { //display error alert on form submit   
@@ -222,15 +215,13 @@ var SearchHSF = function () {
     				numVivienda : $('#numVivienda').val(),
     				numFamilia : $('#numFamilia').val(),
     				numFicha : $('#numFicha').val(),
-    				fechaVisita : $('#fechaVisita').val(),
     				ajax : 'true'
     			}, function(data) {
     				var len = data.length;
     				for ( var i = 0; i < len; i++) {
-    					var d = new Date(data[i].fechaVisita);
-						var visitaUrl = parametros.visitUrl + '/'+data[i].idVisita;
+						var famUrl = parametros.familiaUrl + '/'+data[i].idFamilia;
 						table1.fnAddData(
-    							[d.yyyymmdd(), data[i].numFicha, data[i].personaVisita, data[i].familia.numVivienda, data[i].familia.numFamilia, '<a href='+ visitaUrl + ' class="btn btn-default btn-xs"><i class="fa fa-search"></i></a>']);
+    							[data[i].comunidad.nombre, data[i].numVivienda, data[i].numFamilia, data[i].numFicha, data[i].direccion, data[i].dispensarizada,data[i].infoCompleta,'<a href='+ famUrl + ' class="btn btn-default btn-xs"><i class="fa fa-search"></i></a>']);
     				}
     				App.unblockUI(pageContent);
     			})
@@ -239,15 +230,6 @@ var SearchHSF = function () {
 				    App.unblockUI(pageContent);
 				});
             };
-            
-            Date.prototype.yyyymmdd = function() {         
-		        
-		        var yyyy = this.getFullYear().toString();                                    
-		        var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based         
-		        var dd  = this.getDate().toString();             
-		                            
-		        return yyyy + '-' + (mm[1]?mm:"0"+mm[0]) + '-' + (dd[1]?dd:"0"+dd[0]);
-		   }; 
         }
     };
 

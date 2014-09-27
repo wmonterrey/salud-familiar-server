@@ -1,5 +1,7 @@
 package ni.gob.minsa.hsf.domain;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,7 +30,8 @@ public class CaractHigSanitarias extends BaseMetaData implements Auditable{
 	
 	
 	private String idCaractHig;
-	private Visita visita;
+	private Familia familia;
+	private Date fechaUltimaVisita;
     private String hacinamiento;
     private String animalesDom;
     private String riesgoNatural;
@@ -61,14 +64,23 @@ public class CaractHigSanitarias extends BaseMetaData implements Auditable{
 	}
 
 	@OneToOne(optional=false)
-	@JoinColumn(name="ID_VISITA")
-	@ForeignKey(name = "CARACT_VISITAS_FK")
-	public Visita getVisita() {
-		return visita;
+	@JoinColumn(name="ID_FAMILIA")
+	@ForeignKey(name = "CARACT_FAMILIAS_FK")
+	public Familia getFamilia() {
+		return familia;
 	}
 
-	public void setVisita(Visita visita) {
-		this.visita = visita;
+	public void setFamilia(Familia familia) {
+		this.familia = familia;
+	}
+	
+	@Column(name = "FECHA_ULTIMA_VISITA", nullable = false)
+	public Date getFechaUltimaVisita() {
+		return fechaUltimaVisita;
+	}
+
+	public void setFechaUltimaVisita(Date fechaUltimaVisita) {
+		this.fechaUltimaVisita = fechaUltimaVisita;
 	}
 
 	@Column(name = "HACINAMIENTO", nullable = true, length = 2)

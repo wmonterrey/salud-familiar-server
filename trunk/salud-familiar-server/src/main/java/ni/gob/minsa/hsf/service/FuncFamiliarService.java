@@ -37,11 +37,11 @@ public class FuncFamiliarService {
 		return funcFam;
 	}
 	
-	public FuncFamiliar getVisitaFuncFamiliar(String idVisita) {
+	public FuncFamiliar getFuncFamiliarFamilia(String idFamilia) {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery("FROM FuncFamiliar fm where fm.visita.idVisita = :idVisita");
-		query.setParameter("idVisita", idVisita);
+		Query query = session.createQuery("FROM FuncFamiliar fm where fm.familia.idFamilia = :idFamilia");
+		query.setParameter("idFamilia", idFamilia);
 		FuncFamiliar funcFam = (FuncFamiliar) query.uniqueResult();
 		return funcFam;
 	}

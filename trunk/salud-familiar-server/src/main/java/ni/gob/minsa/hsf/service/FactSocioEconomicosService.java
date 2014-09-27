@@ -37,11 +37,11 @@ public class FactSocioEconomicosService {
 		return factSocEc;
 	}
 	
-	public FactSocioEconomicos getVisitaFactSocioEconomicos(String idVisita) {
+	public FactSocioEconomicos getFactSocioEconomicosFamilia(String idFamilia) {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery("FROM FactSocioEconomicos fse where fse.visita.idVisita = :idVisita");
-		query.setParameter("idVisita", idVisita);
+		Query query = session.createQuery("FROM FactSocioEconomicos fse where fse.familia.idFamilia = :idFamilia");
+		query.setParameter("idFamilia", idFamilia);
 		FactSocioEconomicos factSocEc = (FactSocioEconomicos) query.uniqueResult();
 		return factSocEc;
 	}

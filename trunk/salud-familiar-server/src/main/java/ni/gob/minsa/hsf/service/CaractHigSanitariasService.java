@@ -36,11 +36,11 @@ public class CaractHigSanitariasService {
 		return carHigSan;
 	}
 	
-	public CaractHigSanitarias getVisitaCaractHigSanitarias(String idVisita) {
+	public CaractHigSanitarias getCaractHigSanitariasFamilia(String idFamilia) {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery("FROM CaractHigSanitarias chs where chs.visita.idVisita = :idVisita");
-		query.setParameter("idVisita", idVisita);
+		Query query = session.createQuery("FROM CaractHigSanitarias chs where chs.familia.idFamilia = :idFamilia");
+		query.setParameter("idFamilia", idFamilia);
 		CaractHigSanitarias carHigSan = (CaractHigSanitarias) query.uniqueResult();
 		return carHigSan;
 	}

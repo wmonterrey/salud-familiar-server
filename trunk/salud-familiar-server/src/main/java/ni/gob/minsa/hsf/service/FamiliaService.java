@@ -1,5 +1,6 @@
 package ni.gob.minsa.hsf.service;
 
+import java.text.ParseException;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -24,6 +25,24 @@ public class FamiliaService {
 		Session session = sessionFactory.getCurrentSession();
 		// Create a Hibernate query (HQL)
 		Query query = session.createQuery("FROM Familia");
+		// Retrieve all
+		return  query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Familia> getFamilias(String comunidad, Integer numVivienda, Integer numFamilia, Integer numFicha) throws ParseException {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		String strQuery = "FROM Familia fam where fam.comunidad.codigo = :codComunidad";
+		if (numVivienda != null) strQuery = strQuery + " and fam.numVivienda = :numVivienda";
+		if (numFamilia != null) strQuery = strQuery + " and fam.numFamilia = :numFamilia";
+		if (numFicha != null) strQuery = strQuery + " and fam.numFicha = :numFicha";
+		Query query = session.createQuery(strQuery);
+		query.setParameter("codComunidad", comunidad);
+		if (numVivienda != null) query.setParameter("numVivienda", numVivienda);
+		if (numFamilia != null) query.setParameter("numFamilia", numFamilia);
+		if (numFicha != null) query.setParameter("numFicha", numFicha);
 		// Retrieve all
 		return  query.list();
 	}

@@ -24,7 +24,7 @@
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
-<body class="page-header-fixed page-sidebar-closed page-footer-fixed">
+<body class="page-header-fixed page-sidebar-fixed page-footer-fixed">
 <!-- BEGIN HEADER -->
 <jsp:include page="../fragments/bodyHeader.jsp" />
 <!-- END HEADER -->
@@ -195,20 +195,6 @@
 											</div>
 										</div>
 									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<label class="control-label col-md-6"><spring:message code="visit.date" />:
-											</label>
-											<div class="col-md-6">
-												<div class="input-group date date-picker" data-date-format="dd/MM/yyyy" data-date-end-date="+0d">
-													<input id="fechaVisita" name="fechaVisita" type="text" class="form-control" placeholder="<spring:message code="please.enter" /> <spring:message code="visit.date" />">
-													<span class="input-group-btn">
-														<button class="btn btn-info" type="button"><i class="fa fa-calendar"></i></button>
-													</span>
-												</div>
-											</div>
-										</div>
-									</div>
 								</div>
 								<!-- END ROW -->
 								<div class="form-actions fluid">
@@ -246,11 +232,13 @@
 							<table class="table table-striped table-hover table-bordered" id="resultados">
 							<thead>
 								<tr>
-									<th><spring:message code="visit.date" /></th>
-									<th><spring:message code="noficha" /></th>
-									<th class="hidden-xs"><spring:message code="personnel" /></th>
+									<th><spring:message code="comunity" /></th>
 									<th><spring:message code="novivienda" /></th>
 									<th><spring:message code="nofamilia" /></th>
+									<th><spring:message code="noficha" /></th>
+									<th class="hidden-xs"><spring:message code="address" /></th>
+									<th><spring:message code="dispen" /></th>
+									<th><spring:message code="finished" /></th>
 									<th></th>
 								</tr>
 							</thead>
@@ -312,7 +300,7 @@
 <spring:url value="/opciones/sectores" var="opcSectUrl"/>
 <spring:url value="/opciones/comunidades" var="opcComuUrl"/>
 <spring:url value="/info/hsfs" var="hsfsUrl"/>
-<spring:url value="/info/viewHsf" var="visitUrl"/>
+<spring:url value="/info/viewHsf" var="familiaUrl"/>
 
 <script>
     $(function () {
@@ -327,11 +315,12 @@
 			, opcSectUrl: "${opcSectUrl}"
 			, opcComuUrl: "${opcComuUrl}"
 			, hsfsUrl: "${hsfsUrl}"
-			, visitUrl: "${visitUrl}"
+			, familiaUrl: "${familiaUrl}"
 			, processSuccess: "${processSuccess}"
 			, processError: "${processError}"
 			,language:"${pageContext.request.locale.language}" };
 		SearchHSF.init(parametros);
+		$('#silais').change();
 	});
 </script>
 <!-- END JAVASCRIPTS -->
