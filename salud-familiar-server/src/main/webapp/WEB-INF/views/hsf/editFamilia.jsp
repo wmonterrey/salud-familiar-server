@@ -23,7 +23,7 @@
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
-<body class="page-header-fixed page-sidebar-fixed page-footer-fixed">
+<body class="page-header-fixed page-footer-fixed">
 <!-- BEGIN HEADER -->
 <jsp:include page="../fragments/bodyHeader.jsp" />
 <!-- END HEADER -->
