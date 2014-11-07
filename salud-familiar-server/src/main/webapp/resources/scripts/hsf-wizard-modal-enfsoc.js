@@ -79,14 +79,19 @@ var FormWizardHSFModalEnfSocValidation = function () {
 		            , $('#add_enfermedadsoc_form').serialize()
 		            , function( data )
 		            {
-						enfermedadsoc = JSON.parse(data);
-						if ($('#idEnfermedadSoc').val()==''){
-							var d = new Date(Date.parse(enfermedadsoc.fechaOcurrencia));
-							$('table#lista_enfermedadessoc').dataTable().fnAddData( [
-							  enfermedadsoc.enfermedad.valor, d.yyyymmdd(), enfermedadsoc.personaAtendio.valor]);
-						}
-						$('#idEnfermedadSoc').val(enfermedadsoc.idEnfSocioC);
-						validatorEnfSoc.resetForm();
+						if (data == ""){
+	    					toastr.error(parametros.deniedError);
+	    				}
+	    				else{
+							enfermedadsoc = JSON.parse(data);
+							if ($('#idEnfermedadSoc').val()==''){
+								var d = new Date(Date.parse(enfermedadsoc.fechaOcurrencia));
+								$('table#lista_enfermedadessoc').dataTable().fnAddData( [
+								  enfermedadsoc.enfermedad.valor, d.yyyymmdd(), enfermedadsoc.personaAtendio.valor]);
+							}
+							$('#idEnfermedadSoc').val(enfermedadsoc.idEnfSocioC);
+							validatorEnfSoc.resetForm();
+	    				}
 		            }
 		            , 'text' )
 			  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {
@@ -99,19 +104,24 @@ var FormWizardHSFModalEnfSocValidation = function () {
 		            , $('#add_enfermedadsoc_form').serialize()
 		            , function( data )
 		            {
-						enfermedadsoc = JSON.parse(data);
-						if ($('#idEnfermedadSoc').val()==''){
-							var d = new Date(Date.parse(enfermedadsoc.fechaOcurrencia));
-							$('table#lista_enfermedadessoc').dataTable().fnAddData( [
-							  enfermedadsoc.enfermedad.valor, d.yyyymmdd(), enfermedadsoc.personaAtendio.valor]);
-						}
-		    	    	$('#add_enfermedadsoc_form').find('input:text, input:password, textarea').val('');
-		                $('#add_enfermedadsoc_form').find('input:radio, input:checkbox').prop('checked', false);
-		                $('#add_enfermedadsoc_form').find('select').select2('val','');
-		                $('#add_enfermedadsoc_form').find('select').multiSelect('deselect_all');
-		    	    	$('#enfermedadsoc').select2('data', null);
-			            validatorEnfSoc.elements().closest('.form-group').removeClass('has-error');
-			            validatorEnfSoc.resetForm();
+						if (data == ""){
+	    					toastr.error(parametros.deniedError);
+	    				}
+	    				else{
+							enfermedadsoc = JSON.parse(data);
+							if ($('#idEnfermedadSoc').val()==''){
+								var d = new Date(Date.parse(enfermedadsoc.fechaOcurrencia));
+								$('table#lista_enfermedadessoc').dataTable().fnAddData( [
+								  enfermedadsoc.enfermedad.valor, d.yyyymmdd(), enfermedadsoc.personaAtendio.valor]);
+							}
+			    	    	$('#add_enfermedadsoc_form').find('input:text, input:password, textarea').val('');
+			                $('#add_enfermedadsoc_form').find('input:radio, input:checkbox').prop('checked', false);
+			                $('#add_enfermedadsoc_form').find('select').select2('val','');
+			                $('#add_enfermedadsoc_form').find('select').multiSelect('deselect_all');
+			    	    	$('#enfermedadsoc').select2('data', null);
+				            validatorEnfSoc.elements().closest('.form-group').removeClass('has-error');
+				            validatorEnfSoc.resetForm();
+	    				}
 		            }
 		            , 'text' )
 			  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {

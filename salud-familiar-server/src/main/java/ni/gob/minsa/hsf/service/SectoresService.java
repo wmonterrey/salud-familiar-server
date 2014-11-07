@@ -5,6 +5,9 @@ import java.util.List;
 import javax.annotation.Resource;
 
 
+import ni.gob.minsa.hsf.domain.catalogos.Nivel;
+import ni.gob.minsa.hsf.domain.estructura.EntidadesAdtvas;
+import ni.gob.minsa.hsf.domain.estructura.Unidades;
 import ni.gob.minsa.hsf.domain.poblacion.Sectores;
 
 import org.hibernate.Query;
@@ -42,12 +45,21 @@ public class SectoresService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Sectores> getSectoresMunicipio(String municipio) {
+	public List<Sectores> getSectoresMunicipio(String municipio,Nivel nivel, EntidadesAdtvas entidad, Unidades unidad) {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
 		// Create a Hibernate query (HQL)
-		Query query = session.createQuery("from Sectores secs where secs.municipio = :municipio order by secs.nombre");
-		query.setParameter("municipio", municipio);
+		Query query = null;
+		if (nivel.getCodigo().equals("HSF_NIVELES|UNIDAD")){
+			query = session.createQuery("from Sectores as sect where sect.unidad in (select u.codigo " +
+					"from Unidades as u where (u.codigo = :unidadUsuario or u.unidadAdtva =:undadtvaUsuario))");
+			query.setParameter("unidadUsuario", unidad.getCodigo());
+			query.setParameter("undadtvaUsuario", unidad.getCodigo());
+		}
+		else{
+			query = session.createQuery("from Sectores secs where secs.municipio = :municipio order by secs.nombre");
+			query.setParameter("municipio", municipio);
+		}
 		// Retrieve all
 		return  query.list();
 	}

@@ -29,6 +29,18 @@ public class EnfermedadesSocioCultService {
 		return  query.list();
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<EnfermedadesSocioCult> getEnfermedadesSocioCultPersona(String idPersona) {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = session.createQuery("FROM EnfermedadesSocioCult enf where enf.persona.idPersona = :idPersona and enf.pasive = :pasivo");
+		query.setParameter("idPersona", idPersona);
+		query.setParameter("pasivo", '0');
+		// Retrieve all
+		return  query.list();
+	}
+	
 	public EnfermedadesSocioCult getEnfermedadesSocioCult(String idEnfermedad) {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();

@@ -96,9 +96,14 @@ var FormEdit5HSF = function () {
     		            , $('#edit-hsf-form').serialize()
     		            , function( data )
     		            {
-    						visita = JSON.parse(data);
-    						App.unblockUI(pageContent);
-    						toastr.success(parametros.processSuccess);
+		            		if (data == ""){
+		    					toastr.error(parametros.deniedError);
+		    				}
+		    				else{
+		    					visita = JSON.parse(data);
+	    						toastr.success(parametros.processSuccess);
+		    				}
+		            		App.unblockUI(pageContent);
     		            }
     		            , 'text' )
     			  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {

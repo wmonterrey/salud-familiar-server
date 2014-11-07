@@ -55,13 +55,13 @@
 			</spring:url>
 			<c:set var="processSuccess"><spring:message code="process.success" /></c:set>
 			<c:set var="processError"><spring:message code="process.error" /></c:set>
-			
+			<c:set var="deniedError"><spring:message code="denied" /></c:set>
 			<div class="row">
 				<div class="col-md-12">
 					<div class="portlet">
 						<div class="portlet-title">
 							<div class="caption">
-								<i class="fa fa-user"></i><spring:message code="edit" /> - <spring:message code="heading" /> - <spring:message code="step1" />
+								<i class="fa fa-pencil"></i><spring:message code="edit" /> - <spring:message code="heading" /> - <spring:message code="step1" />
 							</div>
 							<div class="tools">
 								<a href="javascript:;" class="collapse"></a>
@@ -155,10 +155,13 @@
 													 *
 												</span>
 												</label>
-												<div class="col-md-6">
+												<div class="col-md-5">
 													<select data-placeholder="<spring:message code="select" /> <spring:message code="comunity" />" name="comunidad" id="comunidad" class="form-control">
 														<option selected value="${familia.comunidad.codigo}">${familia.comunidad.nombre}</option>
 													</select>
+												</div>
+												<div class="col-md-1">
+													<button type="button" class="btn btn-default btn-xs" onclick="mostrarSelects()"><i class="fa fa-refresh"></i></button>
 												</div>
 											</div>
 										</div>
@@ -292,6 +295,9 @@
 <script src="${hsfEdit}"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 <spring:url value="/info/editFamilia" var="editFamiliaUrl"/>
+<spring:url value="/opciones/municipios" var="opcMuniUrl"/>
+<spring:url value="/opciones/sectores" var="opcSectUrl"/>
+<spring:url value="/opciones/comunidades" var="opcComuUrl"/>
 <script>
     $(function () {
     	$("li.hsf").removeClass("hsf").addClass("active");
@@ -304,9 +310,23 @@
 		var parametros1 = {editFamiliaUrl: "${editFamiliaUrl}"
 			, processSuccess: "${processSuccess}"
 			, processError: "${processError}"
+			, deniedError: "${deniedError}"
+			, opcMuniUrl: "${opcMuniUrl}"
+			, opcSectUrl: "${opcSectUrl}"
+			, opcComuUrl: "${opcComuUrl}"
 			,language:"${pageContext.request.locale.language}" };
 		FormEditHSF.init(parametros1);
 	});
+	
+	function mostrarSelects() {
+		$("#silais").select2('data',null);
+		$("#municipio").select2('data',null);
+		$("#sector").select2('data',null);
+		$("#comunidad").select2('data',null);
+		$("#municipio").empty();
+		$("#sector").empty();
+		$("#comunidad").empty();
+	}
 </script>
 <!-- END JAVASCRIPTS -->
 </body>

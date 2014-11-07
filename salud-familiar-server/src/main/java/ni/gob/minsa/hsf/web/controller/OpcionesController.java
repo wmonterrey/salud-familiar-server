@@ -14,8 +14,12 @@ import ni.gob.minsa.hsf.service.ComunidadesService;
 import ni.gob.minsa.hsf.service.DivisionPoliticaService;
 import ni.gob.minsa.hsf.service.SectoresService;
 import ni.gob.minsa.hsf.service.UnidadesService;
+import ni.gob.minsa.hsf.service.UsuarioService;
+import ni.gob.minsa.hsf.users.model.UserSistema;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,7 +46,8 @@ public class OpcionesController {
 	private ComunidadesService comunidadService;
 	@Resource(name="cie10Service")
 	private Cie10Service cie10Service;
-
+	@Resource(name="usuarioService")
+	private UsuarioService usuarioService;
 	/**
      * Retorna una lista de unidades. Acepta una solicitud GET para JSON
      * @return Un arreglo JSON de unidades
@@ -78,7 +83,8 @@ public class OpcionesController {
     @RequestMapping(value = "municipios", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody List<Divisionpolitica> fetchMunicipiosJson(@RequestParam(value = "entidadId", required = false, defaultValue="0" ) long entidad) {
         logger.info("Obteniendo los municipios en JSON");
-        List<Divisionpolitica> municipios = divPoliticaService.getMunicipios(entidad);
+        UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        List<Divisionpolitica> municipios = divPoliticaService.getMunicipios(entidad , usuario.getNivel(), usuario.getEntidad(), usuario.getUnidad());
         if (municipios == null){
         	logger.debug("Nulo");
         }
@@ -92,7 +98,8 @@ public class OpcionesController {
     @RequestMapping(value = "sectores", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody List<Sectores> fetchSectoresJson(@RequestParam(value = "municipioId", required = true) String municipio) {
         logger.info("Obteniendo los sectores en JSON");
-        List<Sectores> sectores = sectorService.getSectoresMunicipio(municipio);
+        UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        List<Sectores> sectores = sectorService.getSectoresMunicipio(municipio,usuario.getNivel(), usuario.getEntidad(), usuario.getUnidad());
         if (sectores == null){
         	logger.debug("Nulo");
         }

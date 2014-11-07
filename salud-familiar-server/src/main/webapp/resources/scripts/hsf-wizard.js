@@ -603,10 +603,15 @@ var FormWizardHSF = function () {
     		            , $('#submit_form').serialize()
     		            , function( data )
     		            {
-    						visita = JSON.parse(data);
-    						toastr.success(parametros.processSuccess);
-    						$('#idFamilia').val(visita.familia.idFamilia);
-    						$('#idVisita').val(visita.idVisita);
+            				if (data == ""){
+            					toastr.error(parametros.deniedError);
+            				}
+            				else{
+            					visita = JSON.parse(data);
+            					toastr.success(parametros.processSuccess);
+            					$('#idFamilia').val(visita.familia.idFamilia);
+            					$('#idVisita').val(visita.idVisita);
+            				}
     		            }
     		            , 'text' )
     			  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {
@@ -620,9 +625,14 @@ var FormWizardHSF = function () {
     		            , $('#submit_form').serialize()
     		            , function( data )
     		            {
-    						caract = JSON.parse(data);
-    						toastr.success(parametros.processSuccess);
-    						$('#idCaractHig').val(caract.idCaractHig);
+		            		if (data == ""){
+		    					toastr.error(parametros.deniedError);
+		    				}
+		    				else{
+	    						caract = JSON.parse(data);
+	    						toastr.success(parametros.processSuccess);
+	    						$('#idCaractHig').val(caract.idCaractHig);
+		    				}
     		            }
     		            , 'text' )
     			  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {
@@ -636,9 +646,14 @@ var FormWizardHSF = function () {
     		            , $('#submit_form').serialize()
     		            , function( data )
     		            {
-    						factores = JSON.parse(data);
-    						toastr.success(parametros.processSuccess);
-    						$('#idFactSocioEc').val(factores.idFactSocioEc);
+		            		if (data == ""){
+		    					toastr.error(parametros.deniedError);
+		    				}
+		    				else{
+	    						factores = JSON.parse(data);
+	    						toastr.success(parametros.processSuccess);
+	    						$('#idFactSocioEc').val(factores.idFactSocioEc);
+		    				}
     		            }
     		            , 'text' )
     			  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {
@@ -652,9 +667,14 @@ var FormWizardHSF = function () {
     		            , $('#submit_form').serialize()
     		            , function( data )
     		            {
-    						funcionamiento = JSON.parse(data);
-    						toastr.success(parametros.processSuccess);
-    						$('#idFuncFamiliar').val(funcionamiento.idFuncFamiliar);
+		            		if (data == ""){
+		    					toastr.error(parametros.deniedError);
+		    				}
+		    				else{
+	    						funcionamiento = JSON.parse(data);
+	    						toastr.success(parametros.processSuccess);
+	    						$('#idFuncFamiliar').val(funcionamiento.idFuncFamiliar);
+		    				}
     		            }
     		            , 'text' )
     			  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {
@@ -695,8 +715,8 @@ var FormWizardHSF = function () {
                 $('#add_person_form').find('select').multiSelect('deselect_all');
                 table2.fnClearTable();
                 table3.fnClearTable();
-				$("#save-person").unbind("click");
-				$("#save-person-add").unbind("click");
+                $('#form_wizard_2 .button-submit').unbind("click");
+                $("#save-person").unbind("click");
 				$("#dismiss-modalperson").unbind("click");
 				$('a[href="#tab2_1"]').tab('show');
             	$('#nombres').focus();

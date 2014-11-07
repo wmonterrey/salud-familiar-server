@@ -161,7 +161,7 @@ public class Familia extends BaseMetaData implements Auditable{
 
 	@Override
 	public boolean isFieldAuditable(String fieldname) {
-		if(fieldname.matches("created")||fieldname.matches("createdBy")){
+		if(fieldname.matches("created")||fieldname.matches("createdBy")||fieldname.matches("dispensarizada")||fieldname.matches("infoCompleta")){
 			return false;
 		}
 		return true;

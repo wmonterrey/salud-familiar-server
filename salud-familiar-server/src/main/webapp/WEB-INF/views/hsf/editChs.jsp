@@ -55,13 +55,13 @@
 			</spring:url>
 			<c:set var="processSuccess"><spring:message code="process.success" /></c:set>
 			<c:set var="processError"><spring:message code="process.error" /></c:set>
-			
+			<c:set var="deniedError"><spring:message code="denied" /></c:set>
 			<div class="row">
 				<div class="col-md-12">
 					<div class="portlet">
 						<div class="portlet-title">
 							<div class="caption">
-								<i class="fa fa-user"></i><spring:message code="edit" /> - <spring:message code="heading" /> - <spring:message code="step3" />
+								<i class="fa fa-pencil"></i><spring:message code="edit" /> - <spring:message code="heading" /> - <spring:message code="step3" />
 							</div>
 							<div class="tools">
 								<a href="javascript:;" class="collapse"></a>
@@ -556,6 +556,7 @@
 		var parametros1 = {addCarHigSanUrl: "${addCarHigSanUrl}"
 			, processSuccess: "${processSuccess}"
 			, processError: "${processError}"
+			, deniedError: "${deniedError}"
 			,language:"${pageContext.request.locale.language}" };
 		FormEdit2HSF.init(parametros1);
 	});

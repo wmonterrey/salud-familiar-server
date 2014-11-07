@@ -103,9 +103,14 @@ var FormEdit4HSF = function () {
     		            , $('#edit-hsf-form').serialize()
     		            , function( data )
     		            {
-            				funcionamiento = JSON.parse(data);
-            				$('#idFuncFamiliar').val(funcionamiento.idFuncFamiliar);
-    						toastr.success(parametros.processSuccess);
+		            		if (data == ""){
+		    					toastr.error(parametros.deniedError);
+		    				}
+		    				else{
+	            				funcionamiento = JSON.parse(data);
+	            				$('#idFuncFamiliar').val(funcionamiento.idFuncFamiliar);
+	    						toastr.success(parametros.processSuccess);
+		    				}
     						App.unblockUI(pageContent);
     		            }
     		            , 'text' )
