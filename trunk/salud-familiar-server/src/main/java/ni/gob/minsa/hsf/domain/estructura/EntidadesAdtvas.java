@@ -101,7 +101,7 @@ public class EntidadesAdtvas implements Serializable{
 		this.entidadesAdtvas = entidadesAdtvas;
 	}
 
-	@Column(name = "NOMBRE", unique = true, nullable = false, length = 400)
+	@Column(name = "NOMBRE", nullable = false, length = 400)
 	public String getNombre() {
 		return this.nombre;
 	}

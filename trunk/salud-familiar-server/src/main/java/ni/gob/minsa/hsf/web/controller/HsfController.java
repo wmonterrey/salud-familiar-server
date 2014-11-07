@@ -56,6 +56,7 @@ import ni.gob.minsa.hsf.domain.catalogos.TipoPared;
 import ni.gob.minsa.hsf.domain.catalogos.TipoPiso;
 import ni.gob.minsa.hsf.domain.catalogos.TipoTecho;
 import ni.gob.minsa.hsf.domain.estructura.EntidadesAdtvas;
+import ni.gob.minsa.hsf.domain.poblacion.Comunidades;
 import ni.gob.minsa.hsf.domain.poblacion.Divisionpolitica;
 import ni.gob.minsa.hsf.domain.poblacion.Sectores;
 import ni.gob.minsa.hsf.service.CaractHigSanitariasService;
@@ -69,9 +70,13 @@ import ni.gob.minsa.hsf.service.EntidadesAdtvasService;
 import ni.gob.minsa.hsf.service.FactSocioEconomicosService;
 import ni.gob.minsa.hsf.service.FamiliaService;
 import ni.gob.minsa.hsf.service.FuncFamiliarService;
+import ni.gob.minsa.hsf.service.HsfService;
 import ni.gob.minsa.hsf.service.PersonaService;
 import ni.gob.minsa.hsf.service.SectoresService;
+import ni.gob.minsa.hsf.service.UsuarioService;
 import ni.gob.minsa.hsf.service.VisitaService;
+import ni.gob.minsa.hsf.users.model.UserSistema;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -126,11 +131,16 @@ public class HsfController {
 	private EnfermedadesSocioCultService enfermedadesSocioCultService;
 	@Resource(name="cie10Service")
 	private Cie10Service cie10Service;
+	@Resource(name="usuarioService")
+	private UsuarioService usuarioService;
+	@Resource(name="hsfService")
+	private HsfService hsfService;
 	
 	@RequestMapping(value = "newHsf", method = RequestMethod.GET)
     public String initCreationForm(Model model) throws ParseException { 	
     	logger.debug("Crear nueva HSF");
-    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas();
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario.getNivel(),usuario.getEntidad(),usuario.getUnidad());
     	List<Profesion> profesiones = catalogoService.getProfesiones();
     	List<SiNoNs> sinons = catalogoService.getSiNoNs();
     	List<Sexo> sexos = catalogoService.getSexo();
@@ -224,44 +234,59 @@ public class HsfController {
 			, @RequestParam( value="fechaVisita", required=true) String fechaVisita) throws ParseException
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Familia familia = new Familia();
-		familia.setComunidad(comunidadService.getComunidad(comunidad));
-		familia.setNumVivienda(numVivienda);
-		familia.setNumFamilia(numFamilia);
-		familia.setNumFicha(numFicha);
-		familia.setDireccion(direccion);
-		familia.setCodFamilia(comunidad+"-"+numVivienda+"-"+numFamilia);
-		if (idFamilia.equals("")){
-			idFamilia = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
-		}
-		familia.setIdFamilia(idFamilia);
-		familia.setCreatedBy(authentication.getName());
-		familia.setCreated(new Date());
-		familia.setInfoCompleta(estaCompleta(idFamilia));
-		familiaService.addFamilia(familia);
-		
-		
-		Visita visita = new Visita();
-		visita.setFamilia(familia);
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		Date date = formatter.parse(fechaVisita);
-		visita.setFechaVisita(date);
-		visita.setPersonaVisita(personaVisita);
-		visita.setPersonaVisitaProfesion(catalogoService.getProfesion(personaVisitaProfesion));
-		MovilInfo movilInfo = new MovilInfo();
-		WebAuthenticationDetails wad  = (WebAuthenticationDetails) authentication.getDetails();
-		movilInfo.setDeviceid(wad.getRemoteAddress());
-		if (idVisita.equals("")){
-			idVisita = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
-		}
-		visita.setIdVisita(idVisita);
-		visita.setCreatedBy(authentication.getName());
-		visita.setCreated(new Date());
-		visita.setMovilInfo(movilInfo);
-		visitaService.addVisita(visita);
-		return createJsonResponse(visita);
+		UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+		Comunidades com = comunidadService.getComunidad(comunidad);
+    	if(hsfService.verificarPermisoDatos(com, usuario)){
+			Familia familia = new Familia();
+			familia.setComunidad(com);
+			familia.setNumVivienda(numVivienda);
+			familia.setNumFamilia(numFamilia);
+			familia.setNumFicha(numFicha);
+			familia.setDireccion(direccion);
+			familia.setCodFamilia(comunidad+"-"+numVivienda+"-"+numFamilia);
+			if (idFamilia.equals("")){
+				idFamilia = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
+			}
+			familia.setIdFamilia(idFamilia);
+			familia.setCreatedBy(authentication.getName());
+			familia.setCreated(new Date());
+			familia.setInfoCompleta(estaCompleta(idFamilia));
+			familia.setDispensarizada(esDispensarizada(idFamilia));
+			familiaService.addFamilia(familia);
+			
+			Visita visita = new Visita();
+			visita.setFamilia(familia);
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			Date date = formatter.parse(fechaVisita);
+			visita.setFechaVisita(date);
+			visita.setPersonaVisita(personaVisita);
+			visita.setPersonaVisitaProfesion(catalogoService.getProfesion(personaVisitaProfesion));
+			MovilInfo movilInfo = new MovilInfo();
+			WebAuthenticationDetails wad  = (WebAuthenticationDetails) authentication.getDetails();
+			movilInfo.setDeviceid(wad.getRemoteAddress());
+			if (idVisita.equals("")){
+				idVisita = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
+			}
+			visita.setIdVisita(idVisita);
+			visita.setCreatedBy(authentication.getName());
+			visita.setCreated(new Date());
+			visita.setMovilInfo(movilInfo);
+			visitaService.addVisita(visita);
+			return createJsonResponse(visita);
+    	}
+    	else{
+    		return null;
+    	}
 	}
 	
+	private char esDispensarizada(String idFamilia) {
+        List<Persona> personas = this.personaService.getPersonas(idFamilia);
+        for(Persona persona : personas){
+        	if (persona.getGrupoDisp().getCodigo().equals("HSF_GD|NING")) return '0';
+        }
+        return '1';
+	}
+
 	private char estaCompleta(String idFamilia) {
 		Familia familia = this.familiaService.getFamilia(idFamilia);
 		CaractHigSanitarias carHigSan = this.caractHigSanitariasService.getCaractHigSanitariasFamilia(idFamilia);
@@ -276,7 +301,7 @@ public class HsfController {
         	return '0';
         }
 	}
-
+	
 	@RequestMapping( value="editFamilia", method=RequestMethod.POST)
 	public ResponseEntity<String> processEditionFamiliaForm( @RequestParam(value="comunidad", required=true ) String comunidad
 			, @RequestParam( value="numVivienda", required=true ) Integer numVivienda
@@ -285,16 +310,25 @@ public class HsfController {
 			, @RequestParam( value="idFamilia", required=true) String idFamilia
 			, @RequestParam( value="numFicha", required=true ) Integer numFicha) throws ParseException
 	{
-		Familia familia = this.familiaService.getFamilia(idFamilia);
-		familia.setComunidad(comunidadService.getComunidad(comunidad));
-		familia.setNumVivienda(numVivienda);
-		familia.setNumFamilia(numFamilia);
-		familia.setNumFicha(numFicha);
-		familia.setDireccion(direccion);
-		familia.setCodFamilia(comunidad+"-"+numVivienda+"-"+numFamilia);
-		familia.setInfoCompleta(estaCompleta(idFamilia));
-		familiaService.addFamilia(familia);
-		return createJsonResponse(familia);
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserSistema usuario = usuarioService.getUser(authentication.getName());
+		Comunidades com = comunidadService.getComunidad(comunidad);
+    	if(hsfService.verificarPermisoDatos(com, usuario)){
+			Familia familia = this.familiaService.getFamilia(idFamilia);
+			familia.setComunidad(com);
+			familia.setNumVivienda(numVivienda);
+			familia.setNumFamilia(numFamilia);
+			familia.setNumFicha(numFicha);
+			familia.setDireccion(direccion);
+			familia.setCodFamilia(comunidad+"-"+numVivienda+"-"+numFamilia);
+			familia.setInfoCompleta(estaCompleta(idFamilia));
+			familia.setDispensarizada(esDispensarizada(idFamilia));
+			familiaService.addFamilia(familia);
+			return createJsonResponse(familia);
+    	}
+    	else{
+    		return null;
+    	}
 	}
 	
 	@RequestMapping( value="editVisita", method=RequestMethod.POST)
@@ -304,18 +338,25 @@ public class HsfController {
 			, @RequestParam( value="fechaVisita", required=true) String fechaVisita) throws ParseException
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserSistema usuario = usuarioService.getUser(authentication.getName());
 		Visita visita = this.visitaService.getVisita(idVisita);
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		Date date = formatter.parse(fechaVisita);
-		visita.setFechaVisita(date);
-		visita.setPersonaVisita(personaVisita);
-		visita.setPersonaVisitaProfesion(catalogoService.getProfesion(personaVisitaProfesion));
-		MovilInfo movilInfo = new MovilInfo();
-		WebAuthenticationDetails wad  = (WebAuthenticationDetails) authentication.getDetails();
-		movilInfo.setDeviceid(wad.getRemoteAddress());
-		visita.setMovilInfo(movilInfo);
-		visitaService.addVisita(visita);
-		return createJsonResponse(visita);
+		Comunidades com = visita.getFamilia().getComunidad();
+    	if(hsfService.verificarPermisoDatos(com, usuario)){
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			Date date = formatter.parse(fechaVisita);
+			visita.setFechaVisita(date);
+			visita.setPersonaVisita(personaVisita);
+			visita.setPersonaVisitaProfesion(catalogoService.getProfesion(personaVisitaProfesion));
+			MovilInfo movilInfo = new MovilInfo();
+			WebAuthenticationDetails wad  = (WebAuthenticationDetails) authentication.getDetails();
+			movilInfo.setDeviceid(wad.getRemoteAddress());
+			visita.setMovilInfo(movilInfo);
+			visitaService.addVisita(visita);
+			return createJsonResponse(visita);
+    	}
+    	else{
+    		return null;
+    	}
 	}
 	
 	@RequestMapping( value="newCarHigSan", method=RequestMethod.POST)
@@ -339,37 +380,44 @@ public class HsfController {
 			, @RequestParam( value="idCaractHig", required=false, defaultValue="" ) String idCaractHig) throws ParseException 
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		CaractHigSanitarias carHigSan =  new CaractHigSanitarias();
-		if (idCaractHig.equals("")){
-			idCaractHig = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
-			carHigSan.setCreated(new Date());
-			carHigSan.setCreatedBy(authentication.getName());
+		Familia familia = this.familiaService.getFamilia(idFamilia);
+		UserSistema usuario = usuarioService.getUser(authentication.getName());
+		if(hsfService.verificarPermisoDatos(familia.getComunidad(), usuario)){
+			CaractHigSanitarias carHigSan =  new CaractHigSanitarias();
+			if (idCaractHig.equals("")){
+				idCaractHig = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
+				carHigSan.setCreated(new Date());
+				carHigSan.setCreatedBy(authentication.getName());
+			}
+			else{
+				carHigSan =  this.caractHigSanitariasService.getCaractHigSanitarias(idCaractHig);
+			}
+			carHigSan.setFamilia(familia);
+			carHigSan.setHacinamiento(hacinamiento);
+			carHigSan.setAnimalesDom(animalesDom);
+			carHigSan.setRiesgoNatural(riesgoNatural);
+			carHigSan.setRiesgoMeteorologico(riesgoMeteorologico);
+			carHigSan.setRiesgoBiologico(riesgoBiologico);
+			carHigSan.setRiesgoSocial(riesgoSocial);
+			carHigSan.setFactoresMedAmb(factoresMedAmb);
+			carHigSan.setCombCocinar(combCocinar);
+			carHigSan.setaAgua(catalogoService.getAbastecimientoAgua(aAgua));
+			carHigSan.setcAgua(catalogoService.getCalidadAgua(cAgua));
+			carHigSan.setElectricidad(catalogoService.getElectricidad(electricidad));
+			carHigSan.setDepExcretas(catalogoService.getDepExcretas(depExcretas));
+			carHigSan.setDepBasura(catalogoService.getDepBasura(depBasura));
+			carHigSan.setDepResLiq(catalogoService.getDepResLiq(depResLiq));
+			carHigSan.setObsCaractHig(obsCaractHig);
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			Date date = formatter.parse(fechaVisita);
+			carHigSan.setFechaUltimaVisita(date);
+			carHigSan.setIdCaractHig(idCaractHig);
+			caractHigSanitariasService.addCaractHigSanitarias(carHigSan);
+			return createJsonResponse(carHigSan);
 		}
 		else{
-			carHigSan =  this.caractHigSanitariasService.getCaractHigSanitarias(idCaractHig);
-		}
-		carHigSan.setFamilia(familiaService.getFamilia(idFamilia));
-		carHigSan.setHacinamiento(hacinamiento);
-		carHigSan.setAnimalesDom(animalesDom);
-		carHigSan.setRiesgoNatural(riesgoNatural);
-		carHigSan.setRiesgoMeteorologico(riesgoMeteorologico);
-		carHigSan.setRiesgoBiologico(riesgoBiologico);
-		carHigSan.setRiesgoSocial(riesgoSocial);
-		carHigSan.setFactoresMedAmb(factoresMedAmb);
-		carHigSan.setCombCocinar(combCocinar);
-		carHigSan.setaAgua(catalogoService.getAbastecimientoAgua(aAgua));
-		carHigSan.setcAgua(catalogoService.getCalidadAgua(cAgua));
-		carHigSan.setElectricidad(catalogoService.getElectricidad(electricidad));
-		carHigSan.setDepExcretas(catalogoService.getDepExcretas(depExcretas));
-		carHigSan.setDepBasura(catalogoService.getDepBasura(depBasura));
-		carHigSan.setDepResLiq(catalogoService.getDepResLiq(depResLiq));
-		carHigSan.setObsCaractHig(obsCaractHig);
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		Date date = formatter.parse(fechaVisita);
-		carHigSan.setFechaUltimaVisita(date);
-		carHigSan.setIdCaractHig(idCaractHig);
-		caractHigSanitariasService.addCaractHigSanitarias(carHigSan);
-		return createJsonResponse(carHigSan);
+    		return null;
+    	}
 	}
 	
 	@RequestMapping( value="newFactSocEc", method=RequestMethod.POST)
@@ -388,31 +436,38 @@ public class HsfController {
 	        ) throws ParseException 
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		FactSocioEconomicos factSocEc =  new FactSocioEconomicos();
-		if (idFactSocioEc.equals("")){
-			idFactSocioEc = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
-			factSocEc.setCreated(new Date());
-			factSocEc.setCreatedBy(authentication.getName());
+		Familia familia = this.familiaService.getFamilia(idFamilia);
+		UserSistema usuario = usuarioService.getUser(authentication.getName());
+		if(hsfService.verificarPermisoDatos(familia.getComunidad(), usuario)){
+			FactSocioEconomicos factSocEc =  new FactSocioEconomicos();
+			if (idFactSocioEc.equals("")){
+				idFactSocioEc = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
+				factSocEc.setCreated(new Date());
+				factSocEc.setCreatedBy(authentication.getName());
+			}
+			else{
+				factSocEc =  this.factSocioEconomicosService.getFactSocioEconomicos(idFactSocioEc);
+			}
+			factSocEc.setFamilia(familiaService.getFamilia(idFamilia));
+			factSocEc.setTipoPiso(catalogoService.getTipoPiso(tipoPiso));
+			factSocEc.setTipoTecho(catalogoService.getTipoTecho(tipoTecho));
+			factSocEc.setTipoPared(catalogoService.getTipoPared(tipoPared));
+			factSocEc.setCulturaSanitaria(catalogoService.getCulturaSanitaria(culturaSanitaria));
+			factSocEc.setCarPsicosociales(catalogoService.getCarPsicosociales(carPsicosociales));
+			factSocEc.setSatNecBasicas(satNecBasicas);
+			factSocEc.setTenenciaVivienda(catalogoService.getTenenciaVivienda(tenenciaVivienda));
+			factSocEc.setAccionesComunitarias(accionesComunitarias);
+			factSocEc.setObsFactSocioEc(obsFactSocioEc);
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			Date date = formatter.parse(fechaVisita);
+			factSocEc.setFechaUltimaVisita(date);
+			factSocEc.setIdFactSocioEc(idFactSocioEc);
+			factSocioEconomicosService.addFactSocioEconomicos(factSocEc);
+			return createJsonResponse(factSocEc);
 		}
 		else{
-			factSocEc =  this.factSocioEconomicosService.getFactSocioEconomicos(idFactSocioEc);
-		}
-		factSocEc.setFamilia(familiaService.getFamilia(idFamilia));
-		factSocEc.setTipoPiso(catalogoService.getTipoPiso(tipoPiso));
-		factSocEc.setTipoTecho(catalogoService.getTipoTecho(tipoTecho));
-		factSocEc.setTipoPared(catalogoService.getTipoPared(tipoPared));
-		factSocEc.setCulturaSanitaria(catalogoService.getCulturaSanitaria(culturaSanitaria));
-		factSocEc.setCarPsicosociales(catalogoService.getCarPsicosociales(carPsicosociales));
-		factSocEc.setSatNecBasicas(satNecBasicas);
-		factSocEc.setTenenciaVivienda(catalogoService.getTenenciaVivienda(tenenciaVivienda));
-		factSocEc.setAccionesComunitarias(accionesComunitarias);
-		factSocEc.setObsFactSocioEc(obsFactSocioEc);
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		Date date = formatter.parse(fechaVisita);
-		factSocEc.setFechaUltimaVisita(date);
-		factSocEc.setIdFactSocioEc(idFactSocioEc);
-		factSocioEconomicosService.addFactSocioEconomicos(factSocEc);
-		return createJsonResponse(factSocEc);
+    		return null;
+    	}
 	}
 	
 	@RequestMapping( value="newFuncFam", method=RequestMethod.POST)
@@ -429,29 +484,36 @@ public class HsfController {
 	        ) throws ParseException 
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		FuncFamiliar funcFam =  new FuncFamiliar();
-		if (idFuncFamiliar.equals("")){
-			idFuncFamiliar = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
-			funcFam.setCreated(new Date());
-			funcFam.setCreatedBy(authentication.getName());
+		Familia familia = this.familiaService.getFamilia(idFamilia);
+		UserSistema usuario = usuarioService.getUser(authentication.getName());
+		if(hsfService.verificarPermisoDatos(familia.getComunidad(), usuario)){
+			FuncFamiliar funcFam =  new FuncFamiliar();
+			if (idFuncFamiliar.equals("")){
+				idFuncFamiliar = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
+				funcFam.setCreated(new Date());
+				funcFam.setCreatedBy(authentication.getName());
+			}
+			else{
+				funcFam =  this.funcFamiliarService.getFuncFamiliar(idFuncFamiliar);
+			}
+			funcFam.setFamilia(familiaService.getFamilia(idFamilia));
+			funcFam.setTamFamilia(catalogoService.getTamanoFam(tamFamilia));
+			funcFam.setOntogenesis(catalogoService.getOntogenesis(ontogenesis));
+			funcFam.setEtapaCicloVital(catalogoService.getEtapaCicloVital(etapaCicloVital));
+			funcFam.setCrisisNormativa(crisisNormativa);
+			funcFam.setCrisisParanormativa(crisisParanormativa);
+			funcFam.setUsoMedTradicional(usoMedTradicional);
+			funcFam.setObsFuncFamiliar(obsFuncFamiliar);
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			Date date = formatter.parse(fechaVisita);
+			funcFam.setFechaUltimaVisita(date);
+			funcFam.setIdFuncFamiliar(idFuncFamiliar);
+			funcFamiliarService.addFuncFamiliar(funcFam);
+			return createJsonResponse(funcFam);
 		}
 		else{
-			funcFam =  this.funcFamiliarService.getFuncFamiliar(idFuncFamiliar);
-		}
-		funcFam.setFamilia(familiaService.getFamilia(idFamilia));
-		funcFam.setTamFamilia(catalogoService.getTamanoFam(tamFamilia));
-		funcFam.setOntogenesis(catalogoService.getOntogenesis(ontogenesis));
-		funcFam.setEtapaCicloVital(catalogoService.getEtapaCicloVital(etapaCicloVital));
-		funcFam.setCrisisNormativa(crisisNormativa);
-		funcFam.setCrisisParanormativa(crisisParanormativa);
-		funcFam.setUsoMedTradicional(usoMedTradicional);
-		funcFam.setObsFuncFamiliar(obsFuncFamiliar);
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		Date date = formatter.parse(fechaVisita);
-		funcFam.setFechaUltimaVisita(date);
-		funcFam.setIdFuncFamiliar(idFuncFamiliar);
-		funcFamiliarService.addFuncFamiliar(funcFam);
-		return createJsonResponse(funcFam);
+    		return null;
+    	}
 	}
 	
 	@RequestMapping( value="newPersona", method=RequestMethod.POST)
@@ -483,47 +545,56 @@ public class HsfController {
 	        ) throws ParseException
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Persona persona = new Persona();
-		if (idPersona.equals("")){
-			idPersona = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
-			persona.setCreated(new Date());
-			persona.setCreatedBy(authentication.getName());
+		UserSistema usuario = usuarioService.getUser(authentication.getName());
+		Familia familia = familiaService.getFamilia(idFamiliaPerson);
+		if(hsfService.verificarPermisoDatos(familia.getComunidad(), usuario)){
+			Persona persona = new Persona();
+			if (idPersona.equals("")){
+				idPersona = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
+				persona.setCreated(new Date());
+				persona.setCreatedBy(authentication.getName());
+			}
+			else{
+				persona =  this.personaService.getPersona(idPersona);
+			}
+			persona.setIdPersona(idPersona);
+			persona.setFamilia(familia);
+	        persona.setCodPersona(familia.getCodFamilia()+"-"+numPersona);
+	        persona.setNumPersona(numPersona);
+	        persona.setNombres(nombres);
+	        persona.setPrimerApellido(primerApellido);
+	        persona.setSegundoApellido(segundoApellido);
+	        persona.setCedula(cedula);
+	        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			Date date = formatter.parse(fechaNacimiento);
+			persona.setFechaNacimiento(date);
+			persona.setActaNacimiento(actaNacimiento);
+	        persona.setEtnia(catalogoService.getEtnia(etnia));
+	        persona.setSexo(catalogoService.getSexo(sexo));
+	        persona.setEscolaridad(catalogoService.getEscda(escolaridad));
+	        persona.setOcupacion(catalogoService.getOcupacion(ocupacion));
+	        persona.setReligion(catalogoService.getReligion(religion));
+	        persona.setEmbarazada(embarazada);
+	        persona.setCpnActualizado(cpnActualizado);
+	        persona.setMujerEdadFertil(mujerEdadFertil);
+	        persona.setPlanFamiliar(planFamiliar);
+	        persona.setMen1A(men1A);
+	        persona.setMen1AVPCD(men1AVPCD);
+	        persona.setFactRiesgoMod(factRiesgoMod);
+	        persona.setFactRiesgoNoMod(factRiesgoNoMod);
+	        persona.setFactRiesgoSocial(factRiesgoSocial);
+	        persona.setDiscapacidades(discapacidades);
+	        persona.setGrupoDisp(catalogoService.getGrupoDispensarial(grupoDisp));
+	        if (grupoDisp.equals("HSF_GD|NING")) {
+	        	familia.setDispensarizada('0');
+	        	familiaService.addFamilia(familia);
+	        }
+	        personaService.addPersona(persona);
+			return createJsonResponse(persona);
 		}
 		else{
-			persona =  this.personaService.getPersona(idPersona);
-		}
-		Familia familia = familiaService.getFamilia(idFamiliaPerson);    
-		persona.setIdPersona(idPersona);
-		persona.setFamilia(familia);
-        persona.setCodPersona(familia.getCodFamilia()+"-"+numPersona);
-        persona.setNumPersona(numPersona);
-        persona.setNombres(nombres);
-        persona.setPrimerApellido(primerApellido);
-        persona.setSegundoApellido(segundoApellido);
-        persona.setCedula(cedula);
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		Date date = formatter.parse(fechaNacimiento);
-		persona.setFechaNacimiento(date);
-		persona.setActaNacimiento(actaNacimiento);
-        persona.setEtnia(catalogoService.getEtnia(etnia));
-        persona.setSexo(catalogoService.getSexo(sexo));
-        persona.setEscolaridad(catalogoService.getEscda(escolaridad));
-        persona.setOcupacion(catalogoService.getOcupacion(ocupacion));
-        persona.setReligion(catalogoService.getReligion(religion));
-        persona.setEmbarazada(embarazada);
-        persona.setCpnActualizado(cpnActualizado);
-        persona.setMujerEdadFertil(mujerEdadFertil);
-        persona.setPlanFamiliar(planFamiliar);
-        persona.setMen1A(men1A);
-        persona.setMen1AVPCD(men1AVPCD);
-        persona.setFactRiesgoMod(factRiesgoMod);
-        persona.setFactRiesgoNoMod(factRiesgoNoMod);
-        persona.setFactRiesgoSocial(factRiesgoSocial);
-        persona.setDiscapacidades(discapacidades);
-        persona.setGrupoDisp(catalogoService.getGrupoDispensarial(grupoDisp));
-        personaService.addPersona(persona);
-		
-		return createJsonResponse(persona);
+    		return null;
+    	}
 	}
 	
 	@RequestMapping( value="newEnfermedad", method=RequestMethod.POST)
@@ -535,25 +606,36 @@ public class HsfController {
 	        ) throws ParseException
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Enfermedades enf = new Enfermedades();
-		if (idEnfermedad.equals("")){
-			idEnfermedad = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
-			enf.setCreated(new Date());
-			enf.setCreatedBy(authentication.getName());
+		UserSistema usuario = usuarioService.getUser(authentication.getName());
+		Persona persona = personaService.getPersona(idPersonaEnf);
+		if(hsfService.verificarPermisoDatos(persona.getFamilia().getComunidad(), usuario)){
+			Enfermedades enf = new Enfermedades();
+			if (idEnfermedad.equals("")){
+				idEnfermedad = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
+				enf.setCreated(new Date());
+				enf.setCreatedBy(authentication.getName());
+			}
+			else{
+				enf =  this.enfermedadesService.getEnfermedades(idEnfermedad);
+			}
+			enf.setPersona(persona);
+			enf.setEnfermedad(cie10Service.getCie10(enfermedad));
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			Date date = formatter.parse(fechaOcurrencia);
+			enf.setFechaOcurrencia(date);
+	        enf.setIdEnfermedad(idEnfermedad);
+	        enf.setPersonaAtendio(catalogoService.getProfesion(personaAtendio));
+	        enfermedadesService.addEnfermedades(enf);
+			return createJsonResponse(enf);
 		}
 		else{
-			enf =  this.enfermedadesService.getEnfermedades(idEnfermedad);
-		}
-		Persona persona = personaService.getPersona(idPersonaEnf);
-		enf.setPersona(persona);
-		enf.setEnfermedad(cie10Service.getCie10(enfermedad));
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		Date date = formatter.parse(fechaOcurrencia);
-		enf.setFechaOcurrencia(date);
-        enf.setIdEnfermedad(idEnfermedad);
-        enf.setPersonaAtendio(catalogoService.getProfesion(personaAtendio));
-        enfermedadesService.addEnfermedades(enf);
-		return createJsonResponse(enf);
+    		return null;
+    	}
+	}
+	
+	@RequestMapping(value="quitarenf", method=RequestMethod.GET)
+	public @ResponseBody boolean anularEnfermedad(@RequestParam String idEnfermedad) {
+	    return this.enfermedadesService.quitarEnfermedad(idEnfermedad);
 	}
 	
 	@RequestMapping( value="newEnfermedadSC", method=RequestMethod.POST)
@@ -565,41 +647,53 @@ public class HsfController {
 	        ) throws ParseException
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		EnfermedadesSocioCult enf = new EnfermedadesSocioCult();
-		if (idEnfermedad.equals("")){
-			idEnfermedad = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
-			enf.setCreated(new Date());
-			enf.setCreatedBy(authentication.getName());
+		UserSistema usuario = usuarioService.getUser(authentication.getName());
+		Persona persona = personaService.getPersona(idPersonaEnf);
+		if(hsfService.verificarPermisoDatos(persona.getFamilia().getComunidad(), usuario)){
+			EnfermedadesSocioCult enf = new EnfermedadesSocioCult();
+			if (idEnfermedad.equals("")){
+				idEnfermedad = new UUID(authentication.getName().hashCode(),new Date().hashCode()).toString();
+				enf.setCreated(new Date());
+				enf.setCreatedBy(authentication.getName());
+			}
+			else{
+				enf =  this.enfermedadesSocioCultService.getEnfermedadesSocioCult(idEnfermedad);
+			}
+			enf.setPersona(persona);
+			enf.setEnfermedad(catalogoService.getEnfSocioC(enfermedad));
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			Date date = formatter.parse(fechaOcurrencia);
+			enf.setFechaOcurrencia(date);
+	        enf.setIdEnfSocioC(idEnfermedad);
+	        enf.setPersonaAtendio(catalogoService.getProfesion(personaAtendio));
+	        enfermedadesSocioCultService.addEnfermedadesSocioCult(enf);
+			return createJsonResponse(enf);
 		}
 		else{
-			enf =  this.enfermedadesSocioCultService.getEnfermedadesSocioCult(idEnfermedad);
-		}
-		Persona persona = personaService.getPersona(idPersonaEnf);
-		enf.setPersona(persona);
-		enf.setEnfermedad(catalogoService.getEnfSocioC(enfermedad));
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		Date date = formatter.parse(fechaOcurrencia);
-		enf.setFechaOcurrencia(date);
-        enf.setIdEnfSocioC(idEnfermedad);
-        enf.setPersonaAtendio(catalogoService.getProfesion(personaAtendio));
-        enfermedadesSocioCultService.addEnfermedadesSocioCult(enf);
-		return createJsonResponse(enf);
+    		return null;
+    	}
 	}
 	
     @RequestMapping(value = "editHsf/{idFamilia}", method = RequestMethod.GET)
 	public String initUpdateFamForm(@PathVariable("idFamilia") String idFamilia, Model model) {
     	Familia familia = this.familiaService.getFamilia(idFamilia);
 		if(familia!=null){
-			List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas();
-			Sectores sector = this.sectorService.getSector(familia.getComunidad().getSector());
-	        Divisionpolitica municipio = this.divPoliticaService.getDivisionpolitica(sector.getMunicipio());
-	        EntidadesAdtvas silais = this.entidadAdtvaService.getEntidadesAdtvas(municipio.getDependenciaSilais());
-			model.addAttribute("familia",familia);
-			model.addAttribute("entidades",entidades);
-			model.addAttribute("sector",sector);
-			model.addAttribute("municipio",municipio);
-			model.addAttribute("silais",silais);
-			return "hsf/editFamilia";
+			UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    		if(hsfService.verificarPermisoDatos(familia.getComunidad(), usuario)){
+				List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario.getNivel(),usuario.getEntidad(),usuario.getUnidad());
+				Sectores sector = this.sectorService.getSector(familia.getComunidad().getSector());
+		        Divisionpolitica municipio = this.divPoliticaService.getDivisionpolitica(sector.getMunicipio());
+		        EntidadesAdtvas silais = this.entidadAdtvaService.getEntidadesAdtvas(municipio.getDependenciaSilais());
+				model.addAttribute("familia",familia);
+				model.addAttribute("entidades",entidades);
+				model.addAttribute("sector",sector);
+				model.addAttribute("municipio",municipio);
+				model.addAttribute("silais",silais);
+				return "hsf/editFamilia";
+    		}
+    		else{
+    			return "403";
+    		}
 		}
 		else{
 			return "404";
@@ -610,10 +704,64 @@ public class HsfController {
 	public String initUpdateVisitForm(@PathVariable("idVisita") String idVisita, Model model) {
     	Visita visita = this.visitaService.getVisita(idVisita);
 		if(visita!=null){
-	        List<Profesion> profesiones = catalogoService.getProfesiones();
-			model.addAttribute("visita",visita);
-			model.addAttribute("profesiones",profesiones);
-			return "hsf/editVisita";
+			UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());    
+    		if(hsfService.verificarPermisoDatos(visita.getFamilia().getComunidad(), usuario)){
+		        List<Profesion> profesiones = catalogoService.getProfesiones();
+				model.addAttribute("visita",visita);
+				model.addAttribute("profesiones",profesiones);
+				return "hsf/editVisita";
+    		}
+    		else{
+    			return "403";
+    		}
+		}
+		else{
+			return "404";
+		}
+	}
+    
+    @RequestMapping(value = "editPersona/{idPersona}", method = RequestMethod.GET)
+	public String initUpdatePersonForm(@PathVariable("idPersona") String idPersona, Model model) {
+    	Persona persona = this.personaService.getPersona(idPersona);
+		if(persona!=null){
+			UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());    
+    		if(hsfService.verificarPermisoDatos(persona.getFamilia().getComunidad(), usuario)){
+				List<SiNoNs> sinons = catalogoService.getSiNoNs();
+				List<Etnia> etnias = catalogoService.getEtnia();
+				List<Sexo> sexos = catalogoService.getSexo();
+		    	List<Escolaridad> escolaridades = catalogoService.getEscda();
+		    	List<Ocupacion> ocupaciones = catalogoService.getOcupacion();
+		    	List<Religion> religiones = catalogoService.getReligion();
+		    	List<FactRiesgoNoMod> frnms = catalogoService.getFactRiesgoNoMod();
+		    	List<FactRiesgoMod> frms = catalogoService.getFactRiesgoMod();
+		    	List<FactRiesgoSoc> frss = catalogoService.getFactRiesgoSoc();
+		    	List<Discapacidad> discps = catalogoService.getDiscapacidad();
+		    	List<GrupoDispensarial> gds = catalogoService.getGrupoDispensarial();
+		    	List<EnfSocioC> enfermedadessocs = catalogoService.getEnfSocioC();
+		    	List<Enfermedades> enfermedades = enfermedadesService.getEnfermedadesPersona(idPersona);
+		    	List<EnfermedadesSocioCult> enfermedadesSoc = enfermedadesSocioCultService.getEnfermedadesSocioCultPersona(idPersona);
+		    	List<Profesion> profesiones = catalogoService.getProfesiones();
+				model.addAttribute("sinons",sinons);
+				model.addAttribute("sexos", sexos);
+				model.addAttribute("etnias", etnias);
+		    	model.addAttribute("escolaridades", escolaridades);
+		    	model.addAttribute("ocupaciones", ocupaciones);
+		    	model.addAttribute("religiones", religiones);
+		    	model.addAttribute("frnms", frnms);
+		    	model.addAttribute("frss", frss);
+		    	model.addAttribute("frms", frms);
+		    	model.addAttribute("discps", discps);
+		    	model.addAttribute("gds", gds);
+		    	model.addAttribute("enfermedades", enfermedades);
+		    	model.addAttribute("enfermedadesSoc", enfermedadesSoc);
+		    	model.addAttribute("enfermedadessocs", enfermedadessocs);
+		    	model.addAttribute("profesiones", profesiones);
+				model.addAttribute("persona",persona);
+				return "hsf/editPersona";
+    		}
+    		else{
+    			return "403";
+    		}
 		}
 		else{
 			return "404";
@@ -629,45 +777,54 @@ public class HsfController {
     		return "404";
     	}
 		else{
+			UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+			Comunidades com = null;
 			if(chs==null){
 				chs= new CaractHigSanitarias();
 				model.addAttribute("identFamilia",familia.getIdFamilia());
 				model.addAttribute("fechaDeVisita",visita.getFechaVisita());
+				com=familia.getComunidad();
 			}
 			else{
 				model.addAttribute("identFamilia",chs.getFamilia().getIdFamilia());
 				model.addAttribute("fechaDeVisita",chs.getFechaUltimaVisita());
+				com=chs.getFamilia().getComunidad();
 			}
-			List<SiNoNs> sinons = this.catalogoService.getSiNoNs();
-			List<AnimalesDomesticos> animales = catalogoService.getAnimalesDomesticos();
-	    	List<RiesgoNatural> rgnats = catalogoService.getRiesgoNatural();
-	    	List<RiesgoMeteorologico> rgmets = catalogoService.getRiesgoMeteorologico();
-	    	List<RiesgoBiologico> rgbios = catalogoService.getRiesgoBiologico();
-	    	List<RiesgoSocial> rgsocs = catalogoService.getRiesgoSocial();
-	    	List<FactoresMedAmb> factoresMedAmbs = catalogoService.getFactoresMedAmb();
-	    	List<CombCocinar> combCocinars = catalogoService.getCombCocinar();
-	    	List<AbastecimientoAgua> abastecimientoAguas = catalogoService.getAbastecimientoAgua();
-	    	List<CalidadAgua> calidadAguas = catalogoService.getCalidadAgua();
-	    	List<Electricidad> electricidads = catalogoService.getElectricidad();
-	    	List<DepExcretas> depExcretas = catalogoService.getDepExcretas();
-	    	List<DepBasura> depBasuras = catalogoService.getDepBasura();
-	    	List<DepResLiq> depResLiqs = catalogoService.getDepResLiq();
-			model.addAttribute("chs",chs);
-			model.addAttribute("sinons",sinons);
-			model.addAttribute("animales", animales);
-	    	model.addAttribute("rgnats", rgnats);
-	    	model.addAttribute("rgmets", rgmets);
-	    	model.addAttribute("rgbios", rgbios);
-	    	model.addAttribute("rgsocs", rgsocs);
-	    	model.addAttribute("factoresMedAmbs", factoresMedAmbs);
-	    	model.addAttribute("combCocinars", combCocinars);
-	    	model.addAttribute("abastecimientoAguas", abastecimientoAguas);
-	    	model.addAttribute("calidadAguas", calidadAguas);
-	    	model.addAttribute("electricidads", electricidads);
-	    	model.addAttribute("depExcretas", depExcretas);
-	    	model.addAttribute("depBasuras", depBasuras);
-	    	model.addAttribute("depResLiqs", depResLiqs);
-			return "hsf/editChs";
+			if(hsfService.verificarPermisoDatos(com, usuario)){
+				List<SiNoNs> sinons = this.catalogoService.getSiNoNs();
+				List<AnimalesDomesticos> animales = catalogoService.getAnimalesDomesticos();
+		    	List<RiesgoNatural> rgnats = catalogoService.getRiesgoNatural();
+		    	List<RiesgoMeteorologico> rgmets = catalogoService.getRiesgoMeteorologico();
+		    	List<RiesgoBiologico> rgbios = catalogoService.getRiesgoBiologico();
+		    	List<RiesgoSocial> rgsocs = catalogoService.getRiesgoSocial();
+		    	List<FactoresMedAmb> factoresMedAmbs = catalogoService.getFactoresMedAmb();
+		    	List<CombCocinar> combCocinars = catalogoService.getCombCocinar();
+		    	List<AbastecimientoAgua> abastecimientoAguas = catalogoService.getAbastecimientoAgua();
+		    	List<CalidadAgua> calidadAguas = catalogoService.getCalidadAgua();
+		    	List<Electricidad> electricidads = catalogoService.getElectricidad();
+		    	List<DepExcretas> depExcretas = catalogoService.getDepExcretas();
+		    	List<DepBasura> depBasuras = catalogoService.getDepBasura();
+		    	List<DepResLiq> depResLiqs = catalogoService.getDepResLiq();
+				model.addAttribute("chs",chs);
+				model.addAttribute("sinons",sinons);
+				model.addAttribute("animales", animales);
+		    	model.addAttribute("rgnats", rgnats);
+		    	model.addAttribute("rgmets", rgmets);
+		    	model.addAttribute("rgbios", rgbios);
+		    	model.addAttribute("rgsocs", rgsocs);
+		    	model.addAttribute("factoresMedAmbs", factoresMedAmbs);
+		    	model.addAttribute("combCocinars", combCocinars);
+		    	model.addAttribute("abastecimientoAguas", abastecimientoAguas);
+		    	model.addAttribute("calidadAguas", calidadAguas);
+		    	model.addAttribute("electricidads", electricidads);
+		    	model.addAttribute("depExcretas", depExcretas);
+		    	model.addAttribute("depBasuras", depBasuras);
+		    	model.addAttribute("depResLiqs", depResLiqs);
+				return "hsf/editChs";
+    		}
+    		else{
+    			return "403";
+    		}
 		}
 	}
     
@@ -680,33 +837,42 @@ public class HsfController {
 			return "404";
     	}
 		else{
+			UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());  
+			Comunidades com = null;
 			if(fse==null){
 				fse= new FactSocioEconomicos();
 				model.addAttribute("identFamilia",familia.getIdFamilia());
 				model.addAttribute("fechaDeVisita",visita.getFechaVisita());
+				com=familia.getComunidad();
 			}
 			else{
 				model.addAttribute("identFamilia",fse.getFamilia().getIdFamilia());
 				model.addAttribute("fechaDeVisita",fse.getFechaUltimaVisita());
+				com=fse.getFamilia().getComunidad();
 			}
-			List<SiNoNs> sinons = catalogoService.getSiNoNs();
-			List<TipoPiso> pisos = catalogoService.getTipoPiso();
-	    	List<TipoTecho> techos = catalogoService.getTipoTecho();
-	    	List<TipoPared> paredes = catalogoService.getTipoPared();
-	    	List<CulturaSanitaria> culturasSanitaria = catalogoService.getCulturaSanitaria();
-	    	List<CarPsicosociales> carsPsicosociales = catalogoService.getCarPsicosociales();
-	    	List<TenenciaVivienda> tenenciasVivienda = catalogoService.getTenenciaVivienda();
-	    	List<AccionesComunitarias> accionesComunitarias = catalogoService.getAccionesComunitarias();
-			model.addAttribute("fse",fse);
-			model.addAttribute("sinons",sinons);
-			model.addAttribute("pisos", pisos);
-	    	model.addAttribute("techos", techos);
-	    	model.addAttribute("paredes", paredes);
-	    	model.addAttribute("culturasSanitaria", culturasSanitaria);
-	    	model.addAttribute("carsPsicosociales", carsPsicosociales);
-	    	model.addAttribute("tenenciasVivienda", tenenciasVivienda);
-	    	model.addAttribute("accionesComunitarias", accionesComunitarias);
-			return "hsf/editFse";
+			if(hsfService.verificarPermisoDatos(com, usuario)){
+				List<SiNoNs> sinons = catalogoService.getSiNoNs();
+				List<TipoPiso> pisos = catalogoService.getTipoPiso();
+		    	List<TipoTecho> techos = catalogoService.getTipoTecho();
+		    	List<TipoPared> paredes = catalogoService.getTipoPared();
+		    	List<CulturaSanitaria> culturasSanitaria = catalogoService.getCulturaSanitaria();
+		    	List<CarPsicosociales> carsPsicosociales = catalogoService.getCarPsicosociales();
+		    	List<TenenciaVivienda> tenenciasVivienda = catalogoService.getTenenciaVivienda();
+		    	List<AccionesComunitarias> accionesComunitarias = catalogoService.getAccionesComunitarias();
+				model.addAttribute("fse",fse);
+				model.addAttribute("sinons",sinons);
+				model.addAttribute("pisos", pisos);
+		    	model.addAttribute("techos", techos);
+		    	model.addAttribute("paredes", paredes);
+		    	model.addAttribute("culturasSanitaria", culturasSanitaria);
+		    	model.addAttribute("carsPsicosociales", carsPsicosociales);
+		    	model.addAttribute("tenenciasVivienda", tenenciasVivienda);
+		    	model.addAttribute("accionesComunitarias", accionesComunitarias);
+				return "hsf/editFse";
+    		}
+    		else{
+    			return "403";
+    		}
 		}
 	}
     
@@ -719,36 +885,46 @@ public class HsfController {
 			return "404";
     	}
     	else{
+    		UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    		Comunidades com = null;
 			if(ff==null){
 				ff= new FuncFamiliar();
 				model.addAttribute("identFamilia",familia.getIdFamilia());
 				model.addAttribute("fechaDeVisita",visita.getFechaVisita());
+				com=familia.getComunidad();
 			}
 			else{
 				model.addAttribute("identFamilia",ff.getFamilia().getIdFamilia());
 				model.addAttribute("fechaDeVisita",ff.getFechaUltimaVisita());
+				com=ff.getFamilia().getComunidad();
 			}
-			List<SiNoNs> sinons = catalogoService.getSiNoNs();
-			List<TamanoFam> tamanos = catalogoService.getTamanoFam();
-	    	List<Ontogenesis> ontos = catalogoService.getOntogenesis();
-	    	List<EtapaCicloVital> etapasCicloVital = catalogoService.getEtapaCicloVital();
-	    	List<CrisisNormativa> crisisNormativas = catalogoService.getCrisisNormativa();
-	    	List<CrisisParanormativa> crisisParanormativas = catalogoService.getCrisisParanormativa();
-	    	model.addAttribute("ff",ff);
-			model.addAttribute("sinons",sinons);
-	    	model.addAttribute("tamanos", tamanos);
-	    	model.addAttribute("ontos", ontos);
-	    	model.addAttribute("etapasCicloVital", etapasCicloVital);
-	    	model.addAttribute("crisisNormativas", crisisNormativas);
-	    	model.addAttribute("crisisParanormativas", crisisParanormativas);
-			return "hsf/editFf";
+			if(hsfService.verificarPermisoDatos(com, usuario)){
+				List<SiNoNs> sinons = catalogoService.getSiNoNs();
+				List<TamanoFam> tamanos = catalogoService.getTamanoFam();
+		    	List<Ontogenesis> ontos = catalogoService.getOntogenesis();
+		    	List<EtapaCicloVital> etapasCicloVital = catalogoService.getEtapaCicloVital();
+		    	List<CrisisNormativa> crisisNormativas = catalogoService.getCrisisNormativa();
+		    	List<CrisisParanormativa> crisisParanormativas = catalogoService.getCrisisParanormativa();
+		    	model.addAttribute("ff",ff);
+				model.addAttribute("sinons",sinons);
+		    	model.addAttribute("tamanos", tamanos);
+		    	model.addAttribute("ontos", ontos);
+		    	model.addAttribute("etapasCicloVital", etapasCicloVital);
+		    	model.addAttribute("crisisNormativas", crisisNormativas);
+		    	model.addAttribute("crisisParanormativas", crisisParanormativas);
+				return "hsf/editFf";
+    		}
+    		else{
+    			return "403";
+    		}
 		}
 	}
     
     @RequestMapping(value = "searchHsf", method = RequestMethod.GET)
     public String initSearchForm(Model model) throws ParseException { 	
     	logger.debug("Buscar una HSF");
-    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas();
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario.getNivel(),usuario.getEntidad(),usuario.getUnidad());
     	model.addAttribute("entidades", entidades);
     	return "hsf/search";
 	}
@@ -781,46 +957,53 @@ public class HsfController {
     public String showVisit(@PathVariable("idFamilia") String idFamilia, Model model) {
         Familia familia = this.familiaService.getFamilia(idFamilia);
         if(familia!=null){
-	        Sectores sector = this.sectorService.getSector(familia.getComunidad().getSector());
-	        Divisionpolitica municipio = this.divPoliticaService.getDivisionpolitica(sector.getMunicipio());
-	        EntidadesAdtvas silais = this.entidadAdtvaService.getEntidadesAdtvas(municipio.getDependenciaSilais());
-	        CaractHigSanitarias carHigSan = this.caractHigSanitariasService.getCaractHigSanitariasFamilia(idFamilia);
-	        FactSocioEconomicos factSocEc = this.factSocioEconomicosService.getFactSocioEconomicosFamilia(idFamilia);
-	        FuncFamiliar funcFam = this.funcFamiliarService.getFuncFamiliarFamilia(idFamilia);
-	        List<Persona> personas = this.personaService.getPersonas(idFamilia);
-	        List<Visita> visitas = this.visitaService.getVisitas(idFamilia);
-	        List<SiNoNs> sinons = this.catalogoService.getSiNoNs();
-	        List<AnimalesDomesticos> animales = this.catalogoService.getAnimalesDomesticos();
-	        List<RiesgoNatural> rgnats = this.catalogoService.getRiesgoNatural();
-	    	List<RiesgoMeteorologico> rgmets = this.catalogoService.getRiesgoMeteorologico();
-	    	List<RiesgoBiologico> rgbios = this.catalogoService.getRiesgoBiologico();
-	    	List<RiesgoSocial> rgsocs = this.catalogoService.getRiesgoSocial();
-	    	List<FactoresMedAmb> factoresMedAmbs = this.catalogoService.getFactoresMedAmb();
-	    	List<CombCocinar> combCocinars = this.catalogoService.getCombCocinar();
-	    	List<AccionesComunitarias> accionesComunitarias = this.catalogoService.getAccionesComunitarias();
-	    	List<CrisisNormativa> crisisNormativas = this.catalogoService.getCrisisNormativa();
-	    	List<CrisisParanormativa> crisisParanormativas = this.catalogoService.getCrisisParanormativa();
-	        model.addAttribute("familia",familia);
-	        model.addAttribute("sector",sector);
-	        model.addAttribute("municipio",municipio);
-	        model.addAttribute("silais",silais);
-	        model.addAttribute("carHigSan",carHigSan);
-	        model.addAttribute("factSocEc",factSocEc);
-	        model.addAttribute("funcFam",funcFam);
-	        model.addAttribute("personas",personas);
-	        model.addAttribute("visitas",visitas);
-	        model.addAttribute("sinons",sinons);
-	        model.addAttribute("animales",animales);
-	        model.addAttribute("rgnats",rgnats);
-	        model.addAttribute("rgmets",rgmets);
-	        model.addAttribute("rgbios",rgbios);
-	        model.addAttribute("rgsocs",rgsocs);
-	        model.addAttribute("factoresMedAmbs",factoresMedAmbs);
-	        model.addAttribute("combCocinars",combCocinars);
-	        model.addAttribute("accionesComunitarias",accionesComunitarias);
-	        model.addAttribute("crisisNormativas",crisisNormativas);
-	        model.addAttribute("crisisParanormativas",crisisParanormativas);
-	        return "hsf/familia";
+        	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        	if(hsfService.verificarPermisoDatos(familia.getComunidad(), usuario)){
+		        Sectores sector = this.sectorService.getSector(familia.getComunidad().getSector());
+		        Divisionpolitica municipio = this.divPoliticaService.getDivisionpolitica(sector.getMunicipio());
+		        EntidadesAdtvas silais = this.entidadAdtvaService.getEntidadesAdtvas(municipio.getDependenciaSilais());
+		        CaractHigSanitarias carHigSan = this.caractHigSanitariasService.getCaractHigSanitariasFamilia(idFamilia);
+		        FactSocioEconomicos factSocEc = this.factSocioEconomicosService.getFactSocioEconomicosFamilia(idFamilia);
+		        FuncFamiliar funcFam = this.funcFamiliarService.getFuncFamiliarFamilia(idFamilia);
+		        List<Persona> personas = this.personaService.getPersonas(idFamilia);
+		        List<Visita> visitas = this.visitaService.getVisitas(idFamilia);
+		        List<SiNoNs> sinons = this.catalogoService.getSiNoNs();
+		        List<AnimalesDomesticos> animales = this.catalogoService.getAnimalesDomesticos();
+		        List<RiesgoNatural> rgnats = this.catalogoService.getRiesgoNatural();
+		    	List<RiesgoMeteorologico> rgmets = this.catalogoService.getRiesgoMeteorologico();
+		    	List<RiesgoBiologico> rgbios = this.catalogoService.getRiesgoBiologico();
+		    	List<RiesgoSocial> rgsocs = this.catalogoService.getRiesgoSocial();
+		    	List<FactoresMedAmb> factoresMedAmbs = this.catalogoService.getFactoresMedAmb();
+		    	List<CombCocinar> combCocinars = this.catalogoService.getCombCocinar();
+		    	List<AccionesComunitarias> accionesComunitarias = this.catalogoService.getAccionesComunitarias();
+		    	List<CrisisNormativa> crisisNormativas = this.catalogoService.getCrisisNormativa();
+		    	List<CrisisParanormativa> crisisParanormativas = this.catalogoService.getCrisisParanormativa();
+		        model.addAttribute("familia",familia);
+		        model.addAttribute("sector",sector);
+		        model.addAttribute("municipio",municipio);
+		        model.addAttribute("silais",silais);
+		        model.addAttribute("carHigSan",carHigSan);
+		        model.addAttribute("factSocEc",factSocEc);
+		        model.addAttribute("funcFam",funcFam);
+		        model.addAttribute("personas",personas);
+		        model.addAttribute("visitas",visitas);
+		        model.addAttribute("sinons",sinons);
+		        model.addAttribute("animales",animales);
+		        model.addAttribute("rgnats",rgnats);
+		        model.addAttribute("rgmets",rgmets);
+		        model.addAttribute("rgbios",rgbios);
+		        model.addAttribute("rgsocs",rgsocs);
+		        model.addAttribute("factoresMedAmbs",factoresMedAmbs);
+		        model.addAttribute("combCocinars",combCocinars);
+		        model.addAttribute("accionesComunitarias",accionesComunitarias);
+		        model.addAttribute("crisisNormativas",crisisNormativas);
+		        model.addAttribute("crisisParanormativas",crisisParanormativas);
+		        return "hsf/familia";
+        	}
+        	else{
+        		return "403";
+        	}
+	        
         }
 		else{
 			return "404";

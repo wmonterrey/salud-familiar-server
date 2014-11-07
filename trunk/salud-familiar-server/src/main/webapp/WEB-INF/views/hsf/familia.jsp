@@ -2,6 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!--[if IE 8]> <html class="ie8 no-js"> <![endif]-->
 <!--[if IE 9]> <html class="ie9 no-js"> <![endif]-->
@@ -195,7 +196,7 @@
 													<spring:param name="idVisita" value="${visita.idVisita}" />
 												</spring:url>
 												<tr>
-													<td><c:out value="${visita.fechaVisita}" /></td>
+													<td><fmt:formatDate value="${visita.fechaVisita}" pattern="dd/MM/yyyy" /></td>
 													<td><c:out value="${visita.personaVisita}" /></td>
 													<td><c:out value="${visita.personaVisitaProfesion}" /></td>
 													<td><a href="${fn:escapeXml(edit6Url)}" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></a></td>
@@ -234,7 +235,7 @@
 													<td><c:out value="${persona.primerApellido}" /></td>
 													<td><c:out value="${persona.segundoApellido}" /></td>
 													<td><c:out value="${persona.cedula}" /></td>
-													<td><c:out value="${persona.fechaNacimiento}" /></td>
+													<td><fmt:formatDate value="${persona.fechaNacimiento}" pattern="dd/MM/yyyy" /></td>
 													<td><c:out value="${persona.grupoDisp}" /></td>
 													<td><a href="${fn:escapeXml(edit5Url)}" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></a></td>
 												</tr>

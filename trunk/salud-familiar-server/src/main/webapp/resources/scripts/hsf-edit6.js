@@ -1,62 +1,140 @@
-var FormWizardHSFModalPersonaValidation = function () {
+var FormEdit6HSF = function () {
 	
-	var handleInputMasks = function () {
+	var handleDatePickers = function (idioma) {
+        if (jQuery().datepicker) {
+            $('.date-picker').datepicker({
+                rtl: App.isRTL(),
+                language: idioma,
+                format:'dd/mm/yyyy',
+                autoclose: true
+            });
+            $('body').removeClass("modal-open"); // fix bug when inline picker is used in modal
+        }
+    };
+    
+    var handleInputMasks = function () {
         $.extend($.inputmask.defaults, {
             'autounmask': true
-        });
-
-        $("#numPersona").inputmask({
-            "mask": "9",
-            "repeat": 2,
-            "greedy": false
         });
         
         $("#cedula").inputmask({
         	"mask": "[999-999999-9999A]",
         	"greedy": false
         });
-        
+
         $("#fechaNacimiento").inputmask("d/m/y", {
             "placeholder": "dd/mm/yyyy"
-        }); 
-        
-        $("#fechaOcurrencia").inputmask("d/m/y", {
-            "placeholder": "dd/mm/yyyy"
-        });
-        
-        $("#fechaOcurrenciaSoc").inputmask("d/m/y", {
-            "placeholder": "dd/mm/yyyy"
-        });//multi-char placeholder
+        }); //multi-char placeholder
     };
-	
-	return {
+    
+    var handleMultiSelect = function () {
+        $('#factRiesgoMod').multiSelect();
+        $('#factRiesgoNoMod').multiSelect();
+        $('#factRiesgoSocial').multiSelect();
+        $('#discapacidades').multiSelect();
+    };
+   
+    var handleSelect2 = function () {
+    	$("#actaNacimiento").select2({
+        });
+    	$("#etnia").select2({
+        });
+        $("#sexo").select2({
+        });
+        $("#escolaridad").select2({
+        });
+        $("#ocupacion").select2({
+        });
+        $("#religion").select2({
+        });
+        $("#embarazada").select2({
+        });
+        $("#cpnActualizado").select2({
+        });
+        $("#mujerEdadFertil").select2({
+        });
+        $("#planFamiliar").select2({
+        });  
+        $("#men1A").select2({
+        });
+        $("#men1AVPCD").select2({
+        }); 
+        $("#grupoDisp").select2({
+        });
+        $('#enfermedad').select2({
+        	minimumInputLength: 3,
+        	id: function(enfermedad){ return enfermedad.codigoCie10; },
+            ajax: {
+                url: '/hsf/opciones/enfermedades',
+                dataType: 'json',
+                quietMillis: 100,
+                data: function(term, page) {
+                    return {
+                    	filtro: term
+                    };
+                },
+                results: function(data, page ) {
+                    return {
+                    	results: data
+                    };
+                }
+            },
+            formatResult: function(enfermedad) { 
+            	var markup = "<table'><tr>";
+                markup += "<td valign='top'><h5>" + enfermedad.codigoCie10 + "</h5>";
+                markup += "<div>" + enfermedad.nombreCie10 + "</div>";
+                markup += "</td></tr></table>";
+                return markup; 
+            },
+            formatSelection: function(enfermedad) { 
+                return enfermedad.nombreCie10; 
+            },
+            dropdownCssClass: "bigdrop",
+            initSelection: function (item, callback) {
+                return item;
+            },
+            escapeMarkup: function (m) { return m; }
+        });
+    };
+    
+    return {
         //main function to initiate the module
-        init: function (parametros) {
-        	
-        	handleInputMasks();
-        	var pageContent = $('.page-content');
-        	var personForm = $('#add_person_form');
-    	    if ($('#noPersonasFamilia').val()==''){
-    	    	$('#numPersona').val(1);
-    	    }else{
-    	    	$('#numPersona').val(parseInt($('#noPersonasFamilia').val()) + 1);
-    	    }
-    	    var validatorPerson = personForm.validate({
-    	        doNotHideMessage: true, //this option enables to show the error/success messages on tab switch.
-    	        errorElement: 'span', //default input error message container
-    	        errorClass: 'help-block', // default input error message class
-    	        focusInvalid: false, // do not focus the last invalid input
-    	        rules: {
-    	            //Datos generales
-    	        	idFamilia: {
-     	                required: true
-     	            },
-    	            numPersona: {
-    	                required: true,
-    	                min : 1,
-    	                max: 20
-    	            },
-    	            nombres: {
+        init: function (parametros) {  
+        	if (!jQuery().bootstrapWizard) {
+                return;
+            }
+        	var aPos = null;
+            var pageContent = $('.page-content');
+            handleDatePickers(parametros.language);
+            handleInputMasks();
+            handleSelect2();
+            handleMultiSelect();
+            var form = $('#add-person-form');
+            var error = $('.alert-danger', form);
+            
+            var table2 = $('#lista_enfermedades').DataTable({
+            	bFilter: false, bInfo: false, bPaginate: false
+            });
+            
+            var table3 = $('#lista_enfermedadessoc').DataTable({
+            	bFilter: false, bInfo: false, bPaginate: false
+            });
+            
+            jQuery.validator.addMethod("noNingunoyOtro", function(value, select) { 
+            	var isValid = true;
+            	var number = $('option:selected', select).size();
+                if (number > 1 && select.options[select.options.length-1].selected) {
+                	isValid = false;
+                }
+                return isValid;
+	      	}, "Invalido");
+                       
+            var validatorPerson = form.validate({
+                errorElement: 'span', //default input error message container
+                errorClass: 'help-block', // default input error message class
+                focusInvalid: false, // do not focus the last invalid input
+                rules: {
+                	nombres: {
     	                required: true
     	            },
     	            primerApellido: {
@@ -124,33 +202,42 @@ var FormWizardHSFModalPersonaValidation = function () {
     	            grupoDisp: {
     	                required: true
     	            }
-    	        },
-    	
-    	        invalidHandler: function (event, validator) { //display error alert on form submit   
-                	$('#add_person_form .alert-danger').show();
-                	$('#add_person_form .alert-success').hide();
-    	        },
-    	
-    	        highlight: function (element) { // hightlight error inputs
-    	            $(element)
-    	                .closest('.form-group').addClass('has-error'); // set error class to the control group
-    	        },
-    	
-    	        unhighlight: function (element) { // revert the change done by hightlight
-    	            $(element)
-    	                .closest('.form-group').removeClass('has-error'); // set error class to the control group
-    	        },
-    	
-    	        success: function (label) {
-    	                label
-    	                .closest('.form-group').removeClass('has-error'); // set success class to the control group
-    	                $('#add_person_form .alert-danger').hide();
-                    	$('#add_person_form .alert-success').hide();
-    	        },
-    	
-    	    });
-    	    
-    	    var handleTitle = function(tab, navigation, index) {
+                },
+                
+                invalidHandler: function (event, validator) { //display error alert on form submit   
+                    error.show();
+                    App.scrollTo(error, -200);
+                },
+
+                highlight: function (element) { // hightlight error inputs
+                    $(element)
+                        .closest('.form-group').removeClass('has-success').addClass('has-error'); // set error class to the control group
+                },
+
+                unhighlight: function (element) { // revert the change done by hightlight
+                    $(element)
+                        .closest('.form-group').removeClass('has-error'); // set error class to the control group
+                },
+
+                success: function (label) {
+                    if (label.attr("for") == "gender" || label.attr("for") == "payment[]") { // for checkboxes and radio buttons, no need to show OK icon
+                        label
+                            .closest('.form-group').removeClass('has-error');
+                        label.remove(); // remove error label here
+                    } else { // display success icon for other inputs
+                        label
+                        .closest('.form-group').removeClass('has-error'); 
+                    }
+                },
+
+                submitHandler: function (form) {
+                    error.hide();
+                    //add here some ajax code to submit your form or just call form.submit() if you want to submit the form without ajax
+                    guardarPersona();
+                }
+            });
+            
+            var handleTitle = function(tab, navigation, index) {
                 var total = navigation.find('li').length;
                 var current = index + 1;
                 // set wizard title
@@ -183,25 +270,25 @@ var FormWizardHSFModalPersonaValidation = function () {
                 'nextSelector': '.button-next',
                 'previousSelector': '.button-previous',
                 onTabClick: function (tab, navigation, index, clickedIndex) {
-                	$('#add_person_form .alert-danger').hide();
-                	$('#add_person_form .alert-success').hide();
-                    if (personForm.valid() == false) {
+                	$('#add-person-form .alert-danger').hide();
+                	$('#add-person-form .alert-success').hide();
+                    if (form.valid() == false) {
                         return false;
                     }
                     handleTitle(tab, navigation, clickedIndex);
                 },
                 onNext: function (tab, navigation, index) {
-                	$('#add_person_form .alert-danger').hide();
-                	$('#add_person_form .alert-success').hide();
+                	$('#add-person-form .alert-danger').hide();
+                	$('#add-person-form .alert-success').hide();
                     
-                    if (personForm.valid() == false) {
+                    if (form.valid() == false) {
                         return false;
                     }
                     handleTitle(tab, navigation, index);
                 },
                 onPrevious: function (tab, navigation, index) {
-                	$('#add_person_form .alert-danger').hide();
-                	$('#add_person_form .alert-success').hide();
+                	$('#add-person-form .alert-danger').hide();
+                	$('#add-person-form .alert-success').hide();
                     handleTitle(tab, navigation, index);
                 },
                 onTabShow: function (tab, navigation, index) {
@@ -223,7 +310,7 @@ var FormWizardHSFModalPersonaValidation = function () {
                 $(".persona").find("div.tab-pane").each(function (index, tab) {
                     var id = $(tab).attr("id");
                     $('a[href="#' + id + '"]').tab('show');
-                    var IsTabValid = personForm.valid();
+                    var IsTabValid = form.valid();
                     if (!IsTabValid) {
                         IsValid = false;
                         return false; // Break each loop
@@ -231,78 +318,66 @@ var FormWizardHSFModalPersonaValidation = function () {
                 });
                 if (IsValid){
                 	App.blockUI(pageContent, false);
-                	$('#idFamiliaPerson').val($('#idFamilia').val());
                 	guardarPersona();
                 	jQuery('li', $('#form_wizard_2')).removeClass("done");
-                	$('#personamodalform').modal('hide');
                 	App.unblockUI(pageContent);
                 }
             }).hide();
-    	    
-    	    $('#save-person').click(function() {
-    	    	var IsValid = true;
-    	       	// Validate Each Bootstrap tab
-                $(".persona").find("div.tab-pane").each(function (index, tab) {
-                    var id = $(tab).attr("id");
-                    $('a[href="#' + id + '"]').tab('show');
-                    if (!personForm.valid()) {
-                        $('#enferform').modal('hide');
-                        IsValid = false;
-                        return false; // Break each loop
-                    }
-                });
-                if (IsValid){
-                	App.blockUI(pageContent, false);
-                	$('#idFamiliaPerson').val($('#idFamilia').val());
-                	guardarPersona();
-                	App.unblockUI(pageContent);
-                }
+            
+            $('#lista_enfermedades tbody tr').click(function() {
+            	// Get the position of the current data from the node
+                aPos = table2.fnGetPosition( this );
+            });
+            
+    	    $('#quitar-enf').click(function() {
+        		App.blockUI(pageContent, false);
+        		$.getJSON(parametros.quitarEnfermedadUrl, { idEnfermedad: $('#accionUrl').val() }, function(borrado) {
+        	        if (borrado) {
+        	        	table2.fnDeleteRow(aPos);
+        	        	toastr.success(parametros.processSuccess);
+        	        } else {
+        	        	toastr.success(parametros.processError);
+        	        }
+        	    });
+        		$('#basic').modal('hide');
+        		App.unblockUI(pageContent);
     	    });
     	    
-    	    function guardarPersona(){
-		    if (personForm.valid()){
-				$.post( parametros.addPersonUrl
-			            , $('#add_person_form').serialize()
-			            , function( data )
-			            {
-							if (data == ""){
+    	    $(".quitarenf").click(function(){ 
+    	    	$('#accionUrl').val($(this).data('id'));
+    	    	$('#titulo').html('<h4 class="modal-title">'+$(this).data('enf')+'</h4>');
+    	    	$('#cuerpo').html('<h4>'+parametros.quitarenf+'</h4>');
+    	    	$('#basic').modal('show');
+    	     });
+            
+            
+            function guardarPersona()
+        	{
+            	App.blockUI(pageContent, false);
+            	$.post( parametros.editPersonaUrl
+    		            , $('#add-person-form').serialize()
+    		            , function( data )
+    		            {
+		            		if (data == ""){
 		    					toastr.error(parametros.deniedError);
 		    				}
 		    				else{
-								persona = JSON.parse(data);
-								if ($('#idPersona').val()==''){
-									var d = new Date(Date.parse(persona.fechaNacimiento));
-									$('table#lista_personas').dataTable().fnAddData( [
-									  persona.numPersona, persona.nombres, persona.primerApellido, persona.segundoApellido, persona.cedula, d.yyyymmdd(), persona.grupoDisp.valor]);
-								}
-								$('#idPersona').val(persona.idPersona);
-								$('#noPersonasFamilia').val($('#numPersona').val());
-				        		validatorPerson.resetForm();
+		    					persona = JSON.parse(data);
+		    					toastr.success(parametros.processSuccess);
 		    				}
-			            }
-			            , 'text' )
-				  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {
-				  			alert( parametros.processError + " : " + errorThrown);
-				  		});
-			 }
-		   }
-		   
-		   Date.prototype.yyyymmdd = function() {         
-		        
-		        var yyyy = this.getFullYear().toString();                                    
-		        var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based         
-		        var dd  = this.getDate().toString();             
-		                            
-		        return yyyy + '-' + (mm[1]?mm:"0"+mm[0]) + '-' + (dd[1]?dd:"0"+dd[0]);
-		   }; 
-		   
-		   $("#fechaNacimiento").change(
-           		function() {
-           			$("#edad").val(getAge($("#fechaNacimiento").val()));
-           			$("#sexo").change();
-           });
-		   
-		   $("#sexo").change(
+    		            }
+    		            , 'text' )
+    			  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {
+    			    		alert( parametros.processError + " : " + errorThrown);
+    			    		App.unblockUI(pageContent);
+    			  		});
+            	window.setTimeout(function(){
+			        window.location.href = parametros.familiaUrl;
+			    }, 1500);
+            	App.unblockUI(pageContent);
+        	}
+            
+            $("#sexo").change(
 	           		function() {
 	           			if($("#sexo").val()=='SEXO|F' && $("#edada").val()>10 && $("#edada").val()<55){
 	           				$("#embarazada").select2("enable", true);
@@ -343,8 +418,14 @@ var FormWizardHSFModalPersonaValidation = function () {
 	           				$("#cpnActualizado").select2("enable", false);
 	           			}
 	       });
-		   
-		   function getAge(dateString) {
+            
+ 		   $("#fechaNacimiento").change(
+ 	           		function() {
+ 	           			$("#edad").val(getAge($("#fechaNacimiento").val()));
+ 	           			$("#sexo").change();
+ 	           });
+ 		   
+ 		  function getAge(dateString) {
 			   var now = new Date();
 
 			   var yearNow = now.getYear();
@@ -439,8 +520,24 @@ var FormWizardHSFModalPersonaValidation = function () {
 
 			   return ageString;
 			 }
+            
+            
+            $(document).on('keypress','form input',function(event){                
+    		    event.stopImmediatePropagation();
+    		    if( event.which == 13 )
+    		    {
+    		        event.preventDefault();
+    		        var $input = $('form input');
+    		        if( $(this).is( $input.last() ) )
+    		        {
+    		            //Time to submit the form!!!!
+    		        }
+    		        else
+    		        {
+    		            $input.eq( $input.index( this ) + 1 ).focus();
+    		        }
+    		    }
+    		});
         }
-	
-	};
-	
+    };
 }();

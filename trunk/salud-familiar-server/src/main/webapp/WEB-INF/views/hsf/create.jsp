@@ -58,6 +58,7 @@
 			<c:set var="valPersonas"><spring:message code="person.valtotal" /></c:set>
 			<c:set var="processSuccess"><spring:message code="process.success" /></c:set>
 			<c:set var="processError"><spring:message code="process.error" /></c:set>
+			<c:set var="deniedError"><spring:message code="denied" /></c:set>
 			<div class="row">
 				<div class="col-md-12">
 					<div class="portlet" id="form_wizard_1">
@@ -179,6 +180,7 @@
 													</div>
 												</div>
 												<!-- END ROW -->
+												<!-- START ROW -->
 												<div class="row">
 													<div class="col-md-6">
 														<div class="form-group">
@@ -212,6 +214,8 @@
 														</div>
 													</div>
 												</div>
+												<!-- END ROW -->
+												<!-- START ROW -->
 												<div class="row">
 													<div class="col-md-6">
 														<div class="form-group">
@@ -2551,6 +2555,7 @@
 				, opcComuUrl: "${opcComuUrl}"
 				, processSuccess: "${processSuccess}"
 				, processError: "${processError}"
+				, deniedError: "${deniedError}"
 				,language:"${pageContext.request.locale.language}" };
 		FormWizardHSF.init(parametros1);
 	});
@@ -2559,6 +2564,7 @@
 		var parametros2 = {addPersonUrl: "${addPersonUrl}"
 			, processSuccess: "${processSuccess}"
 			, processError: "${processError}"
+			, deniedError: "${deniedError}"
 			};
 		FormWizardHSFModalPersonaValidation.init(parametros2);
 	}
@@ -2567,6 +2573,7 @@
 		var parametros3 = {addEnfermedadUrl: "${addEnfermedadUrl}"
 			, processSuccess: "${processSuccess}"
 			, processError: "${processError}"
+			, deniedError: "${deniedError}"
 			};
 		FormWizardHSFModalEnfValidation.init(parametros3);
 	}
@@ -2575,6 +2582,7 @@
 		var parametros4 = {addEnfermedadSCUrl: "${addEnfermedadSCUrl}"
 			, processSuccess: "${processSuccess}"
 			, processError: "${processError}"
+			, deniedError: "${deniedError}"
 			};
 		FormWizardHSFModalEnfSocValidation.init(parametros4);
 	}

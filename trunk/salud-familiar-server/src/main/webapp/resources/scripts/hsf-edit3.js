@@ -113,9 +113,14 @@ var FormEdit3HSF = function () {
     		            , $('#edit-hsf-form').serialize()
     		            , function( data )
     		            {
-    						factores = JSON.parse(data);
-    						$('#idFactSocioEc').val(factores.idFactSocioEc);
-    						toastr.success(parametros.processSuccess);
+		            		if (data == ""){
+		    					toastr.error(parametros.deniedError);
+		    				}
+		    				else{
+	    						factores = JSON.parse(data);
+	    						$('#idFactSocioEc').val(factores.idFactSocioEc);
+	    						toastr.success(parametros.processSuccess);
+		    				}
     						App.unblockUI(pageContent);
     		            }
     		            , 'text' )

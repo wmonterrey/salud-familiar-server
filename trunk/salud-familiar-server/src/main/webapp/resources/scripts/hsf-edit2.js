@@ -143,10 +143,16 @@ var FormEdit2HSF = function () {
     		            , $('#edit-hsf-form').serialize()
     		            , function( data )
     		            {
-    						caract = JSON.parse(data);
-    						$('#idCaractHig').val(caract.idCaractHig);
-    						toastr.success(parametros.processSuccess);
-    						App.unblockUI(pageContent);
+		            		if (data == ""){
+		    					toastr.error(parametros.deniedError);
+		    				}
+		    				else{
+	    						caract = JSON.parse(data);
+	    						$('#idCaractHig').val(caract.idCaractHig);
+	    						toastr.success(parametros.processSuccess);
+		    				}
+	    					App.unblockUI(pageContent);
+	    						
     		            }
     		            , 'text' )
     			  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {

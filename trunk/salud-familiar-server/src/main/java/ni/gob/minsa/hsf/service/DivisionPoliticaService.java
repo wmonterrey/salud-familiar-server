@@ -5,6 +5,9 @@ import java.util.List;
 import javax.annotation.Resource;
 
 
+import ni.gob.minsa.hsf.domain.catalogos.Nivel;
+import ni.gob.minsa.hsf.domain.estructura.EntidadesAdtvas;
+import ni.gob.minsa.hsf.domain.estructura.Unidades;
 import ni.gob.minsa.hsf.domain.poblacion.Divisionpolitica;
 
 import org.hibernate.Query;
@@ -38,12 +41,35 @@ public class DivisionPoliticaService {
 	 * @return una lista de <code>Divisionpolitica</code>
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Divisionpolitica> getMunicipios(long entidad) {
+	public List<Divisionpolitica> getMunicipios(long entidadId) {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
 		// Create a Hibernate query (HQL)
 		Query query = session.createQuery("FROM  Divisionpolitica dp where dp.dependenciaSilais = :entidad order by dp.nombre");
-		query.setParameter("entidad", entidad);
+		query.setParameter("entidad", entidadId);
+		// Retrieve all
+		return  query.list();
+	}
+	
+	/**
+	 * Regresa todos los municipios de un usuario
+	 * 
+	 * @return una lista de <code>Divisionpolitica</code>
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Divisionpolitica> getMunicipios(long entidadId, Nivel nivel, EntidadesAdtvas entidad, Unidades unidad) {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = null;
+		if (nivel.getCodigo().equals("HSF_NIVELES|UNIDAD")){
+			query = session.createQuery("FROM  Divisionpolitica dp where dp.codigoNacional = :munUnidad order by dp.nombre");
+			query.setParameter("munUnidad", unidad.getMunicipio());
+		}
+		else {
+			query = session.createQuery("FROM  Divisionpolitica dp where dp.dependenciaSilais = :entidad order by dp.nombre");
+			query.setParameter("entidad", entidadId);
+		}
 		// Retrieve all
 		return  query.list();
 	}
