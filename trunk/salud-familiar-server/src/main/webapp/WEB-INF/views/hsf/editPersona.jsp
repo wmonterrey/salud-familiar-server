@@ -38,10 +38,15 @@
 <div class="page-content-wrapper">
 	<div class="page-content-wrapper">
 		<div class="page-content">
+			<!-- BEGIN STYLE CUSTOMIZER -->
+			<jsp:include page="../fragments/bodyCustomizer.jsp" />
 			<!-- BEGIN PAGE HEADER-->
 			<div class="row">
 				<div class="col-md-12">
 					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
+					<h3 class="page-title">
+						<spring:message code="heading" />
+					</h3>
 					<ul class="page-breadcrumb breadcrumb">
 						<li>
 							<i class="fa fa-home"></i>
@@ -61,6 +66,7 @@
 			<c:set var="processError"><spring:message code="process.error" /></c:set>
 			<c:set var="quitarenf"><spring:message code="disable.enf" /></c:set>
 			<c:set var="deniedError"><spring:message code="denied" /></c:set>
+			
 			<div class="row">
 				<div class="col-md-12">
 					<div class="portlet" id="form_wizard_2">
@@ -74,6 +80,9 @@
 							<div class="tools">
 								<a href="javascript:;" class="collapse"></a>
 								<a href="javascript:;" class="remove"></a>
+							</div>
+							<div class="actions">
+								<a href="${fn:escapeXml(familiaUrl)}" class="btn btn-danger btn-sm"><i class="fa fa-undo"></i> <spring:message code="cancel" /></a>
 							</div>
 						</div>
 						<div class="portlet-body form">
@@ -872,7 +881,14 @@
        																<th></th>
 																</tr>
 															</thead>
-																
+															<c:forEach items="${enfermedadesSoc}" var="enfsoc">
+																<tr>
+																	<td><c:out value="${enfsoc.enfermedad.valor}" /></td>
+																	<td><fmt:formatDate value="${enfsoc.fechaOcurrencia}" pattern="yyyy-MM-dd" /></td>
+																	<td><c:out value="${enfsoc.personaAtendio.valor}" /></td>
+																	<td><a data-toggle="modal" data-enf="${enfsoc.enfermedad.valor}" data-id= "${enfsoc.idEnfSocioC}" class="btn btn-default btn-xs quitarenfsoc"><i class="fa fa-trash-o"></i></a></td>
+																</tr>
+															</c:forEach>	
 															</table>
 															</div>
 														</div>
@@ -913,15 +929,35 @@
 							<div class="modal-content">
 								<div class="modal-header">
 									<button type="button" class="close" data-dismiss="modal" data-aria-hidden="true"></button>
-									<div id="titulo"></div>
+									<div id="tituloEnfModal"></div>
 								</div>
 								<div class="modal-body">
-									<input type=hidden id="accionUrl"/>
-									<div id="cuerpo"></div>
+									<input type=hidden id="enfModal"/>
+									<div id="cuerpoEnfModal"></div>
 								</div>
 								<div class="modal-footer">
 									<button type="button" class="btn btn-default" data-dismiss="modal"><spring:message code="cancel" /></button>
 									<button type="button" id="quitar-enf" class="btn btn-info"><spring:message code="ok" /></button>
+								</div>
+							</div>
+							<!-- /.modal-content -->
+						</div>
+						<!-- /.modal-dialog -->
+					</div>
+					<div class="modal fade" id="basic2" tabindex="-1" data-role="basic" data-backdrop="static" data-aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" data-aria-hidden="true"></button>
+									<div id="tituloEnfSocModal"></div>
+								</div>
+								<div class="modal-body">
+									<input type=hidden id="enfSocModal"/>
+									<div id="cuerpoEnfSocModal"></div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal"><spring:message code="cancel" /></button>
+									<button type="button" id="quitar-enf-soc" class="btn btn-info"><spring:message code="ok" /></button>
 								</div>
 							</div>
 							<!-- /.modal-content -->
@@ -1043,6 +1079,126 @@
 						</div>
 					</div>
 					<!-- END MODAL -->
+					<!-- /.modal -->
+					<div id="enfersocform" class="modal fade" data-backdrop="static" data-aria-hidden="true">
+						<div class="modal-dialog modal-wide">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h4 class="modal-title"><i class="fa fa-stethoscope"></i> <spring:message code="enf.list" /></h4>
+								</div>
+								<div class="modal-body">
+									<div class="scroller" style="height:50%" data-always-visible="1" data-rail-visible1="1">
+										<div class="portlet">
+											<div class="portlet-title">
+												<div class="caption">
+													<i class="fa fa-plus"></i><spring:message code="add" /> <spring:message code="enf" />
+												</div>
+												<div class="tools">
+													
+												</div>
+											</div>
+											<div class="portlet-body form">
+												<!-- BEGIN FORM-->
+												<form action="#" class="form-horizontal" data-role="form" id="add_enfermedadsoc_form">
+													<div class="alert alert-danger display-none">
+														<button class="close" data-close="alert"></button>
+														<spring:message code="form.errors" />
+													</div>
+													<div class="alert alert-success display-none">
+														<button class="close" data-close="alert"></button>
+														<spring:message code="form.success" />
+													</div>
+													<div class="form-body">
+														<div class="form-group" hidden="true">
+															<label class="control-label col-md-6"><spring:message code="nopersona" />:
+															<span class="required">
+																 *
+															</span>
+															</label>
+															<div class="col-md-6">
+																<div class="input-group">
+																	<input type="text" id="idPersonaEnfSoc" name="idPersonaEnfSoc" class="form-control"/>
+																	<span class="input-group-addon">
+																		<i class="fa fa-sort-alpha-asc"></i>
+																	</span>
+																</div>
+															</div>
+														</div>
+														<div class="form-group" hidden="true">
+															<label class="control-label col-md-6"><spring:message code="enf" />:
+															<span class="required">
+																 *
+															</span>
+															</label>
+															<div class="col-md-6">
+																<div class="input-group">
+																	<input type="text" id="idEnfermedadSoc" name="idEnfermedadSoc" class="form-control"/>
+																	<span class="input-group-addon">
+																		<i class="fa fa-sort-alpha-asc"></i>
+																	</span>
+																</div>
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-3"><spring:message code="enf" />:
+															<span class="required">
+																 *
+															</span>
+															</label>
+															<div class="col-md-6">
+																<select data-placeholder="<spring:message code="select" /> <spring:message code="enf" />" name="enfermedadsoc" id="enfermedadsoc" class="form-control">
+																	<option value=""></option>
+																	<c:forEach items="${enfermedadessocs}" var="enfermedassoc"> 
+																		<option value="${enfermedassoc.codigo}">${enfermedassoc.valor}</option> 
+																	</c:forEach>
+																</select>
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-3"><spring:message code="enf.fec" />:
+															<span class="required">
+																 *
+															</span>
+															</label>
+															<div class="col-md-6">
+																<div class="input-group date date-picker" data-date-format="dd/MM/yyyy" data-date-end-date="+0d">
+																	<input id="fechaOcurrenciaSoc" name="fechaOcurrenciaSoc" type="text" class="form-control" placeholder="<spring:message code="please.enter" /> <spring:message code="enf.fec" />">
+																	<span class="input-group-btn">
+																		<button class="btn btn-info" type="button"><i class="fa fa-calendar"></i></button>
+																	</span>
+																</div>
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-3"><spring:message code="enf.atn" />:
+															<span class="required">
+																 *
+															</span>
+															</label>
+															<div class="col-md-6">
+																<select data-placeholder="<spring:message code="select" /> <spring:message code="enf.atn" />" name="personaAtendioSoc" id="personaAtendioSoc" class="form-control">
+																	<option value=""></option>
+																	<c:forEach items="${profesiones}" var="profesion"> 
+																		<option value="${profesion.codigo}">${profesion.valor}</option> 
+																	</c:forEach>
+																</select>
+															</div>
+														</div>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" id="save-enfsoc" class="btn btn-info"><spring:message code="save" /></button>
+									<button type="button" id="save-enfsoc-add" class="btn btn-success"><spring:message code="saveadd" /></button>
+									<button type="button" id="dismiss-modalenfsoc" data-dismiss="modal" class="btn btn-danger"><spring:message code="end" /></button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- END MODAL -->
 				</div>
 			</div>
 			<!-- END PAGE CONTENT -->
@@ -1099,6 +1255,7 @@
 <spring:url value="/info/newPersona" var="editPersonaUrl"/>
 <spring:url value="/info/newEnfermedad" var="addEnfermedadUrl"/>
 <spring:url value="/info/quitarenf" var="quitarEnfermedadUrl"/>
+<spring:url value="/info/quitarenfsoc" var="quitarEnfermedadSocUrl"/>
 <spring:url value="/info/newEnfermedadSC" var="addEnfermedadSCUrl"/>
 
 <script>
@@ -1113,6 +1270,7 @@
 		var parametros1 = {editPersonaUrl: "${editPersonaUrl}"
 			, familiaUrl: "${familiaUrl}"
 			, quitarEnfermedadUrl: "${quitarEnfermedadUrl}"
+			, quitarEnfermedadSocUrl: "${quitarEnfermedadSocUrl}"
 			, quitarenf: "${quitarenf}"
 			, processSuccess: "${processSuccess}"
 			, processError: "${processError}"
@@ -1130,6 +1288,15 @@
 			, deniedError: "${deniedError}"
 			};
 		FormWizardHSFModalEnfValidation.init(parametros3);
+	}
+	function validarEnf2()
+	{
+		var parametros4 = {addEnfermedadSCUrl: "${addEnfermedadSCUrl}"
+			, processSuccess: "${processSuccess}"
+			, processError: "${processError}"
+			, deniedError: "${deniedError}"
+			};
+		FormWizardHSFModalEnfSocValidation.init(parametros4);
 	}
 	
 </script>

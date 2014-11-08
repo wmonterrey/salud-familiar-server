@@ -49,6 +49,21 @@ public class EnfermedadesSocioCultService {
 		return enfermedad;
 	}
 	
+	public boolean quitarEnfermedad(String idEnfermedad) {
+		Session session = sessionFactory.getCurrentSession();
+		try{
+			Query query = session.createQuery("update EnfermedadesSocioCult set pasive = :pasivo" +
+				" where idEnfSocioC = :idEnfermedad");
+			query.setParameter("pasivo", '1');
+			query.setParameter("idEnfermedad", idEnfermedad);
+			query.executeUpdate();
+		}
+		catch (Exception e){
+			return false;
+		}
+		return true;
+	}
+	
 	public void addEnfermedadesSocioCult(EnfermedadesSocioCult enfermedad) {
 		Session session = sessionFactory.getCurrentSession();
 		session.saveOrUpdate(enfermedad);

@@ -28,10 +28,15 @@
 <div class="page-content-wrapper">
 	<div class="page-content-wrapper">
 		<div class="page-content">
+			<!-- BEGIN STYLE CUSTOMIZER -->
+			<jsp:include page="../fragments/bodyCustomizer.jsp" />
 			<!-- BEGIN PAGE HEADER-->
 			<div class="row">
 				<div class="col-md-12">
 					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
+					<h3 class="page-title">
+					<spring:message code="users" /> <small><spring:message code="edit" /></small>
+					</h3>
 					<ul class="page-breadcrumb breadcrumb">
 						<li>
 							<i class="fa fa-home"></i>
@@ -54,7 +59,7 @@
 					<div class="portlet">
 						<div class="portlet-title">
 							<div class="caption">
-								<i class="fa fa-user"></i><spring:message code="users.changepass" />
+								<i class="fa fa-lock"></i><spring:message code="users.changepass" />
 							</div>
 							<div class="tools">
 								<a href="javascript:;" class="collapse"></a>

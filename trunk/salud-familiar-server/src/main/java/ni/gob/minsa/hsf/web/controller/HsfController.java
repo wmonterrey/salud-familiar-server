@@ -638,6 +638,11 @@ public class HsfController {
 	    return this.enfermedadesService.quitarEnfermedad(idEnfermedad);
 	}
 	
+	@RequestMapping(value="quitarenfsoc", method=RequestMethod.GET)
+	public @ResponseBody boolean anularEnfermedadSoc(@RequestParam String idEnfermedadSoc) {
+	    return this.enfermedadesSocioCultService.quitarEnfermedad(idEnfermedadSoc);
+	}
+	
 	@RequestMapping( value="newEnfermedadSC", method=RequestMethod.POST)
 	public ResponseEntity<String> processCreationEnfermedadSCForm( @RequestParam(value="idPersonaEnfSoc", required=true ) String idPersonaEnf
 			, @RequestParam( value="enfermedadsoc", required=true ) String enfermedad
