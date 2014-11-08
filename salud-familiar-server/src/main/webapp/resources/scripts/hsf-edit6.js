@@ -329,9 +329,14 @@ var FormEdit6HSF = function () {
                 aPos = table2.fnGetPosition( this );
             });
             
+            $('#lista_enfermedadessoc tbody tr').click(function() {
+            	// Get the position of the current data from the node
+                aPos = table3.fnGetPosition( this );
+            });
+            
     	    $('#quitar-enf').click(function() {
         		App.blockUI(pageContent, false);
-        		$.getJSON(parametros.quitarEnfermedadUrl, { idEnfermedad: $('#accionUrl').val() }, function(borrado) {
+        		$.getJSON(parametros.quitarEnfermedadUrl, { idEnfermedad: $('#enfModal').val() }, function(borrado) {
         	        if (borrado) {
         	        	table2.fnDeleteRow(aPos);
         	        	toastr.success(parametros.processSuccess);
@@ -343,11 +348,32 @@ var FormEdit6HSF = function () {
         		App.unblockUI(pageContent);
     	    });
     	    
+    	    $('#quitar-enf-soc').click(function() {
+        		App.blockUI(pageContent, false);
+        		$.getJSON(parametros.quitarEnfermedadSocUrl, { idEnfermedadSoc: $('#enfSocModal').val() }, function(borrado) {
+        	        if (borrado) {
+        	        	table3.fnDeleteRow(aPos);
+        	        	toastr.success(parametros.processSuccess);
+        	        } else {
+        	        	toastr.success(parametros.processError);
+        	        }
+        	    });
+        		$('#basic2').modal('hide');
+        		App.unblockUI(pageContent);
+    	    });
+    	    
     	    $(".quitarenf").click(function(){ 
-    	    	$('#accionUrl').val($(this).data('id'));
-    	    	$('#titulo').html('<h4 class="modal-title">'+$(this).data('enf')+'</h4>');
-    	    	$('#cuerpo').html('<h4>'+parametros.quitarenf+'</h4>');
+    	    	$('#enfModal').val($(this).data('id'));
+    	    	$('#tituloEnfModal').html('<h4 class="modal-title">'+$(this).data('enf')+'</h4>');
+    	    	$('#cuerpoEnfModal').html('<h4>'+parametros.quitarenf+'</h4>');
     	    	$('#basic').modal('show');
+    	     });
+    	    
+    	    $(".quitarenfsoc").click(function(){ 
+    	    	$('#enfSocModal').val($(this).data('id'));
+    	    	$('#tituloEnfSocModal').html('<h4 class="modal-title">'+$(this).data('enf')+'</h4>');
+    	    	$('#cuerpoEnfSocModal').html('<h4>'+parametros.quitarenf+'</h4>');
+    	    	$('#basic2').modal('show');
     	     });
             
             
@@ -373,7 +399,7 @@ var FormEdit6HSF = function () {
     			  		});
             	window.setTimeout(function(){
 			        window.location.href = parametros.familiaUrl;
-			    }, 1500);
+			    }, 1000);
             	App.unblockUI(pageContent);
         	}
             

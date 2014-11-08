@@ -87,7 +87,7 @@ var FormWizardHSFModalEnfSocValidation = function () {
 							if ($('#idEnfermedadSoc').val()==''){
 								var d = new Date(Date.parse(enfermedadsoc.fechaOcurrencia));
 								$('table#lista_enfermedadessoc').dataTable().fnAddData( [
-								  enfermedadsoc.enfermedad.valor, d.yyyymmdd(), enfermedadsoc.personaAtendio.valor]);
+								  enfermedadsoc.enfermedad.valor, d.yyyymmdd(), enfermedadsoc.personaAtendio.valor,'']);
 							}
 							$('#idEnfermedadSoc').val(enfermedadsoc.idEnfSocioC);
 							validatorEnfSoc.resetForm();
@@ -112,7 +112,7 @@ var FormWizardHSFModalEnfSocValidation = function () {
 							if ($('#idEnfermedadSoc').val()==''){
 								var d = new Date(Date.parse(enfermedadsoc.fechaOcurrencia));
 								$('table#lista_enfermedadessoc').dataTable().fnAddData( [
-								  enfermedadsoc.enfermedad.valor, d.yyyymmdd(), enfermedadsoc.personaAtendio.valor]);
+								  enfermedadsoc.enfermedad.valor, d.yyyymmdd(), enfermedadsoc.personaAtendio.valor,'']);
 							}
 			    	    	$('#add_enfermedadsoc_form').find('input:text, input:password, textarea').val('');
 			                $('#add_enfermedadsoc_form').find('input:radio, input:checkbox').prop('checked', false);

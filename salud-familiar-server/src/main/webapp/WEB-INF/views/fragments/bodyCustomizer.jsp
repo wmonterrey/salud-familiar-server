@@ -31,7 +31,7 @@
 				 <spring:message code="theme.color"/>
 			</span>
 			<ul>
-				<li class="color-black current color-default tooltips" data-style="default" data-original-title=<fmt:message key="theme.dark" />>
+				<li class="color-black current color-default tooltips" data-style="default" data-original-title=<spring:message code="theme.dark" />>
 				</li>
 				<li class="color-grey tooltips" data-style="grey" data-original-title=<spring:message code="theme.grey"/>>
 				</li>

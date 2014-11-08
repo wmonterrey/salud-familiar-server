@@ -8,11 +8,15 @@
 	<http auto-config="true" request-matcher="regex">
 	    <intercept-url pattern="/movil/.*" access="ROLE_MOVIL" />
 	    <intercept-url pattern="/admin/.*" access="ROLE_ADMIN" />
+	    <intercept-url pattern="/catalog/.*" access="ROLE_CATALOG" />
+	    <intercept-url pattern="/info/.*" access="ROLE_INFO" />
+	    <intercept-url pattern="/report/.*" access="ROLE_REPORT" />
+	    <intercept-url pattern="/monitor/.*" access="ROLE_MONITOR" />
 		<intercept-url pattern="/login" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<intercept-url pattern="/loginfailed" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<intercept-url pattern="/logout" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<intercept-url pattern="/resources/.*" access="IS_AUTHENTICATED_ANONYMOUSLY" />
-		<intercept-url pattern="/.*" access="ROLE_ADMIN,ROLE_CATALOG,ROLE_BASIC" />
+		<intercept-url pattern="/.*" access="ROLE_ADMIN,ROLE_CATALOG,ROLE_INFO,ROLE_REPORT,ROLE_MONITOR" />
 		<form-login login-page="/login" default-target-url="/"
 			authentication-failure-url="/loginfailed" />
 		<logout logout-url="/logout" 

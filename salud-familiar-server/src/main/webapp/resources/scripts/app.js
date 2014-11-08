@@ -661,16 +661,54 @@ var App = function () {
     var handleTheme = function () {
 
         var panel = $('.theme-panel');
+        
+        "boxed"==localStorage.getItem("hsf-layout")?(
+        		$("body").addClass("page-boxed"),
+        		$('.header > .header-inner').addClass("container"),
+        		cont = $('body > .clearfix').after('<div class="container"></div>'),
+        		$('.page-container').appendTo('body > .container'),
+        		'fixed' === 'fixed'? $('.footer').html('<div class="container">' + $('.footer').html() + '</div>'):$('.footer').appendTo('body > .container'),
+        		$('.layout-option', panel).val("boxed")):(
+        				$("body").removeClass("page-boxed"),
+        				$('.layout-option', panel).val("fluid"));
 
-        if ($('body').hasClass('page-boxed') == false) {
-            $('.layout-option', panel).val("fluid");
-        }
-
-        $('.sidebar-option', panel).val("default");
-        $('.header-option', panel).val("fixed");
-        $('.footer-option', panel).val("default");
-        if ( $('.sidebar-pos-option').attr("disabled") === false) {
-            $('.sidebar-pos-option', panel).val(App.isRTL() ? 'right' : 'left');
+        "fixed"==localStorage.getItem("hsf-sidebar")?(
+        		$("body").addClass("page-sidebar-fixed"),
+        		$('.sidebar-option', panel).val("fixed")):(
+        				$("body").removeClass("page-sidebar-fixed"),
+        				$('.sidebar-option', panel).val("default"));
+        
+		"fixed"==localStorage.getItem("hsf-header")?(
+				$("body").addClass("page-header-fixed"),
+				$(".header").removeClass("navbar-static-top").addClass("navbar-fixed-top"),
+        		$('.header-option', panel).val("fixed")):(
+        				$("body").removeClass("page-header-fixed"),
+        				$(".header").removeClass("navbar-fixed-top").addClass("navbar-static-top"),
+        				$('.header-option', panel).val("default"));
+		
+		"fixed"==localStorage.getItem("hsf-footer")?(
+				$("body").addClass("page-footer-fixed"),
+        		$('.footer-option', panel).val("fixed")):(
+        				$("body").removeClass("page-footer-fixed"),
+        				$('.footer-option', panel).val("default"));
+				
+		//sidebar position
+        if (App.isRTL()) {
+            if (localStorage.getItem("hsf-sbpos") === 'left') {
+                $("body").addClass("page-sidebar-reversed");
+                $('.sidebar-pos-option', panel).val("left");
+            } else {
+                $("body").removeClass("page-sidebar-reversed");
+                $('.sidebar-pos-option', panel).val("right");
+            }
+        } else {
+            if (localStorage.getItem("hsf-sbpos") === 'right') {
+                $("body").addClass("page-sidebar-reversed");
+                $('.sidebar-pos-option', panel).val("right");
+            } else {
+                $("body").removeClass("page-sidebar-reversed");
+                $('.sidebar-pos-option', panel).val("left");
+            }
         }
         
         //handle theme layout
@@ -702,14 +740,19 @@ var App = function () {
         var setLayout = function () {
 
             var layoutOption = $('.layout-option', panel).val();
+            localStorage.setItem("hsf-layout",layoutOption);
             var sidebarOption = $('.sidebar-option', panel).val();
+            localStorage.setItem("hsf-sidebar",sidebarOption);
             var headerOption = $('.header-option', panel).val();
+            localStorage.setItem("hsf-header",headerOption);
             var footerOption = $('.footer-option', panel).val();
+            localStorage.setItem("hsf-footer",footerOption);
             var sidebarPosOption = $('.sidebar-pos-option', panel).val();
+            localStorage.setItem("hsf-sbpos",sidebarPosOption);
 
 
             if (sidebarOption == "fixed" && headerOption == "default") {
-                alert('Default Header with Fixed Sidebar option is not supported. Proceed with Fixed Header with Fixed Sidebar.');
+                alert('Esta opcion no está soportada. Para dejar fijo el menu tiene que dejar fijo el encabezado.');
                 $('.header-option', panel).val("fixed");
                 $('.sidebar-option', panel).val("fixed");
                 sidebarOption = 'fixed';
@@ -791,7 +834,7 @@ var App = function () {
             var loc = window.location;
             var pathName = loc.pathname.substring(0,loc.pathname.indexOf('/', 1)+1);
             $('#style_color').attr("href", pathName+"resources/css/themes/" + color_ + ".css");
-            $.cookie('style_color', color);
+            localStorage.setItem("sm-style-color",color);
         };
 
         $('.toggler', panel).click(function () {
@@ -808,9 +851,7 @@ var App = function () {
 
         $('.layout-option, .header-option, .sidebar-option, .footer-option, .sidebar-pos-option', panel).change(setLayout);
 
-        if ($.cookie('style_color')) {
-            setColor($.cookie('style_color'));
-        }
+        null!=localStorage.getItem("sm-style-color")?setColor(localStorage.getItem("sm-style-color")):setColor("default");
     };
     //* END:CORE HANDLERS *//
 

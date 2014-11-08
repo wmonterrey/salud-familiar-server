@@ -37,6 +37,8 @@
 <div class="page-content-wrapper">
 	<div class="page-content-wrapper">
 		<div class="page-content">
+			<!-- BEGIN STYLE CUSTOMIZER -->
+			<jsp:include page="../../fragments/bodyCustomizer.jsp" />
 			<!-- BEGIN PAGE HEADER-->
 			<div class="row">
 				<div class="col-md-12">
@@ -46,6 +48,9 @@
 									<spring:message code="${rol.authId.authority}" />
 								</c:forEach>
 					</c:set>
+					<h3 class="page-title">
+					<spring:message code="users" />
+					</h3>
 					<ul class="page-breadcrumb breadcrumb">
 						<li>
 							<i class="fa fa-home"></i>

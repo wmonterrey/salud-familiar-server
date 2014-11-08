@@ -103,6 +103,7 @@ public class UsuariosController {
 		user.setModified(new Date());
 		user.setCompleteName(completeName);
 		user.setEmail(email);
+		this.usuarioService.updateUser(user);
 		return user.getUsername();
 	}
 	
