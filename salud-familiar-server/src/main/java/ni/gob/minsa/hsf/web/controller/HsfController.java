@@ -140,7 +140,7 @@ public class HsfController {
     public String initCreationForm(Model model) throws ParseException { 	
     	logger.debug("Crear nueva HSF");
     	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
-    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario.getNivel(),usuario.getEntidad(),usuario.getUnidad());
+    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario);
     	List<Profesion> profesiones = catalogoService.getProfesiones();
     	List<SiNoNs> sinons = catalogoService.getSiNoNs();
     	List<Sexo> sexos = catalogoService.getSexo();
@@ -685,7 +685,7 @@ public class HsfController {
 		if(familia!=null){
 			UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
     		if(hsfService.verificarPermisoDatos(familia.getComunidad(), usuario)){
-				List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario.getNivel(),usuario.getEntidad(),usuario.getUnidad());
+				List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario);
 				Sectores sector = this.sectorService.getSector(familia.getComunidad().getSector());
 		        Divisionpolitica municipio = this.divPoliticaService.getDivisionpolitica(sector.getMunicipio());
 		        EntidadesAdtvas silais = this.entidadAdtvaService.getEntidadesAdtvas(municipio.getDependenciaSilais());
@@ -929,7 +929,7 @@ public class HsfController {
     public String initSearchForm(Model model) throws ParseException { 	
     	logger.debug("Buscar una HSF");
     	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
-    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario.getNivel(),usuario.getEntidad(),usuario.getUnidad());
+    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario);
     	model.addAttribute("entidades", entidades);
     	return "hsf/search";
 	}

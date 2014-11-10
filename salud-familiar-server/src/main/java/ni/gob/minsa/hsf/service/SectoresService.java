@@ -5,10 +5,8 @@ import java.util.List;
 import javax.annotation.Resource;
 
 
-import ni.gob.minsa.hsf.domain.catalogos.Nivel;
-import ni.gob.minsa.hsf.domain.estructura.EntidadesAdtvas;
-import ni.gob.minsa.hsf.domain.estructura.Unidades;
 import ni.gob.minsa.hsf.domain.poblacion.Sectores;
+import ni.gob.minsa.hsf.users.model.UserSistema;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -45,16 +43,16 @@ public class SectoresService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Sectores> getSectoresMunicipio(String municipio,Nivel nivel, EntidadesAdtvas entidad, Unidades unidad) {
+	public List<Sectores> getSectoresMunicipio(String municipio,UserSistema usuario) {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
 		// Create a Hibernate query (HQL)
 		Query query = null;
-		if (nivel.getCodigo().equals("HSF_NIVELES|UNIDAD")){
+		if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|UNIDAD")){
 			query = session.createQuery("from Sectores as sect where sect.unidad in (select u.codigo " +
 					"from Unidades as u where (u.codigo = :unidadUsuario or u.unidadAdtva =:undadtvaUsuario))");
-			query.setParameter("unidadUsuario", unidad.getCodigo());
-			query.setParameter("undadtvaUsuario", unidad.getCodigo());
+			query.setParameter("unidadUsuario", usuario.getUnidad().getCodigo());
+			query.setParameter("undadtvaUsuario", usuario.getUnidad().getCodigo());
 		}
 		else{
 			query = session.createQuery("from Sectores secs where secs.municipio = :municipio order by secs.nombre");

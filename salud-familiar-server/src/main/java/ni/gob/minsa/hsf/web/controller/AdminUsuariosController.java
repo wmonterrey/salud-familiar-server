@@ -10,6 +10,7 @@ import ni.gob.minsa.hsf.domain.catalogos.Nivel;
 import ni.gob.minsa.hsf.domain.estructura.EntidadesAdtvas;
 import ni.gob.minsa.hsf.service.CatalogoService;
 import ni.gob.minsa.hsf.service.EntidadesAdtvasService;
+import ni.gob.minsa.hsf.service.HsfService;
 import ni.gob.minsa.hsf.service.UnidadesService;
 import ni.gob.minsa.hsf.service.UsuarioService;
 import ni.gob.minsa.hsf.users.model.Authority;
@@ -50,11 +51,14 @@ public class AdminUsuariosController {
 	private EntidadesAdtvasService entidadAdtvaService;
 	@Resource(name="unidadesService")
 	private UnidadesService unidadesService;
+	@Resource(name="hsfService")
+	private HsfService hsfService;
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
     public String obtenerUsuarios(Model model) throws ParseException { 	
     	logger.debug("Mostrando Usuarios en JSP");
-    	List<UserSistema> usuarios = usuarioService.getUsers();
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	List<UserSistema> usuarios = usuarioService.getUsers(usuario);
     	model.addAttribute("usuarios", usuarios);
     	return "admin/users/list";
 	}	
@@ -67,19 +71,27 @@ public class AdminUsuariosController {
      */
     @RequestMapping("/{username}")
     public ModelAndView showUser(@PathVariable("username") String username) {
-        ModelAndView mav = new ModelAndView("admin/users/user");
-        UserSistema user = this.usuarioService.getUser(username);
-        List<UserAccess> accesosUsuario = usuarioService.getUserAccess(username);
-        mav.addObject("user",user);
-        mav.addObject("accesses",accesosUsuario);
+    	ModelAndView mav;
+        UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        UserSistema user = this.usuarioService.getUser(username, usuario);
+        if(user==null){
+        	mav = new ModelAndView("403");
+        }
+        else{
+        	mav = new ModelAndView("admin/users/user");
+            List<UserAccess> accesosUsuario = usuarioService.getUserAccess(username);
+            mav.addObject("user",user);
+            mav.addObject("accesses",accesosUsuario);
+        }
         return mav;
     }
     
     @RequestMapping(value = "newUser", method = RequestMethod.GET)
 	public String initCreationForm(Model model) {
     	List<Rol> roles = usuarioService.getRoles();
-    	List<Nivel> niveles = catalogoService.getNiveles();
-    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas();
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	List<Nivel> niveles = catalogoService.getNiveles(usuario);
+    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario);
     	model.addAttribute("roles", roles);
     	model.addAttribute("niveles", niveles);
     	model.addAttribute("entidades", entidades);
@@ -101,9 +113,9 @@ public class AdminUsuariosController {
 	        , @RequestParam( value="authorities", required=true ) List<String> authorities
 	        )
 	{
+		UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
 		UserSistema user = new UserSistema();
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		user.setCreatedBy(authentication.getName());
+		user.setCreatedBy(usuario.getUsername());
 		StandardPasswordEncoder encoder = new StandardPasswordEncoder();
 		String encodedPass = encoder.encode(password);
 		user.setUsername(userName);
@@ -126,24 +138,28 @@ public class AdminUsuariosController {
 		user.setEnabled(enabled);
 		user.setCreated(new Date());
 		user.setLastCredentialChange(new Date());
-		try{
-			this.usuarioService.addUser(user);
-			if (authorities!=null){
-				for(String auth:authorities){
-					AuthorityId authId = new AuthorityId();
-					authId.setUsername(user.getUsername());
-					authId.setAuthority(auth);
-					Authority authority = new Authority();
-					authority.setAuthId(authId);
-					authority.setUser(user);
-					this.usuarioService.addAuthority(authority);
+		if(hsfService.verificarPermisoUsuarios(user,usuario)){
+			try{
+				this.usuarioService.addUser(user);
+				if (authorities!=null){
+					for(String auth:authorities){
+						AuthorityId authId = new AuthorityId();
+						authId.setUsername(user.getUsername());
+						authId.setAuthority(auth);
+						Authority authority = new Authority();
+						authority.setAuthId(authId);
+						authority.setUser(user);
+						this.usuarioService.addAuthority(authority);
+					}
 				}
 			}
+			catch(Exception e){
+				return e.getMessage();
+			}
 		}
-		catch(Exception e){
-			return e.getMessage();
+		else{
+			return "No autorizado";
 		}
-		
 		return user.getUsername();
 	}
 	
@@ -155,19 +171,20 @@ public class AdminUsuariosController {
      */
     @RequestMapping(value = "edit/{username}", method = RequestMethod.GET)
 	public String initUpdateUserForm(@PathVariable("username") String username, Model model) {
-		UserSistema usertoEdit = this.usuarioService.getUser(username);
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+		UserSistema usertoEdit = this.usuarioService.getUser(username,usuario);
 		if(usertoEdit!=null){
 			model.addAttribute("user",usertoEdit);
 			List<Rol> roles = usuarioService.getRoles();
-			List<Nivel> niveles = catalogoService.getNiveles();
-	    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas();
+	    	List<Nivel> niveles = catalogoService.getNiveles(usuario);
+	    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario);
 	    	model.addAttribute("roles", roles);
 	    	model.addAttribute("niveles", niveles);
 	    	model.addAttribute("entidades", entidades);
 			return "admin/users/edit";
 		}
 		else{
-			return "404";
+			return "403";
 		}
 	}
     
@@ -183,9 +200,9 @@ public class AdminUsuariosController {
 	        , @RequestParam( value="authorities", required=false ) List<String> authorities
 	        )
 	{
-		UserSistema user = usuarioService.getUser(userName);
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		user.setModifiedBy(authentication.getName());
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	UserSistema user = usuarioService.getUser(userName);
+		user.setModifiedBy(usuario.getUsername());
 		user.setCompleteName(completeName);
 		user.setEmail(email);
 		user.setNivel(catalogoService.getNivel(nivel));
@@ -202,23 +219,28 @@ public class AdminUsuariosController {
 			user.setUnidad(null);
 		}
 		user.setModified(new Date());
-		try{
-			this.usuarioService.updateUser(user);
-			usuarioService.deleteRoles(userName);
-			if (authorities!=null){
-				for(String auth:authorities){
-					AuthorityId authId = new AuthorityId();
-					authId.setUsername(user.getUsername());
-					authId.setAuthority(auth);
-					Authority authority = new Authority();
-					authority.setAuthId(authId);
-					authority.setUser(user);
-					this.usuarioService.addAuthority(authority);
+		if(hsfService.verificarPermisoUsuarios(user,usuario)){
+			try{
+				this.usuarioService.updateUser(user);
+				usuarioService.deleteRoles(userName);
+				if (authorities!=null){
+					for(String auth:authorities){
+						AuthorityId authId = new AuthorityId();
+						authId.setUsername(user.getUsername());
+						authId.setAuthority(auth);
+						Authority authority = new Authority();
+						authority.setAuthId(authId);
+						authority.setUser(user);
+						this.usuarioService.addAuthority(authority);
+					}
 				}
 			}
+			catch(Exception e){
+				return e.getMessage();
+			}
 		}
-		catch(Exception e){
-			return e.getMessage();
+		else{
+			return "No autorizado";
 		}
 		return user.getUsername();
 	}
@@ -231,13 +253,14 @@ public class AdminUsuariosController {
      */
     @RequestMapping(value = "chgpass/{username}", method = RequestMethod.GET)
 	public String initChangePassForm(@PathVariable("username") String username, Model model) {
-		UserSistema usertoChange = this.usuarioService.getUser(username);
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+		UserSistema usertoChange = this.usuarioService.getUser(username,usuario);
 		if(usertoChange!=null){
 			model.addAttribute("user",usertoChange);
 			return "admin/users/chgpass";
 		}
 		else{
-			return "404";
+			return "403";
 		}
 	}
     
@@ -247,16 +270,21 @@ public class AdminUsuariosController {
 			, @RequestParam( value="password", required=true ) String password
 	        )
 	{
-		UserSistema user = usuarioService.getUser(userName);
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		user.setModifiedBy(authentication.getName());
-		user.setModified(new Date());
-		StandardPasswordEncoder encoder = new StandardPasswordEncoder();
-		String encodedPass = encoder.encode(password);
-		user.setPassword(encodedPass);
-		user.setLastCredentialChange(new Date());
-		this.usuarioService.updateUser(user);
-		return user.getUsername();
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	UserSistema user = usuarioService.getUser(userName);
+    	if(hsfService.verificarPermisoUsuarios(user,usuario)){
+			user.setModifiedBy(usuario.getUsername());
+			user.setModified(new Date());
+			StandardPasswordEncoder encoder = new StandardPasswordEncoder();
+			String encodedPass = encoder.encode(password);
+			user.setPassword(encodedPass);
+			user.setLastCredentialChange(new Date());
+			this.usuarioService.updateUser(user);
+			return user.getUsername();
+    	}
+		else{
+			return "403";
+		}
 	}
 	
 	
@@ -300,14 +328,19 @@ public class AdminUsuariosController {
         else{
         	return redirecTo;
         }
-    	
-    	UserSistema user = this.usuarioService.getUser(username);
-    	user.setModified(new Date());
-    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        user.setModifiedBy(authentication.getName());
-        user.setEnabled(hab);
-    	this.usuarioService.updateUser(user);
-    	redirectAttributes.addFlashAttribute("nombreUsuario", username);
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	UserSistema user = this.usuarioService.getUser(username,usuario);
+    	if(user!=null){
+    		user.setModified(new Date());
+    		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    		user.setModifiedBy(authentication.getName());
+    		user.setEnabled(hab);
+    		this.usuarioService.updateUser(user);
+    		redirectAttributes.addFlashAttribute("nombreUsuario", username);
+    	}
+    	else{
+    		redirecTo = "403";
+    	}
     	return redirecTo;	
     }
     
@@ -320,9 +353,10 @@ public class AdminUsuariosController {
     @RequestMapping("/lock/{username}")
     public String lockUser(@PathVariable("username") String username, 
     		RedirectAttributes redirectAttributes) {
-    	UserSistema user = this.usuarioService.getUser(username);
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	UserSistema user = this.usuarioService.getUser(username,usuario);
     	if(user==null){
-			return "404";
+			return "403";
 		}
 		else{
 	    	user.setModified(new Date());
@@ -345,9 +379,10 @@ public class AdminUsuariosController {
     @RequestMapping("/unlock/{username}")
     public String unlockUser(@PathVariable("username") String username, 
     		RedirectAttributes redirectAttributes) {
-    	UserSistema user = this.usuarioService.getUser(username);
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	UserSistema user = this.usuarioService.getUser(username,usuario);
     	if(user==null){
-			return "404";
+			return "403";
 		}
 		else{
 	    	user.setModified(new Date());

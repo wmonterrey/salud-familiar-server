@@ -5,10 +5,8 @@ import java.util.List;
 import javax.annotation.Resource;
 
 
-import ni.gob.minsa.hsf.domain.catalogos.Nivel;
-import ni.gob.minsa.hsf.domain.estructura.EntidadesAdtvas;
-import ni.gob.minsa.hsf.domain.estructura.Unidades;
 import ni.gob.minsa.hsf.domain.poblacion.Divisionpolitica;
+import ni.gob.minsa.hsf.users.model.UserSistema;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -57,14 +55,14 @@ public class DivisionPoliticaService {
 	 * @return una lista de <code>Divisionpolitica</code>
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Divisionpolitica> getMunicipios(long entidadId, Nivel nivel, EntidadesAdtvas entidad, Unidades unidad) {
+	public List<Divisionpolitica> getMunicipios(long entidadId, UserSistema usuario) {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
 		// Create a Hibernate query (HQL)
 		Query query = null;
-		if (nivel.getCodigo().equals("HSF_NIVELES|UNIDAD")){
+		if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|UNIDAD")){
 			query = session.createQuery("FROM  Divisionpolitica dp where dp.codigoNacional = :munUnidad order by dp.nombre");
-			query.setParameter("munUnidad", unidad.getMunicipio());
+			query.setParameter("munUnidad", usuario.getUnidad().getMunicipio());
 		}
 		else {
 			query = session.createQuery("FROM  Divisionpolitica dp where dp.dependenciaSilais = :entidad order by dp.nombre");

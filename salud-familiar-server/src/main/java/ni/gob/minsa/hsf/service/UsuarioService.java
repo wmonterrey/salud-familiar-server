@@ -11,6 +11,7 @@ import ni.gob.minsa.hsf.users.model.UserAccess;
 import ni.gob.minsa.hsf.users.model.UserSistema;
 
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -48,6 +49,34 @@ public class UsuarioService {
 		return  query.list();
 	}
 	
+	/**
+	 * Regresa todos los usuarios para un usuario
+	 * 
+	 * @return una lista de <code>User</code>(s)
+	 */
+
+	@SuppressWarnings("unchecked")
+	public List<UserSistema> getUsers(UserSistema usuario) {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		SQLQuery query = null;
+		if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|CENTRAL")){
+			query = session.createSQLQuery("select * from hsf_usuarios_sistema");
+		}
+		else if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|SILAIS")){
+			query = session.createSQLQuery("select * from hsf_usuarios_sistema where " +
+					"codigo_entidad = "+ usuario.getEntidad().getCodigo() +" or (codigo_unidad in (Select codigo from unidades where ENTIDAD_ADTVA = "+ usuario.getEntidad().getCodigo() +"))");
+		}
+		else if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|UNIDAD")){
+			query = session.createSQLQuery("select * from hsf_usuarios_sistema where " +
+					"codigo_unidad = "+ usuario.getUnidad().getCodigo() +" or (codigo_unidad in (Select codigo from unidades where UNIDAD_ADTVA = "+ usuario.getUnidad().getCodigo() +"));");
+		}
+		query.addEntity(UserSistema.class);
+		// Retrieve all
+		return  query.list();
+	}
+	
 
 	/**
 	 * Regresa un User
@@ -62,6 +91,36 @@ public class UsuarioService {
 				"u.username = '" + username + "'");
 		UserSistema user = (UserSistema) query.uniqueResult();
 		return user;
+	}
+	
+	/**
+	 * Regresa un User
+	 * 
+	 * @return un <code>User</code>
+	 */
+
+	public UserSistema getUser(String username, UserSistema usuario) {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		SQLQuery query = null;
+		if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|CENTRAL")){
+			query = session.createSQLQuery("select * from hsf_usuarios_sistema where " +
+				"NOMBRE_USUARIO = '" + username + "'");
+		}
+		else if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|SILAIS")){
+			query = session.createSQLQuery("select * from hsf_usuarios_sistema where " +
+					"NOMBRE_USUARIO = '" + username + "' and (codigo_entidad = "+ usuario.getEntidad().getCodigo() +" or " +
+							"(codigo_unidad in (Select codigo from unidades where ENTIDAD_ADTVA = "+ usuario.getEntidad().getCodigo() +")))");
+		}
+		else if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|UNIDAD")){
+			query = session.createSQLQuery("select * from hsf_usuarios_sistema where " +
+					"NOMBRE_USUARIO = '" + username + "' and (codigo_unidad = "+ usuario.getUnidad().getCodigo() +" or " +
+							"(codigo_unidad in (Select codigo from unidades where UNIDAD_ADTVA = "+ usuario.getUnidad().getCodigo() +")));");
+		}
+		query.addEntity(UserSistema.class);
+		// Retrieve all
+		return  (UserSistema) query.uniqueResult();
 	}
 	
 	
