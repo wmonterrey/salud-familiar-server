@@ -5,9 +5,8 @@ import java.util.List;
 import javax.annotation.Resource;
 
 
-import ni.gob.minsa.hsf.domain.catalogos.Nivel;
 import ni.gob.minsa.hsf.domain.estructura.EntidadesAdtvas;
-import ni.gob.minsa.hsf.domain.estructura.Unidades;
+import ni.gob.minsa.hsf.users.model.UserSistema;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -41,21 +40,21 @@ public class EntidadesAdtvasService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<EntidadesAdtvas> getEntidadesAdtvas(Nivel nivel, EntidadesAdtvas entidad, Unidades unidad) {
+	public List<EntidadesAdtvas> getEntidadesAdtvas(UserSistema usuario) {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
 		Query query = null;
 		// Create a Hibernate query (HQL)
-		if (nivel.getCodigo().equals("HSF_NIVELES|CENTRAL")){
+		if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|CENTRAL")){
 			query = session.createQuery("FROM EntidadesAdtvas ea order by ea.nombre");
 		}
-		else if (nivel.getCodigo().equals("HSF_NIVELES|SILAIS")){
+		else if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|SILAIS")){
 			query = session.createQuery("FROM EntidadesAdtvas ea where ea.codigo = :codigo order by ea.nombre");
-			query.setParameter("codigo", entidad.getCodigo());
+			query.setParameter("codigo", usuario.getEntidad().getCodigo());
 		}
-		else if (nivel.getCodigo().equals("HSF_NIVELES|UNIDAD")){
+		else if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|UNIDAD")){
 			query = session.createQuery("FROM EntidadesAdtvas ea where ea.codigo = :codigo order by ea.nombre");
-			query.setParameter("codigo", unidad.getEntidadAdtva());
+			query.setParameter("codigo", usuario.getUnidad().getEntidadAdtva());
 		}
 		// Retrieve all
 		return  query.list();

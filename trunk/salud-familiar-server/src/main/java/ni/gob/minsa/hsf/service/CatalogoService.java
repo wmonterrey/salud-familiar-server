@@ -44,6 +44,8 @@ import ni.gob.minsa.hsf.domain.catalogos.TipoPared;
 import ni.gob.minsa.hsf.domain.catalogos.TipoPiso;
 import ni.gob.minsa.hsf.domain.catalogos.TipoTecho;
 import ni.gob.minsa.hsf.domain.estructura.Catalogo;
+import ni.gob.minsa.hsf.users.model.UserSistema;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -83,6 +85,30 @@ public class CatalogoService {
 		// Create a Hibernate query (HQL)
 		Query query = session.createQuery("FROM Nivel where pasivo = :pasivo order by orden");
 		query.setParameter("pasivo", false);
+		// Retrieve all
+		return  query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Nivel> getNiveles(UserSistema usuario) {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = null;
+		if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|CENTRAL")){
+			query = session.createQuery("FROM Nivel where pasivo = :pasivo order by orden");
+			query.setParameter("pasivo", false);
+		}
+		else if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|SILAIS")){
+			query = session.createQuery("FROM Nivel where pasivo = :pasivo and codigo is not :central order by orden");
+			query.setParameter("pasivo", false);
+			query.setParameter("central", "HSF_NIVELES|CENTRAL");
+		}
+		else if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|UNIDAD")){
+			query = session.createQuery("FROM Nivel where pasivo = :pasivo and codigo =:unidad order by orden");
+			query.setParameter("pasivo", false);
+			query.setParameter("unidad", "HSF_NIVELES|UNIDAD");
+		}
 		// Retrieve all
 		return  query.list();
 	}

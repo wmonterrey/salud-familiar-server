@@ -1,12 +1,5 @@
 package ni.gob.minsa.hsf;
 
-import javax.annotation.Resource;
-
-import ni.gob.minsa.hsf.service.CatalogoService;
-import ni.gob.minsa.hsf.service.ComunidadesService;
-import ni.gob.minsa.hsf.service.FamiliaService;
-import ni.gob.minsa.hsf.service.PersonaService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -18,14 +11,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/*")
 public class HomeController {
-	@Resource(name="comunidadService")
-	private ComunidadesService comunidadService;
-	@Resource(name="familiaService")
-	private FamiliaService familiaService;
-	@Resource(name="personaService")
-	private PersonaService personaService;
-	@Resource(name="catalogoService")
-	private CatalogoService catalogoService;
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
     @RequestMapping(value = "/", method = RequestMethod.GET)

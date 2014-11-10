@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 
 import ni.gob.minsa.hsf.domain.estructura.Unidades;
+import ni.gob.minsa.hsf.users.model.UserSistema;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -25,7 +26,8 @@ public class UnidadesService {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
 		// Create a Hibernate query (HQL)
-		Query query = session.createQuery("FROM Unidades");
+		Query query = session.createQuery("FROM Unidades where (unds.tipoUnidad = 2 " +
+				"or unds.tipoUnidad = 3 or unds.tipoUnidad = 4");
 		// Retrieve all
 		return  query.list();
 	}
@@ -35,7 +37,8 @@ public class UnidadesService {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
 		// Create a Hibernate query (HQL)
-		Query query = session.createQuery("FROM Unidades unds where unds.entidadAdtva = " + entidad + " order by unds.nombre");
+		Query query = session.createQuery("FROM Unidades unds where unds.entidadAdtva = " + entidad + " and (unds.tipoUnidad = 2 " +
+				"or unds.tipoUnidad = 3 or unds.tipoUnidad = 4) order by unds.nombre");
 		// Retrieve all
 		return  query.list();
 	}
@@ -45,7 +48,27 @@ public class UnidadesService {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
 		// Create a Hibernate query (HQL)
-		Query query = session.createQuery("FROM Unidades unds where unds.municipio = " + municipio + " order by unds.nombre");
+		Query query = session.createQuery("FROM Unidades unds where unds.municipio = " + municipio + " and (unds.tipoUnidad = 2 " +
+				"or unds.tipoUnidad = 3 or unds.tipoUnidad = 4) order by unds.nombre");
+		// Retrieve all
+		return  query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Unidades> getUnidadesMunicipio(String municipio, UserSistema usuario) {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = null;
+		if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|UNIDAD")){
+			query = session.createQuery("FROM Unidades unds " +
+					"where unds.codigo = " + usuario.getUnidad().getCodigo() + " or unds.unidadAdtva = " + usuario.getUnidad().getCodigo() + " and (unds.tipoUnidad = 2 " +
+				"or unds.tipoUnidad = 3 or unds.tipoUnidad = 4) order by unds.nombre");
+		}
+		else {
+			query = session.createQuery("FROM Unidades unds where unds.municipio = " + municipio + " and (unds.tipoUnidad = 2 " +
+				"or unds.tipoUnidad = 3 or unds.tipoUnidad = 4) order by unds.nombre");
+		}
 		// Retrieve all
 		return  query.list();
 	}

@@ -55,7 +55,8 @@ public class OpcionesController {
     @RequestMapping(value = "unidades", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody List<Unidades> fetchUnidadesJson(@RequestParam(value = "muniId", required = true) String municipio) {
         logger.info("Obteniendo las unidades en JSON");
-        List<Unidades> unidades = unidadesService.getUnidadesMunicipio(municipio);
+        UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        List<Unidades> unidades = unidadesService.getUnidadesMunicipio(municipio, usuario);
         if (unidades == null){
         	logger.debug("Nulo");
         }
@@ -84,7 +85,7 @@ public class OpcionesController {
     public @ResponseBody List<Divisionpolitica> fetchMunicipiosJson(@RequestParam(value = "entidadId", required = false, defaultValue="0" ) long entidad) {
         logger.info("Obteniendo los municipios en JSON");
         UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
-        List<Divisionpolitica> municipios = divPoliticaService.getMunicipios(entidad , usuario.getNivel(), usuario.getEntidad(), usuario.getUnidad());
+        List<Divisionpolitica> municipios = divPoliticaService.getMunicipios(entidad , usuario);
         if (municipios == null){
         	logger.debug("Nulo");
         }
@@ -99,7 +100,7 @@ public class OpcionesController {
     public @ResponseBody List<Sectores> fetchSectoresJson(@RequestParam(value = "municipioId", required = true) String municipio) {
         logger.info("Obteniendo los sectores en JSON");
         UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
-        List<Sectores> sectores = sectorService.getSectoresMunicipio(municipio,usuario.getNivel(), usuario.getEntidad(), usuario.getUnidad());
+        List<Sectores> sectores = sectorService.getSectoresMunicipio(municipio,usuario);
         if (sectores == null){
         	logger.debug("Nulo");
         }
