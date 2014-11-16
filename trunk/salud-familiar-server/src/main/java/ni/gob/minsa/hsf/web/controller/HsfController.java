@@ -40,7 +40,6 @@ import ni.gob.minsa.hsf.domain.catalogos.FactRiesgoNoMod;
 import ni.gob.minsa.hsf.domain.catalogos.FactRiesgoSoc;
 import ni.gob.minsa.hsf.domain.catalogos.FactoresMedAmb;
 import ni.gob.minsa.hsf.domain.catalogos.GrupoDispensarial;
-import ni.gob.minsa.hsf.domain.catalogos.Ocupacion;
 import ni.gob.minsa.hsf.domain.catalogos.Ontogenesis;
 import ni.gob.minsa.hsf.domain.catalogos.Profesion;
 import ni.gob.minsa.hsf.domain.catalogos.Religion;
@@ -56,6 +55,7 @@ import ni.gob.minsa.hsf.domain.catalogos.TipoPared;
 import ni.gob.minsa.hsf.domain.catalogos.TipoPiso;
 import ni.gob.minsa.hsf.domain.catalogos.TipoTecho;
 import ni.gob.minsa.hsf.domain.estructura.EntidadesAdtvas;
+import ni.gob.minsa.hsf.domain.estructura.Ocupacion;
 import ni.gob.minsa.hsf.domain.poblacion.Comunidades;
 import ni.gob.minsa.hsf.domain.poblacion.Divisionpolitica;
 import ni.gob.minsa.hsf.domain.poblacion.Sectores;
@@ -71,6 +71,7 @@ import ni.gob.minsa.hsf.service.FactSocioEconomicosService;
 import ni.gob.minsa.hsf.service.FamiliaService;
 import ni.gob.minsa.hsf.service.FuncFamiliarService;
 import ni.gob.minsa.hsf.service.HsfService;
+import ni.gob.minsa.hsf.service.OcupacionService;
 import ni.gob.minsa.hsf.service.PersonaService;
 import ni.gob.minsa.hsf.service.SectoresService;
 import ni.gob.minsa.hsf.service.UsuarioService;
@@ -113,6 +114,8 @@ public class HsfController {
 	private SectoresService sectorService;
 	@Resource(name="catalogoService")
 	private CatalogoService catalogoService;
+	@Resource(name="ocupacionService")
+	private OcupacionService ocupacionService;
 	@Resource(name="familiaService")
 	private FamiliaService familiaService;
 	@Resource(name="visitaService")
@@ -146,7 +149,7 @@ public class HsfController {
     	List<Sexo> sexos = catalogoService.getSexo();
     	List<Etnia> etnias = catalogoService.getEtnia();
     	List<Escolaridad> escolaridades = catalogoService.getEscda();
-    	List<Ocupacion> ocupaciones = catalogoService.getOcupacion();
+    	List<Ocupacion> ocupaciones = ocupacionService.getAllOcupaciones();
     	List<Religion> religiones = catalogoService.getReligion();
     	List<FactRiesgoNoMod> frnms = catalogoService.getFactRiesgoNoMod();
     	List<FactRiesgoMod> frms = catalogoService.getFactRiesgoMod();
@@ -572,7 +575,7 @@ public class HsfController {
 	        persona.setEtnia(catalogoService.getEtnia(etnia));
 	        persona.setSexo(catalogoService.getSexo(sexo));
 	        persona.setEscolaridad(catalogoService.getEscda(escolaridad));
-	        persona.setOcupacion(catalogoService.getOcupacion(ocupacion));
+	        persona.setOcupacion(ocupacionService.getOcupacionByCodigo(ocupacion));
 	        persona.setReligion(catalogoService.getReligion(religion));
 	        persona.setEmbarazada(embarazada);
 	        persona.setCpnActualizado(cpnActualizado);
@@ -735,7 +738,7 @@ public class HsfController {
 				List<Etnia> etnias = catalogoService.getEtnia();
 				List<Sexo> sexos = catalogoService.getSexo();
 		    	List<Escolaridad> escolaridades = catalogoService.getEscda();
-		    	List<Ocupacion> ocupaciones = catalogoService.getOcupacion();
+		    	List<Ocupacion> ocupaciones = ocupacionService.getAllOcupaciones();
 		    	List<Religion> religiones = catalogoService.getReligion();
 		    	List<FactRiesgoNoMod> frnms = catalogoService.getFactRiesgoNoMod();
 		    	List<FactRiesgoMod> frms = catalogoService.getFactRiesgoMod();

@@ -484,10 +484,10 @@
 																<c:forEach items="${ocupaciones}" var="ocupacion">
 																	<c:choose> 
 																		<c:when test="${ocupacion.codigo eq persona.ocupacion.codigo}">
-																			<option selected value="${ocupacion.codigo}">${ocupacion.valor}</option>
+																			<option selected value="${ocupacion.codigo}">${ocupacion.nombre}</option>
 																		</c:when>
 																		<c:otherwise>
-																			<option value="${ocupacion.codigo}">${ocupacion.valor}</option>
+																			<option value="${ocupacion.codigo}">${ocupacion.nombre}</option>
 																		</c:otherwise>
 																	</c:choose> 
 																</c:forEach>

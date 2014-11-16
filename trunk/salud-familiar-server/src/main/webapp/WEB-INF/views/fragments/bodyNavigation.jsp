@@ -1,4 +1,5 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="sec"	uri="http://www.springframework.org/security/tags"%>
 <!-- BEGIN SIDEBAR -->
 <div class="page-sidebar-wrapper">
 	<div class="page-sidebar-wrapper">
@@ -23,6 +24,7 @@
 					</span>
 					</a>
 				</li>
+				<sec:authorize url="/info/">
 				<li class="hsf">
 					<a href="javascript:;">
 					<i class="fa fa-table"></i>
@@ -45,6 +47,8 @@
 						</li>
 					</ul>
 				</li>
+				</sec:authorize>
+				<sec:authorize url="/report/">
 				<li class="reports">
 					<a href="javascript:;">
 					<i class="fa fa-folder-open-o"></i>
@@ -56,17 +60,19 @@
 					</a>
 					<ul class="sub-menu">
 						<li class="reportday">
-							<a href="<spring:url value="/" htmlEscape="true "/>">
+							<a href="<spring:url value="/report/visitbyday" htmlEscape="true "/>">
 							<i class="fa fa-calendar"></i>
 							<spring:message code="report.day"/></a>
 						</li>
 						<li class="reportarea">
-							<a href="<spring:url value="/" htmlEscape="true "/>">
+							<a href="<spring:url value="/report/visitbyarea" htmlEscape="true "/>">
 							<i class="fa fa-map-marker"></i>
 							<spring:message code="report.area"/></a>
 						</li>
 					</ul>
 				</li>
+				</sec:authorize>
+				<sec:authorize url="/monitor/">
 				<li class="monitor">
 					<a href="javascript:;">
 					<i class="fa fa-dashboard"></i>
@@ -89,6 +95,18 @@
 						</li>
 					</ul>
 				</li>
+				</sec:authorize>
+				<sec:authorize url="/catalog/">
+				<li class="catalog">
+					<a href="<spring:url value="/catalog/catalogs/" htmlEscape="true "/>">
+					<i class="fa fa-suitcase"></i>
+					<span class="title">
+						<spring:message code="catalog"/>
+					</span>
+					</a>
+				</li>
+				</sec:authorize>
+				<sec:authorize url="/admin/">
 				<li class="users">
 					<a href="<spring:url value="/admin/users/" htmlEscape="true "/>">
 					<i class="fa fa-group"></i>
@@ -97,6 +115,7 @@
 					</span>
 					</a>
 				</li>
+				</sec:authorize>
 				<li class="last ">
 					<a href="<spring:url value="/logout" htmlEscape="true" />">
 					<i class="fa fa-sign-out"></i>

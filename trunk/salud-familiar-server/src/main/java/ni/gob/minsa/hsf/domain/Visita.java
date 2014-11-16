@@ -25,6 +25,7 @@ public class Visita extends BaseMetaData implements Auditable{
 	private String idVisita;
 	private Familia familia;
 	private Date fechaVisita;
+	private char tipoVisita = '1';
 	private String personaVisita;
 	private Profesion personaVisitaProfesion;
 	private MovilInfo movilInfo;
@@ -70,6 +71,15 @@ public class Visita extends BaseMetaData implements Auditable{
 
 	public void setPersonaVisita(String personaVisita) {
 		this.personaVisita = personaVisita;
+	}
+	
+	@Column(name = "TIPO_VISITA", nullable = false)
+	public char getTipoVisita() {
+		return tipoVisita;
+	}
+
+	public void setTipoVisita(char tipoVisita) {
+		this.tipoVisita = tipoVisita;
 	}
 
 	@ManyToOne(fetch=FetchType.LAZY,targetEntity=Catalogo.class)

@@ -1892,7 +1892,7 @@
 																					<select data-placeholder="<spring:message code="select" /> <spring:message code="person.occup" />" name="ocupacion" id="ocupacion" class="form-control">
 																						<option value=""></option>
 																						<c:forEach items="${ocupaciones}" var="ocupacion"> 
-																							<option value="${ocupacion.codigo}">${ocupacion.valor}</option> 
+																							<option value="${ocupacion.codigo}">${ocupacion.nombre}</option> 
 																						</c:forEach>
 																					</select>
 																				</div>
