@@ -15,7 +15,7 @@ import javax.persistence.*;
 })
 @Entity
 @Table(name="OCUPACIONES"
-    ,schema="alerta"
+    ,schema="hsf"
     , uniqueConstraints = @UniqueConstraint(columnNames="CODIGO") 
 )
 public class Ocupacion  implements java.io.Serializable {

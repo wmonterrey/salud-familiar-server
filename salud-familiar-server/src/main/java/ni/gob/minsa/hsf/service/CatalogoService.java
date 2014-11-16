@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import ni.gob.minsa.hsf.domain.catalogos.AbastecimientoAgua;
 import ni.gob.minsa.hsf.domain.catalogos.AccionesComunitarias;
 import ni.gob.minsa.hsf.domain.catalogos.AnimalesDomesticos;
+import ni.gob.minsa.hsf.domain.catalogos.Areas;
 import ni.gob.minsa.hsf.domain.catalogos.CalidadAgua;
 import ni.gob.minsa.hsf.domain.catalogos.CarPsicosociales;
 import ni.gob.minsa.hsf.domain.catalogos.CombCocinar;
@@ -28,7 +29,6 @@ import ni.gob.minsa.hsf.domain.catalogos.FactRiesgoSoc;
 import ni.gob.minsa.hsf.domain.catalogos.FactoresMedAmb;
 import ni.gob.minsa.hsf.domain.catalogos.GrupoDispensarial;
 import ni.gob.minsa.hsf.domain.catalogos.Nivel;
-import ni.gob.minsa.hsf.domain.catalogos.Ocupacion;
 import ni.gob.minsa.hsf.domain.catalogos.Ontogenesis;
 import ni.gob.minsa.hsf.domain.catalogos.Profesion;
 import ni.gob.minsa.hsf.domain.catalogos.Religion;
@@ -112,6 +112,52 @@ public class CatalogoService {
 		// Retrieve all
 		return  query.list();
 	}
+	
+	public Areas getAreas(String area) {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = session.getNamedQuery("obtenerAreasPorCodigo").setString("pCodigo", area);
+		// Retrieve all
+		return  (Areas) query.uniqueResult();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Areas> getAreas() {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = session.createQuery("FROM Areas where pasivo = :pasivo order by orden");
+		query.setParameter("pasivo", false);
+		// Retrieve all
+		return  query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Areas> getAreas(UserSistema usuario) {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = null;
+		if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|CENTRAL")){
+			query = session.createQuery("FROM Areas where pasivo = :pasivo order by orden");
+			query.setParameter("pasivo", false);
+		}
+		else if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|SILAIS")){
+			query = session.createQuery("FROM Areas where pasivo = :pasivo and codigo is not :central order by orden");
+			query.setParameter("pasivo", false);
+			query.setParameter("central", "HSF_AREAS|CENTRAL");
+		}
+		else if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|UNIDAD")){
+			query = session.createQuery("FROM Areas where pasivo = :pasivo and (codigo =:unidad or codigo =:sector or codigo =:comu) order by orden");
+			query.setParameter("pasivo", false);
+			query.setParameter("unidad", "HSF_AREAS|UNI");
+			query.setParameter("sector", "HSF_AREAS|SECTOR");
+			query.setParameter("comu", "HSF_AREAS|COMU");
+		}
+		// Retrieve all
+		return  query.list();
+	}
 
 	public Sexo getSexo(String sexo) {
 		// Retrieve session from Hibernate
@@ -168,26 +214,6 @@ public class CatalogoService {
 		Session session = sessionFactory.getCurrentSession();
 		// Create a Hibernate query (HQL)
 		Query query = session.createQuery("FROM Escolaridad where pasivo = :pasivo order by orden");
-		query.setParameter("pasivo", false);
-		// Retrieve all
-		return  query.list();
-	}
-	
-	public Ocupacion getOcupacion(String ocupacion) {
-		// Retrieve session from Hibernate
-		Session session = sessionFactory.getCurrentSession();
-		// Create a Hibernate query (HQL)
-		Query query = session.getNamedQuery("obtenerOcupacionPorCodigo").setString("pCodigo", ocupacion);
-		// Retrieve all
-		return  (Ocupacion) query.uniqueResult();
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<Ocupacion> getOcupacion() {
-		// Retrieve session from Hibernate
-		Session session = sessionFactory.getCurrentSession();
-		// Create a Hibernate query (HQL)
-		Query query = session.createQuery("FROM Ocupacion where pasivo = :pasivo order by orden");
 		query.setParameter("pasivo", false);
 		// Retrieve all
 		return  query.list();

@@ -15,11 +15,11 @@ import ni.gob.minsa.hsf.domain.audit.Auditable;
 import ni.gob.minsa.hsf.domain.catalogos.Escolaridad;
 import ni.gob.minsa.hsf.domain.catalogos.Etnia;
 import ni.gob.minsa.hsf.domain.catalogos.GrupoDispensarial;
-import ni.gob.minsa.hsf.domain.catalogos.Ocupacion;
 import ni.gob.minsa.hsf.domain.catalogos.Religion;
 import ni.gob.minsa.hsf.domain.catalogos.Sexo;
 import ni.gob.minsa.hsf.domain.estructura.BaseMetaData;
 import ni.gob.minsa.hsf.domain.estructura.Catalogo;
+import ni.gob.minsa.hsf.domain.estructura.Ocupacion;
 
 
 @Entity
@@ -215,13 +215,12 @@ public class Persona extends BaseMetaData implements Auditable, Serializable{
 	public void setEscolaridad(Escolaridad escolaridad) {
 		this.escolaridad = escolaridad;
 	}
-
-	@ManyToOne(fetch=FetchType.LAZY,targetEntity=Catalogo.class)
+	
+	@ManyToOne(fetch=FetchType.LAZY,targetEntity=Ocupacion.class)
     @JoinColumn(name="CODIGO_OCUPA",referencedColumnName="CODIGO", nullable=true)
-	@ForeignKey(name = "PERSONAS_OCUPA_FK")
-	public Ocupacion getOcupacion() {
-		return ocupacion;
-	}
+    public Ocupacion getOcupacion() {
+        return this.ocupacion;
+    }
 
 
 	public void setOcupacion(Ocupacion ocupacion) {
