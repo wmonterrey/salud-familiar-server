@@ -55,7 +55,7 @@ public class SectoresService {
 			query.setParameter("undadtvaUsuario", usuario.getUnidad().getCodigo());
 		}
 		else{
-			query = session.createQuery("from Sectores secs where secs.municipio = :municipio order by secs.nombre");
+			query = session.createQuery("from Sectores secs where secs.municipio.codigoNacional = :municipio order by secs.nombre");
 			query.setParameter("municipio", municipio);
 		}
 		// Retrieve all

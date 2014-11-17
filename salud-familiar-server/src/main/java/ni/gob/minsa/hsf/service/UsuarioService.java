@@ -70,7 +70,7 @@ public class UsuarioService {
 		}
 		else if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|UNIDAD")){
 			query = session.createSQLQuery("select * from hsf_usuarios_sistema where " +
-					"codigo_unidad = "+ usuario.getUnidad().getCodigo() +" or (codigo_unidad in (Select codigo from unidades where UNIDAD_ADTVA = "+ usuario.getUnidad().getCodigo() +"));");
+					"codigo_unidad = "+ usuario.getUnidad().getCodigo() +" or (codigo_unidad in (Select codigo from unidades where UNIDAD_ADTVA = "+ usuario.getUnidad().getCodigo() +"))");
 		}
 		query.addEntity(UserSistema.class);
 		// Retrieve all
@@ -116,7 +116,7 @@ public class UsuarioService {
 		else if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|UNIDAD")){
 			query = session.createSQLQuery("select * from hsf_usuarios_sistema where " +
 					"NOMBRE_USUARIO = '" + username + "' and (codigo_unidad = "+ usuario.getUnidad().getCodigo() +" or " +
-							"(codigo_unidad in (Select codigo from unidades where UNIDAD_ADTVA = "+ usuario.getUnidad().getCodigo() +")));");
+							"(codigo_unidad in (Select codigo from unidades where UNIDAD_ADTVA = "+ usuario.getUnidad().getCodigo() +")))");
 		}
 		query.addEntity(UserSistema.class);
 		// Retrieve all

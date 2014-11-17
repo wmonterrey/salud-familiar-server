@@ -43,7 +43,7 @@ public class DivisionPoliticaService {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
 		// Create a Hibernate query (HQL)
-		Query query = session.createQuery("FROM  Divisionpolitica dp where dp.dependenciaSilais = :entidad order by dp.nombre");
+		Query query = session.createQuery("FROM  Divisionpolitica dp where dp.dependenciaSilais.codigo = :entidad order by dp.nombre");
 		query.setParameter("entidad", entidadId);
 		// Retrieve all
 		return  query.list();
@@ -65,7 +65,7 @@ public class DivisionPoliticaService {
 			query.setParameter("munUnidad", usuario.getUnidad().getMunicipio());
 		}
 		else {
-			query = session.createQuery("FROM  Divisionpolitica dp where dp.dependenciaSilais = :entidad order by dp.nombre");
+			query = session.createQuery("FROM  Divisionpolitica dp where dp.dependenciaSilais.codigo = :entidad order by dp.nombre");
 			query.setParameter("entidad", entidadId);
 		}
 		// Retrieve all

@@ -288,14 +288,15 @@ var Index = function () {
     				sumSeg = 0;
     				sumTotal = 0;
         			for (var row in data.lista1) {
+        				var d = new Date(data.lista1[row][0]);
     					table1.fnAddData(
-    							[data.lista1[row][0], data.lista1[row][1], data.lista1[row][2], data.lista1[row][3]]);
-    					fechas.push([data.lista1[row][0]]);
-    					iniciales.push([data.lista1[row][0], data.lista1[row][1]]);
+    							[d.yyyymmdd(), data.lista1[row][1], data.lista1[row][2], data.lista1[row][3]]);
+    					fechas.push([d.yyyymmdd()]);
+    					iniciales.push([d.yyyymmdd(), data.lista1[row][1]]);
     					sumInicial = sumInicial + parseInt(data.lista1[row][1]);
-    					segs.push([data.lista1[row][0], data.lista1[row][2]]);
+    					segs.push([d.yyyymmdd(), data.lista1[row][2]]);
     					sumSeg = sumSeg + parseInt(data.lista1[row][2]);
-    					totales.push([data.lista1[row][0], data.lista1[row][3]]);
+    					totales.push([d.yyyymmdd(), data.lista1[row][3]]);
     					sumTotal = sumTotal + parseInt(data.lista1[row][3]);
         			}
         			for (var row in data.lista2) {
@@ -314,6 +315,16 @@ var Index = function () {
 				    
 				});
         	} 
+            
+            
+            Date.prototype.yyyymmdd = function() {         
+		        
+		        var yyyy = this.getFullYear().toString();                                    
+		        var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based         
+		        var dd  = this.getDate().toString();             
+		                            
+		        return yyyy + '-' + (mm[1]?mm:"0"+mm[0]) + '-' + (dd[1]?dd:"0"+dd[0]);
+		    }; 
         }
     };
 

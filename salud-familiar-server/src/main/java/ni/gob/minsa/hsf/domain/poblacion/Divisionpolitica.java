@@ -2,16 +2,21 @@ package ni.gob.minsa.hsf.domain.poblacion;
 
 // Generated 12-06-2012 03:38:40 PM by Hibernate Tools 3.6.0
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import ni.gob.minsa.hsf.domain.estructura.EntidadesAdtvas;
 import ni.gob.minsa.hsf.serializer.CustomDateSerializer;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
@@ -20,8 +25,12 @@ import org.joda.time.DateTime;
  */
 @Entity
 @Table(name = "divisionpolitica", catalog = "hsf")
-public class Divisionpolitica {
+public class Divisionpolitica implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private long divisionpoliticaId;
 	private String nombre;
 	private Long dependencia;
@@ -34,7 +43,7 @@ public class Divisionpolitica {
 	private DateTime fechaRegistro;
 	private String usuarioRegistro;
 	private Short codigoCse;
-	private Long dependenciaSilais;
+	private EntidadesAdtvas dependenciaSilais;
 
 	public Divisionpolitica() {
 	}
@@ -180,12 +189,14 @@ public class Divisionpolitica {
 		this.codigoCse = codigoCse;
 	}
 
-	@Column(name = "DEPENDENCIA_SILAIS", nullable = true)
-	public Long getDependenciaSilais() {
+	@ManyToOne(optional=true)
+	@JoinColumn(name="DEPENDENCIA_SILAIS",referencedColumnName="CODIGO", nullable=true)
+	@ForeignKey(name = "MUNICIPIO_SILAIS_FK")
+	public EntidadesAdtvas getDependenciaSilais() {
 		return dependenciaSilais;
 	}
 
-	public void setDependenciaSilais(Long dependenciaSilais) {
+	public void setDependenciaSilais(EntidadesAdtvas dependenciaSilais) {
 		this.dependenciaSilais = dependenciaSilais;
 	}
 

@@ -29,7 +29,7 @@ public class ReportesService {
 		// Create a Hibernate query (HQL)
 		Query query = null;
 		if (codArea.equals("HSF_AREAS|CENTRAL")){
-			query = session.createQuery("select date(v.fechaVisita) as fecha, " +
+			query = session.createQuery("select v.fechaVisita as fecha, " +
 					"sum(case v.tipoVisita when '1' then 1 else 0 end) as inicial, " +
 					"sum(case v.tipoVisita when '0' then 1 else 0 end) as seguimiento, " +
 					"count(v.idVisita) as total " +
@@ -38,7 +38,7 @@ public class ReportesService {
 			query.setTimestamp("fechaFinal", timeStampFinal);
 		}
 		else if (codArea.equals("HSF_AREAS|SILAIS")){
-			query = session.createSQLQuery("SELECT date(hsf_Visitas.FECHA_VISITA) as fecha, " +
+			query = session.createSQLQuery("SELECT hsf_Visitas.FECHA_VISITA as fecha, " +
 					"sum(case hsf_visitas.TIPO_VISITA when '1' then 1 else 0 end) as inicial, " +
 					"sum(case hsf_visitas.TIPO_VISITA when '0' then 1 else 0 end) as seguimiento, count(id_visita) as total " +
 					"FROM ((((hsf_Visitas INNER JOIN hsf_familias ON hsf_Visitas.ID_FAMILIA = hsf_familias.ID_FAMILIA) " +
@@ -53,7 +53,7 @@ public class ReportesService {
 			query.setParameter("silais", codSilais);
 		}
 		else if (codArea.equals("HSF_AREAS|UNI")){
-			query = session.createSQLQuery("SELECT date(hsf_Visitas.FECHA_VISITA) as fecha, " +
+			query = session.createSQLQuery("SELECT hsf_Visitas.FECHA_VISITA as fecha, " +
 					"sum(case hsf_visitas.TIPO_VISITA when '1' then 1 else 0 end) as inicial, " +
 					"sum(case hsf_visitas.TIPO_VISITA when '0' then 1 else 0 end) as seguimiento, " +
 					"Count(hsf_Visitas.id_visita) AS total " +
@@ -68,7 +68,7 @@ public class ReportesService {
 			query.setParameter("unidad", codUnidad);
 		}
 		else if (codArea.equals("HSF_AREAS|SECTOR")){
-			query = session.createSQLQuery("SELECT date(hsf_Visitas.FECHA_VISITA) as fecha, " +
+			query = session.createSQLQuery("SELECT hsf_Visitas.FECHA_VISITA as fecha, " +
 					"sum(case hsf_visitas.TIPO_VISITA when '1' then 1 else 0 end) as inicial, " +
 					"sum(case hsf_visitas.TIPO_VISITA when '0' then 1 else 0 end) as seguimiento, count(id_visita) as total " +
 					"FROM (((hsf_Visitas INNER JOIN hsf_familias ON hsf_Visitas.ID_FAMILIA = hsf_familias.ID_FAMILIA) " +
