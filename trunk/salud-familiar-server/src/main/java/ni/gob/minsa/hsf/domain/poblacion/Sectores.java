@@ -1,27 +1,36 @@
 package ni.gob.minsa.hsf.domain.poblacion;
 
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 
 import ni.gob.minsa.hsf.serializer.CustomDateSerializer;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 @Entity
 @Table(name = "sectores", catalog = "hsf")
-public class Sectores {
+public class Sectores implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer sectorId;
 	private String nombre;
 	private String referencias;
 	private Integer unidad;
-	private String municipio;
+	private Divisionpolitica municipio;
 	private String codigo;
 	private char sede = 0;
 	private char pasivo = 0;
@@ -70,13 +79,15 @@ public class Sectores {
 		this.unidad = unidad;
 	}
 
-	@Column(name = "MUNICIPIO", nullable = false, length = 4)
-	public String getMunicipio() {
+	@ManyToOne(optional=true)
+	@JoinColumn(name="MUNICIPIO",referencedColumnName="CODIGO_NACIONAL", nullable=true)
+	@ForeignKey(name = "SECTOR_MUNICIPIO_FK")
+	public Divisionpolitica getMunicipio() {
 		return municipio;
 	}
 
 
-	public void setMunicipio(String municipio) {
+	public void setMunicipio(Divisionpolitica municipio) {
 		this.municipio = municipio;
 	}
 

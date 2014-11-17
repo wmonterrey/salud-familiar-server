@@ -689,9 +689,9 @@ public class HsfController {
 			UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
     		if(hsfService.verificarPermisoDatos(familia.getComunidad(), usuario)){
 				List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario);
-				Sectores sector = this.sectorService.getSector(familia.getComunidad().getSector());
-		        Divisionpolitica municipio = this.divPoliticaService.getDivisionpolitica(sector.getMunicipio());
-		        EntidadesAdtvas silais = this.entidadAdtvaService.getEntidadesAdtvas(municipio.getDependenciaSilais());
+				Sectores sector = this.sectorService.getSector(familia.getComunidad().getSector().getCodigo());
+		        Divisionpolitica municipio = this.divPoliticaService.getDivisionpolitica(sector.getMunicipio().getCodigoNacional());
+		        EntidadesAdtvas silais = this.entidadAdtvaService.getEntidadesAdtvas(municipio.getDependenciaSilais().getCodigo());
 				model.addAttribute("familia",familia);
 				model.addAttribute("entidades",entidades);
 				model.addAttribute("sector",sector);
@@ -967,9 +967,9 @@ public class HsfController {
         if(familia!=null){
         	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
         	if(hsfService.verificarPermisoDatos(familia.getComunidad(), usuario)){
-		        Sectores sector = this.sectorService.getSector(familia.getComunidad().getSector());
-		        Divisionpolitica municipio = this.divPoliticaService.getDivisionpolitica(sector.getMunicipio());
-		        EntidadesAdtvas silais = this.entidadAdtvaService.getEntidadesAdtvas(municipio.getDependenciaSilais());
+		        Sectores sector = this.sectorService.getSector(familia.getComunidad().getSector().getCodigo());
+		        Divisionpolitica municipio = this.divPoliticaService.getDivisionpolitica(sector.getMunicipio().getCodigoNacional());
+		        EntidadesAdtvas silais = this.entidadAdtvaService.getEntidadesAdtvas(municipio.getDependenciaSilais().getCodigo());
 		        CaractHigSanitarias carHigSan = this.caractHigSanitariasService.getCaractHigSanitariasFamilia(idFamilia);
 		        FactSocioEconomicos factSocEc = this.factSocioEconomicosService.getFactSocioEconomicosFamilia(idFamilia);
 		        FuncFamiliar funcFam = this.funcFamiliarService.getFuncFamiliarFamilia(idFamilia);
