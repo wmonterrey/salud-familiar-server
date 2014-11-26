@@ -39,8 +39,9 @@ public class CaractHigSanitariasService {
 	public CaractHigSanitarias getCaractHigSanitariasFamilia(String idFamilia) {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery("FROM CaractHigSanitarias chs where chs.familia.idFamilia = :idFamilia");
+		Query query = session.createQuery("FROM CaractHigSanitarias chs where chs.familia.idFamilia = :idFamilia and chs.pasive =:pasivo");
 		query.setParameter("idFamilia", idFamilia);
+		query.setParameter("pasivo", '0');
 		CaractHigSanitarias carHigSan = (CaractHigSanitarias) query.uniqueResult();
 		return carHigSan;
 	}

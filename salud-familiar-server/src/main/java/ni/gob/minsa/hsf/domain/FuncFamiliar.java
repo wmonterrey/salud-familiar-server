@@ -8,7 +8,6 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import ni.gob.minsa.hsf.domain.audit.Auditable;
@@ -54,7 +53,7 @@ public class FuncFamiliar extends BaseMetaData implements Auditable{
 		this.idFuncFamiliar = idFuncFamiliar;
 	}
 
-	@OneToOne(optional=false)
+	@ManyToOne(optional=false)
 	@JoinColumn(name="ID_FAMILIA")
 	@ForeignKey(name = "FUNCFAM_VISITAS_FK")
 	public Familia getFamilia() {

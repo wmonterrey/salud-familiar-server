@@ -14,8 +14,6 @@
 <!-- BEGIN PAGE LEVEL STYLES -->
 <spring:url value="/resources/plugins/select2/select2_conquer.css" var="select2css" />
 <link rel="stylesheet" type="text/css" href="${select2css}"/>
-<spring:url value="/resources/plugins/bootstrap-datepicker/css/datepicker.css" var="datepickercss" />
-<link rel="stylesheet" type="text/css" href="${datepickercss}"/>
 <spring:url value="/resources/plugins/data-tables/DT_bootstrap.css" var="dtbootcss" />
 <link rel="stylesheet" href="${dtbootcss}"/>
 <spring:url value="/resources/plugins/data-tables/TableTools/css/dataTables.tableTools.css" var="dtttcss" />
@@ -48,7 +46,7 @@
 					<li>
 						<i class="fa fa-home"></i>
 						<a href="<spring:url value="/" htmlEscape="true "/>"><spring:message code="dashboard" /></a>
-						<i class="fa fa-angle-right"></i> <a href="<spring:url value="/report/visitbyday" htmlEscape="true "/>"><spring:message code="visit.day" /></a>
+						<i class="fa fa-angle-right"></i> <a href="<spring:url value="/report/consolidado" htmlEscape="true "/>"><spring:message code="summary" /></a>
 					</li>
 				</ul>
 				<!-- END PAGE TITLE & BREADCRUMB-->
@@ -193,39 +191,11 @@
 									</div>
 								</div>
 								<!-- END ROW -->
-								<!-- START ROW -->
 								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group">
-											<div class="col-md-12">
-												<div class="input-group date date-picker" data-date-format="dd/MM/yyyy" data-date-end-date="+0d">
-													<input id="desde" name="desde" type="text" class="form-control" placeholder="<spring:message code="fromLabel" />">
-													<span class="input-group-btn">
-														<button class="btn btn-info" type="button"><i class="fa fa-calendar"></i></button>
-													</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<div class="col-md-12">
-												<div class="input-group date date-picker" data-date-format="dd/MM/yyyy" data-date-end-date="+0d">
-													<input id="hasta" name="hasta" type="text" class="form-control" placeholder="<spring:message code="toLabel" />">
-													<span class="input-group-btn">
-														<button class="btn btn-info" type="button"><i class="fa fa-calendar"></i></button>
-													</span>
-												</div>
-											</div>
-										</div>
+									<div class="modal-footer">
+										<button type="submit" id="view-report" class="btn btn-info"><i class="fa fa-refresh"></i> <spring:message code="update" /></button>
 									</div>
 								</div>
-								<!-- END ROW -->
-									<div class="row">
-											<div class="modal-footer">
-												<button type="submit" id="view-report" class="btn btn-info"><i class="fa fa-refresh"></i> <spring:message code="update" /></button>
-											</div>
-									</div>
 							</div>
 							<!-- END BODYFORM -->
 						</form>
@@ -238,19 +208,22 @@
 				<div class="portlet">
 					<div class="portlet-title">
 						<div class="caption">
-							<i class="fa fa-table"></i><spring:message code="visit.day" />
+							<i class="fa fa-table"></i><spring:message code="summary" />
 						</div>
 					</div>
 					<div class="portlet-body">
 						<div class="table-toolbar1">
 						</div>
-						<table class="table table-striped table-hover table-bordered" id="visitas_dia">
+						<table class="table table-striped table-hover table-bordered" id="consolidado">
 							<thead>
 								<tr>
-									<th><spring:message code="visit.date" /></th>
-									<th><spring:message code="visit.first" /></th>
-									<th><spring:message code="visit.followup" /></th>
-									<th><spring:message code="total" /></th>
+									<th><spring:message code="area" /></th>
+									<th><spring:message code="houses" /></th>
+									<th><spring:message code="families" /></th>
+									<th><spring:message code="families.estimated" /></th>
+									<th><spring:message code="families.disp" /></th>
+									<th><spring:message code="persons" /></th>
+									<th><spring:message code="persons.disp" /></th>
 								</tr>
 							</thead>
 						</table>
@@ -260,16 +233,86 @@
 			</div>
 			<div class="clearfix">
 			</div>
+			<!-- BEGIN OVERVIEW STATISTIC BLOCKS-->
+			<div class="row">
+				<div class="col-md-4 col-sm-6">
+					<div class="circle-stat stat-block">
+						<div class="visual">
+							<input id="knob1" class="knobify" data-width="115" data-thickness=".2" data-skin="tron" data-displayprevious="true" value="0" data-max="100" data-min="0"/>
+						</div>
+						<div class="details">
+							<div class="title">
+								 <spring:message code="families" />
+							</div>
+							<div id="knob1num" class="number">
+								 0
+							</div>
+							<div class="title">
+								 <spring:message code="families.estimated" />
+							</div>
+							<div id="knob2num" class="number">
+								 0
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 col-sm-6">
+					<div class="circle-stat stat-block">
+						<div class="visual">
+							<input id="knob2" class="knobify" data-fgcolor="#66EE66" data-width="115" data-thickness=".2" data-skin="tron" data-displayprevious="true" value="0" data-max="100" data-min="0"/>
+						</div>
+						<div class="details">
+							<div class="title">
+								 <spring:message code="families.disp" />
+							</div>
+							<div id="knob3num" class="number">
+								 0
+							</div>
+							<div class="title">
+								 <spring:message code="families" />
+							</div>
+							<div id="knob4num" class="number">
+								 0
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 col-sm-6">
+					<div class="circle-stat stat-block">
+						<div class="visual">
+							<input id="knob3" class="knobify" data-fgcolor="#fdbb39" data-width="115" data-thickness=".2" data-skin="tron" data-displayprevious="true" value="0" data-max="100" data-min="0"/>
+						</div>
+						<div class="details">
+							<div class="title">
+								<spring:message code="persons.disp" />
+							</div>
+							<div id="knob5num" class="number">
+								 0
+							</div>
+							<div class="title">
+								 <spring:message code="persons" />
+							</div>
+							<div id="knob6num" class="number">
+								 0
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- END OVERVIEW STATISTIC BLOCKS-->
+			<div class="clearfix">
+			</div>
+			<!-- START GRAPHIC 1-->
 			<div class="row">
 				<div class="col-md-12 col-sm-12">
 					<!-- BEGIN PORTLET-->
-					<div id="visitas-dia-div" class="portlet">
+					<div id="consolidado-div" class="portlet">
 						<div class="portlet-title">
 							<div class="caption">
-								<i class="fa fa-bar-chart-o"></i><spring:message code="visit.day" />
+								<i class="fa fa-bar-chart-o"></i><spring:message code="summary" />
 							</div>
 							<div class="actions">
-								<a href="#" onclick="exportVisitaDia();" class="btn btn-info btn-sm"><i class="fa fa-download"></i></a>
+								<a href="#" onclick="exportConsolidado();" class="btn btn-info btn-sm"><i class="fa fa-download"></i></a>
 							</div>
 						</div>
 						<div class="portlet-body">
@@ -279,8 +322,7 @@
 							</div>
 							<div id="site_statistics_content" class="display-none">
 								<div id="consolidado-title" align="center"></div>
-								<div id="site_statistics" class="chart">
-								</div>
+								<div id="site_statistics" class="chart"></div>
 								<div id="consolidado-foot"></div>
 							</div>
 						</div>
@@ -288,6 +330,36 @@
 					<!-- END PORTLET-->
 				</div>
 			</div>
+			<!-- END GRAPHIC 1-->
+			<!-- START GRAPHIC 2-->
+			<div class="row">
+				<div class="col-md-12 col-sm-12">
+					<!-- BEGIN PORTLET-->
+					<div id="consolidado-div-2" class="portlet">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="fa fa-bar-chart-o"></i><spring:message code="summary" />
+							</div>
+							<div class="actions">
+								<a href="#" onclick="exportConsolidado2();" class="btn btn-info btn-sm"><i class="fa fa-download"></i></a>
+							</div>
+						</div>
+						<div class="portlet-body">
+							<spring:url value="/resources/img/loading.gif" var="loading" />
+							<div id="site_statistics_loading_2">
+								<img src="${loading}" alt="loading"/>
+							</div>
+							<div id="site_statistics_content_2" class="display-none">
+								<div id="consolidado-title-2" align="center"></div>
+								<div id="site_statistics_2" class="chart"></div>
+								<div id="consolidado-foot-2"></div>
+							</div>
+						</div>
+					</div>
+					<!-- END PORTLET-->
+				</div>
+			</div>
+			<!-- END GRAPHIC 2-->
 		</div>
 		<!-- END PAGE CONTENT-->
 	</div>
@@ -309,10 +381,6 @@
 <script type="text/javascript" src="${jQValidationAdd}"></script>
 <spring:url value="/resources/plugins/select2/select2.min.js" var="selectDos" />
 <script type="text/javascript" src="${selectDos}"></script>
-<spring:url value="/resources/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js" var="datepicker" />
-<script type="text/javascript" src="${datepicker}"></script>
-<spring:url value="/resources/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js" var="inputmask" />
-<script type="text/javascript" src="${inputmask}"></script>
 <spring:url value="/resources/plugins/jquery-validation/localization/messages_{language}.js" var="jQValidationLoc">
 	<spring:param name="language" value="${pageContext.request.locale.language}" />
 </spring:url>				
@@ -337,25 +405,26 @@
 <script src="${html2Canvas}"></script>
 <spring:url value="/resources/plugins/flot/jquery.flot.categories.js" var="categories" />
 <script src="${categories}"></script>
+<spring:url value="/resources/plugins/jquery-knob/js/jquery.knob.js" var="jKnob" />
+<script src="${jKnob}"></script>
 <!-- END PAGE LEVEL PLUGINS -->
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <spring:url value="/resources/scripts/app.js" var="App" />
 <script src="${App}" type="text/javascript"></script>
-<!--<spring:url value="/resources/scripts/handleDatePickers.js" var="handleDatePickersJS" />
-<script src="${handleDatePickersJS}"></script>-->
-<spring:url value="/resources/scripts/view-report1.js" var="viewReport" />
+<spring:url value="/resources/scripts/view-report3.js" var="viewReport" />
 <script src="${viewReport}"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 
 <spring:url value="/opciones/municipios" var="opcMuniUrl"/>
 <spring:url value="/opciones/sectores" var="opcSectUrl"/>
 <spring:url value="/opciones/comunidades" var="opcComuUrl"/>
-<spring:url value="/report/visitsbyday" var="reportUrl"/>
-<c:set var="initial"><spring:message code="visit.first" /></c:set>
-<c:set var="followup"><spring:message code="visit.followup" /></c:set>
-<c:set var="total"><spring:message code="total" /></c:set>
+<spring:url value="/report/consolidados" var="reportUrl"/>
+<c:set var="famEst"><spring:message code="families.estimated" /></c:set>
+<c:set var="famVis"><spring:message code="families" /></c:set>
+<c:set var="famDisp"><spring:message code="families.disp" /></c:set>
 <c:set var="exportar"><spring:message code="export" /></c:set>
-<c:set var="visitsDay"><spring:message code="visit.day" /></c:set>
+<c:set var="summary"><spring:message code="summary" /></c:set>
+<c:set var="summaryNac"><spring:message code="summary1" /></c:set>
 <c:set var="titleApp"><spring:message code="title" /></c:set>
 <c:set var="heading"><spring:message code="heading" /></c:set>
 <c:set var="percent"><spring:message code="percent" /></c:set>
@@ -364,7 +433,7 @@
     $(function () {
     	$("li.reports").removeClass("reports").addClass("active");
     	$("li.agregados").removeClass("agregados").addClass("active");
-        $("li.reportday").removeClass("reportday").addClass("active");
+        $("li.consolidado").removeClass("consolidado").addClass("active");
     });
 </script>
 <script>
@@ -377,19 +446,32 @@
 			, processSuccess: "${processSuccess}"
 			, processError: "${processError}"
 			, noResults: "${noResults}"
-				, visitsArea: "${visitsArea}"
-					, visitsDay: "${visitsDay}"
-					, titleApp: "${titleApp}"
-					, heading: "${heading}"
+			, summary: "${summary}"
+			, summaryNac: "${summaryNac}"
+			, titleApp: "${titleApp}"
+			, heading: "${heading}"
+				, percent: "${percent}"
 			,language:"${pageContext.request.locale.language}",dataTablesTTSWF: "${dataTablesTTSWF}", exportar: "${exportar}"
-				, initial: "${initial}", followup: "${followup}", total: "${total}" };
-		//handleDatePickers("${pageContext.request.locale.language}");
+				, famEst: "${famEst}", famVis: "${famVis}", famDisp: "${famDisp}" };
 		ViewReport.init(parametros);
+		nParametrosKnob = {knob1:0,knob2:0,knob3:0,knob4:0,knob5:0,knob6:0,knob7:0,knob8:0,knob9:0};
+		ViewReport.initKnowElements(nParametrosKnob);
 	});
 	
-	function exportVisitaDia()
+	function exportConsolidado()
 	{
-		html2canvas($("#visitas-dia-div"), {
+		html2canvas($("#consolidado-div"), {
+	        onrendered: function(canvas) {
+	            // canvas is the final rendered <canvas> element
+	        	var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");  /// here is the most important part because if you dont replace you will get a DOM 18 exception.
+	        	document.location.href=image;
+	        }
+	    });
+	}
+	
+	function exportConsolidado2()
+	{
+		html2canvas($("#consolidado-div-2"), {
 	        onrendered: function(canvas) {
 	            // canvas is the final rendered <canvas> element
 	        	var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");  /// here is the most important part because if you dont replace you will get a DOM 18 exception.

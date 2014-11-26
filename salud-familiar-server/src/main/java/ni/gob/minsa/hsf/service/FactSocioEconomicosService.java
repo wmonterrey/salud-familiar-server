@@ -40,8 +40,9 @@ public class FactSocioEconomicosService {
 	public FactSocioEconomicos getFactSocioEconomicosFamilia(String idFamilia) {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery("FROM FactSocioEconomicos fse where fse.familia.idFamilia = :idFamilia");
+		Query query = session.createQuery("FROM FactSocioEconomicos fse where fse.familia.idFamilia = :idFamilia and fse.pasive =:pasivo");
 		query.setParameter("idFamilia", idFamilia);
+		query.setParameter("pasivo", '0');
 		FactSocioEconomicos factSocEc = (FactSocioEconomicos) query.uniqueResult();
 		return factSocEc;
 	}

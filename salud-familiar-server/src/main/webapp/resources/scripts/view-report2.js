@@ -248,30 +248,28 @@ var ViewReport = function () {
             function getData() {
             	App.blockUI(pageContent, false);
             	$.getJSON(parametros.reportUrl, $('#parameters_form').serialize(), function(data) {
-            		
             		$('#site_statistics_loading').show();
                     $('#site_statistics_content').hide();
                     
                     if ($('#area option:selected').val() == "HSF_AREAS|CENTRAL"){
-    					title = parametros.visitsDay;
+    					title = parametros.visitAreaNac;
     				}
     				else if ($('#area option:selected').val() == "HSF_AREAS|SILAIS"){
-    					title = parametros.visitsDay+' '+$('#silais option:selected').text();
+    					title = parametros.visitsArea+' '+$('#silais option:selected').text();
     				}
     				else if ($('#area option:selected').val() == "HSF_AREAS|UNI"){
-    					title = parametros.visitsDay+' '+$('#unidad option:selected').text();
+    					title = parametros.visitsArea+' '+$('#unidad option:selected').text();
     				}
     				else if ($('#area option:selected').val() == "HSF_AREAS|SECTOR"){
-    					title = parametros.visitsDay+' '+$('#sector option:selected').text();
+    					title = parametros.visitsArea+' '+$('#sector option:selected').text();
     				}
     				else if ($('#area option:selected').val() == "HSF_AREAS|COMU"){
-    					title = parametros.visitsDay+' '+$('#comunidad option:selected').text();
+    					title = parametros.visitsArea+' '+$('#comunidad option:selected').text();
     				}
                     var d = new Date();
                     fecha=d.toLocaleString(parametros.language);
                     var pdfMes = title + ', ' +$('#desde').val() +' - '+$('#hasta').val();
-                    
-                    var table1 = $('#visitas_dia').dataTable( {  
+            		var table1 = $('#visitas_area').dataTable( {  
                         "aoColumns" : [null,{sClass: "aw-right" },{sClass: "aw-right" },{sClass: "aw-right" }],bFilter: false, bInfo: true, bPaginate: true, bDestroy: true,
                         "aLengthMenu": [[5, 10, 15, 20, -1],[5, 10, 15, 20, "Todos"]], iDisplayLength: 5});
                 	
@@ -304,8 +302,10 @@ var ViewReport = function () {
                     } );
                 	
                 	$( tt.fnContainer() ).insertBefore('div.table-toolbar1');
-                	jQuery('#visitas_dia_wrapper .dataTables_length select').addClass("form-control input-small"); // modify table per page dropdown
-                	table1.fnClearTable();
+                	jQuery('#visitas_area_wrapper .dataTables_length select').addClass("form-control input-small"); // modify table per page dropdown
+            		table1.fnClearTable();
+            		$('#site_statistics_loading').show();
+                    $('#site_statistics_content').hide();
             		if (data == ''){
     					toastr.error(parametros.noResults);
     				}
@@ -313,24 +313,23 @@ var ViewReport = function () {
             			iniciales = [];
         				segs = [];
         				totales = [];
-        				fechas = [];
+        				areas = [];
         				sumInicial = 0;
         				sumSeg = 0;
         				sumTotal = 0;
             			for (var row in data) {
-            				var d = new Date(data[row][0]);
 	        				table1.fnAddData(
-	    							[d.yyyymmdd(), data[row][1], data[row][2], data[row][3]]);
+	    							[data[row][0], data[row][1], data[row][2], data[row][3]]);
 	        				
-	        				fechas.push([d.yyyymmdd()]);
-	    					iniciales.push([d.yyyymmdd(), data[row][1]]);
+	        				areas.push([data[row][0]]);
+	    					iniciales.push([data[row][0], data[row][1]]);
 	    					sumInicial = sumInicial + parseInt(data[row][1]);
-	    					segs.push([d.yyyymmdd(), data[row][2]]);
+	    					segs.push([data[row][0], data[row][2]]);
 	    					sumSeg = sumSeg + parseInt(data[row][2]);
-	    					totales.push([d.yyyymmdd(), data[row][3]]);
+	    					totales.push([data[row][0], data[row][3]]);
 	    					sumTotal = sumTotal + parseInt(data[row][3]);
 	        			}
-            			nParametrosChart = {fechas: fechas,iniciales: iniciales, segs: segs, totales: totales
+            			nParametrosChart = {areas: areas,iniciales: iniciales, segs: segs, totales: totales
             					, sumInicial: sumInicial, sumSeg: sumSeg, sumTotal: sumTotal, title:title, fecha:fecha, titleApp: parametros.titleApp
         						, heading: parametros.heading,
             					initial: parametros.initial, followup: parametros.followup, total: parametros.total};
@@ -344,15 +343,6 @@ var ViewReport = function () {
         		});
         		App.unblockUI(pageContent);
         	} 
-            
-            Date.prototype.yyyymmdd = function() {         
-                
-                var yyyy = this.getFullYear().toString();                                    
-                var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based         
-                var dd  = this.getDate().toString();             
-                                    
-                return yyyy + '-' + (mm[1]?mm:"0"+mm[0]) + '-' + (dd[1]?dd:"0"+dd[0]);
-            };
         },
         
         initCharts: function (parametrosChart) {
@@ -363,7 +353,6 @@ var ViewReport = function () {
             }
             $('#consolidado-title').html("<h4>"+ parametrosChart.titleApp +"</h4><h5>"+ parametrosChart.heading +", "+ parametrosChart.title +", "+ $('#desde').val() +" - "+ $('#hasta').val() +"</h5>");
             $('#consolidado-foot').html("<h5>" +parametrosChart.fecha +"</h5>");
-            
             if ($('#site_statistics').size() != 0) {
 
                 $('#site_statistics_loading').hide();
@@ -380,7 +369,7 @@ var ViewReport = function () {
                     label: parametrosChart.followup+'-('+parametrosChart.sumSeg+')'
                 }], {
     				series : {
-    					lines : {
+    					bars : {
     						show : true,
     						fill : true,
     						fillColor: {
@@ -405,8 +394,6 @@ var ViewReport = function () {
     				},
     				xaxis : {
     					mode : "categories",
-    					ticks: 11,
-                        tickDecimals: 0
     				},
     				yaxis: {
                         ticks: 11,
@@ -430,7 +417,7 @@ var ViewReport = function () {
     						if (item) {
     							var x = item.datapoint[0], y = item.datapoint[1];
     							$("#tooltip").html(
-    									'<div class="date">'+parametrosChart.fechas[x]+'</div>'+
+    									'<div class="date">'+parametrosChart.areas[x]+'</div>'+
     									'<div class="label label-warning">'+y+'</div>')
     									.css({
     								top : item.pageY + 5,

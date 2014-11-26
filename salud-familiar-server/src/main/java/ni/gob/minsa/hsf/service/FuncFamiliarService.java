@@ -40,8 +40,9 @@ public class FuncFamiliarService {
 	public FuncFamiliar getFuncFamiliarFamilia(String idFamilia) {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery("FROM FuncFamiliar fm where fm.familia.idFamilia = :idFamilia");
+		Query query = session.createQuery("FROM FuncFamiliar fm where fm.familia.idFamilia = :idFamilia and fm.pasive =:pasivo");
 		query.setParameter("idFamilia", idFamilia);
+		query.setParameter("pasivo", '0');
 		FuncFamiliar funcFam = (FuncFamiliar) query.uniqueResult();
 		return funcFam;
 	}

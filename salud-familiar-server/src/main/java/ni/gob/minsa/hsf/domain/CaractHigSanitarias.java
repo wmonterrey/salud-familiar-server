@@ -8,7 +8,6 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import ni.gob.minsa.hsf.domain.audit.Auditable;
@@ -63,7 +62,7 @@ public class CaractHigSanitarias extends BaseMetaData implements Auditable{
 		this.idCaractHig = idCaractHig;
 	}
 
-	@OneToOne(optional=false)
+	@ManyToOne(optional=false)
 	@JoinColumn(name="ID_FAMILIA")
 	@ForeignKey(name = "CARACT_FAMILIAS_FK")
 	public Familia getFamilia() {

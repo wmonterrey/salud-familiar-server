@@ -8,7 +8,9 @@
 	<http auto-config="true" request-matcher="regex">
 	    <intercept-url pattern="/movil/.*" access="ROLE_MOVIL" />
 	    <intercept-url pattern="/admin/.*" access="ROLE_ADMIN" />
+	    <intercept-url pattern="/noshown/.*" access="ROLE_DEV" />
 	    <intercept-url pattern="/catalog/.*" access="ROLE_CATALOG" />
+	    <intercept-url pattern="/info/delete/.*" access="ROLE_DELETE" />
 	    <intercept-url pattern="/info/.*" access="ROLE_INFO" />
 	    <intercept-url pattern="/report/.*" access="ROLE_REPORT" />
 	    <intercept-url pattern="/monitor/.*" access="ROLE_MONITOR" />

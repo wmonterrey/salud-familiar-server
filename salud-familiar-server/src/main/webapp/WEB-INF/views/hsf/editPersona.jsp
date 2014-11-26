@@ -148,7 +148,7 @@
 										<div class="tab-pane active" id="tab2_1">
 											<div class="row">
 												<div class="col-md-6">
-													<div class="form-group">
+													<div class="form-group" hidden="true">
 														<label class="control-label col-md-6"><spring:message code="nofamilia" />:
 														<span class="required">
 															 *
@@ -164,7 +164,7 @@
 														</div>
 													</div>
 												</div>
-												<div class="col-md-6">
+												<div class="col-md-6" hidden="true">
 													<div class="form-group">
 														<label class="control-label col-md-6"><spring:message code="nopersona" />:
 														<span class="required">

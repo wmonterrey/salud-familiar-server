@@ -4,7 +4,7 @@
 <spring:url value="/users/checkcredential" var="checkCredentialUrl"></spring:url>
 <spring:url value="/logout"	var="logout"/>
 <spring:url value="/keepsession" var="keepsession"/>
-<spring:url value="/users/chgpass" var="forcechgpass"/>
+<spring:url value="/users/forcechgpass" var="forcechgpass"/>
 <c:set var="notif"><spring:message code="not" /></c:set>
 <c:set var="sessionExpiring"><spring:message code="session.expiring" /></c:set>
 <c:set var="sessionExpiringTime"><spring:message code="session.expiring.time" /></c:set>

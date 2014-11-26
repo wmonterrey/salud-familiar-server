@@ -2,6 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!--[if IE 8]> <html class="ie8 no-js"> <![endif]-->
 <!--[if IE 9]> <html class="ie9 no-js"> <![endif]-->
@@ -48,7 +49,7 @@
 					<li>
 						<i class="fa fa-home"></i>
 						<a href="<spring:url value="/" htmlEscape="true "/>"><spring:message code="dashboard" /></a>
-						<i class="fa fa-angle-right"></i> <a href="<spring:url value="/info/searchHsf" htmlEscape="true "/>"><spring:message code="hsf.search" /></a>
+						<i class="fa fa-angle-right"></i> <a href="<spring:url value="/report/visitbyarea" htmlEscape="true "/>"><spring:message code="visit.area" /></a>
 					</li>
 				</ul>
 				<!-- END PAGE TITLE & BREADCRUMB-->
@@ -59,12 +60,13 @@
 		<c:set var="exportar"><spring:message code="export" /></c:set>
 		<c:set var="processSuccess"><spring:message code="process.success" /></c:set>
 		<c:set var="processError"><spring:message code="process.error" /></c:set>
+		<c:set var="noResults"><spring:message code="zeroresults" /></c:set>
 		<div class="row">
-			<div class="col-md-12">
+			<div class="col-md-4">
 				<div class="portlet" id="form_search">
 					<div class="portlet-title">
 						<div class="caption">
-							<i class="fa fa-reorder"></i> <spring:message code="hsf.search" />
+							<i class="fa fa-search"></i> <spring:message code="select" />
 						</div>
 						<div class="tools hidden-xs">
 							<a href="javascript:;" class="collapse"></a>
@@ -73,7 +75,7 @@
 					</div>
 					<div class="portlet-body form">
 						<!-- START FORM -->
-						<form action="#" class="form-horizontal" id="search_form">
+						<form action="#" class="form-horizontal" id="parameters_form">
 							<!-- START BODYFORM -->
 							<div class="form-body">
 								<div class="alert alert-danger display-none">
@@ -86,14 +88,34 @@
 								</div>
 								<!-- START ROW -->
 								<div class="row">
-									<div class="col-md-6">
+									<div class="col-md-12">
 										<div class="form-group">
-											<label class="control-label col-md-6"><spring:message code="silais" />:
+											<label class="control-label col-md-3"><spring:message code="select" /> <spring:message code="users.nivel" />:
 											<span class="required">
 												 *
 											</span>
 											</label>
-											<div class="col-md-6">
+											<div class="col-md-9">
+												<select data-placeholder="<spring:message code="select" /> <spring:message code="area" />" name="area" id="area" class="form-control">
+													<option value=""></option>
+													<c:forEach items="${areas}" var="area"> 
+														<option value="${area.codigo}">${area.valor}</option> 
+													</c:forEach>
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- START ROW -->
+								<div class="row">
+									<div class="col-md-12">
+										<div id="silais-div" class="form-group" hidden=true>
+											<label class="control-label col-md-3"><spring:message code="silais" />:
+											<span class="required">
+												 *
+											</span>
+											</label>
+											<div class="col-md-9">
 												<select data-placeholder="<spring:message code="select" /> <spring:message code="silais" />" name="silais" id="silais" class="form-control">
 													<option value=""></option>
 													<c:forEach items="${entidades}" var="entidad"> 
@@ -103,14 +125,17 @@
 											</div>
 										</div>
 									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<label class="control-label col-md-6"><spring:message code="muni" />:
+								</div>
+								<!-- START ROW -->
+								<div class="row">
+									<div class="col-md-12">
+										<div id="muni-div" class="form-group" hidden=true>
+											<label class="control-label col-md-3"><spring:message code="muni" />:
 											<span class="required">
 												 *
 											</span>
 											</label>
-											<div class="col-md-6">
+											<div class="col-md-9">
 												<select data-placeholder="<spring:message code="select" /> <spring:message code="muni" />" name="municipio" id="municipio" class="form-control">
 													<option value=""></option>
 												</select>
@@ -121,28 +146,46 @@
 								<!-- END ROW -->
 								<!-- START ROW -->
 								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group">
-											<label class="control-label col-md-6"><spring:message code="sector" />:
+									<div class="col-md-12">
+										<div id="unidad-div" class="form-group" hidden=true>
+											<label class="control-label col-md-3"><spring:message code="unit" />:
 											<span class="required">
 												 *
 											</span>
 											</label>
-											<div class="col-md-6">
+											<div class="col-md-9">
+												<select data-placeholder="<spring:message code="select" /> <spring:message code="unit" />" name="unidad" id="unidad" class="form-control">
+													<option value=""></option>
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- END ROW -->
+								<!-- START ROW -->
+								<div class="row">
+									<div class="col-md-12">
+										<div id="sector-div" class="form-group" hidden=true>
+											<label class="control-label col-md-3"><spring:message code="sector" />:
+											<span class="required">
+												 *
+											</span>
+											</label>
+											<div class="col-md-9">
 												<select data-placeholder="<spring:message code="select" /> <spring:message code="sector" />" name="sector" id="sector" class="form-control">
 													<option value=""></option>
 												</select>
 											</div>
 										</div>
 									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<label class="control-label col-md-6"><spring:message code="comunity" />:
+									<div class="col-md-12">
+										<div id="comunidad-div" class="form-group" hidden=true>
+											<label class="control-label col-md-3"><spring:message code="comunity" />:
 											<span class="required">
 												 *
 											</span>
 											</label>
-											<div class="col-md-6">
+											<div class="col-md-9">
 												<select data-placeholder="<spring:message code="select" /> <spring:message code="comunity" />" name="comunidad" id="comunidad" class="form-control">
 													<option value=""></option>
 												</select>
@@ -155,13 +198,11 @@
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
-											<label class="control-label col-md-6"><spring:message code="novivienda" />:
-											</label>
-											<div class="col-md-6">
-												<div class="input-group">
-													<input type="text" placeholder="<spring:message code="please.enter" /> <spring:message code="novivienda" />" class="form-control" id="numVivienda" name="numVivienda" />
-													<span class="input-group-addon">
-														<i class="fa fa-sort-numeric-asc"></i>
+											<div class="col-md-12">
+												<div class="input-group date date-picker" data-date-format="dd/MM/yyyy" data-date-end-date="+0d">
+													<input id="desde" name="desde" type="text" class="form-control" placeholder="<spring:message code="fromLabel" />">
+													<span class="input-group-btn">
+														<button class="btn btn-info" type="button"><i class="fa fa-calendar"></i></button>
 													</span>
 												</div>
 											</div>
@@ -169,13 +210,11 @@
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
-											<label class="control-label col-md-6"><spring:message code="nofamilia" />:
-											</label>
-											<div class="col-md-6">
-												<div class="input-group">
-													<input type="text" placeholder="<spring:message code="please.enter" /> <spring:message code="nofamilia" />" class="form-control" id="numFamilia" name="numFamilia"/>
-													<span class="input-group-addon">
-														<i class="fa fa-sort-numeric-asc"></i>
+											<div class="col-md-12">
+												<div class="input-group date date-picker" data-date-format="dd/MM/yyyy" data-date-end-date="+0d">
+													<input id="hasta" name="hasta" type="text" class="form-control" placeholder="<spring:message code="toLabel" />">
+													<span class="input-group-btn">
+														<button class="btn btn-info" type="button"><i class="fa fa-calendar"></i></button>
 													</span>
 												</div>
 											</div>
@@ -183,31 +222,9 @@
 									</div>
 								</div>
 								<!-- END ROW -->
-								<!-- START ROW -->
 								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group">
-											<label class="control-label col-md-6"><spring:message code="noficha" />:
-											</label>
-											<div class="col-md-6">
-												<div class="input-group">
-													<input type="text" placeholder="<spring:message code="please.enter" /> <spring:message code="noficha" />" class="form-control" id="numFicha" name="numFicha"/>
-													<span class="input-group-addon">
-														<i class="fa fa-sort-numeric-asc"></i>
-													</span>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!-- END ROW -->
-								<div class="form-actions fluid">
-									<div class="row">
-										<div class="col-md-12">
-											<div class="col-md-offset-11 col-md-1">
-												<button type="submit" id="search-hsf" class="btn btn-info"><i class="fa fa-search"></i> <spring:message code="search" /></button>
-											</div>
-										</div>
+									<div class="modal-footer">
+										<button type="submit" id="view-report" class="btn btn-info"><i class="fa fa-refresh"></i> <spring:message code="update" /></button>
 									</div>
 								</div>
 							</div>
@@ -218,42 +235,61 @@
 				</div>
 				<!-- END PORTLET -->
 			</div>
-		</div>
-		<div class="row">
-				<div class="col-md-12">
-					<!-- BEGIN TABLE PORTLET-->
-					<div class="portlet">
+			<div class="col-md-8">
+				<div class="portlet">
+					<div class="portlet-title">
+						<div class="caption">
+							<i class="fa fa-table"></i><spring:message code="visit.area" />
+						</div>
+					</div>
+					<div class="portlet-body">
+						<div class="table-toolbar1">
+						</div>
+						<table class="table table-striped table-hover table-bordered" id="visitas_area">
+							<thead>
+								<tr>
+									<th><spring:message code="area" /></th>
+									<th><spring:message code="visit.first" /></th>
+									<th><spring:message code="visit.followup" /></th>
+									<th><spring:message code="total" /></th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+				<!-- END PORTLET-->
+			</div>
+			<div class="clearfix">
+			</div>
+			<div class="row">
+				<div class="col-md-12 col-sm-12">
+					<!-- BEGIN PORTLET-->
+					<div id="visitas-area-div" class="portlet">
 						<div class="portlet-title">
 							<div class="caption">
+								<i class="fa fa-bar-chart-o"></i><spring:message code="visit.area" />
 							</div>
-							<div class="tools">
-								<a href="javascript:;" class="collapse"></a>
-								<a href="javascript:;" class="remove"></a>
+							<div class="actions">
+								<a href="#" onclick="exportVisitaArea();" class="btn btn-info btn-sm"><i class="fa fa-download"></i></a>
 							</div>
 						</div>
 						<div class="portlet-body">
-							<div class="table-responsive">
-							<table class="table table-striped table-hover table-bordered" id="resultados">
-							<thead>
-								<tr>
-									<th><spring:message code="comunity" /></th>
-									<th><spring:message code="noviv" /></th>
-									<th><spring:message code="nofamilia" /></th>
-									<th><spring:message code="noficha" /></th>
-									<th class="hidden-xs"><spring:message code="shortadd" /></th>
-									<th><spring:message code="dispen" /></th>
-									<th><spring:message code="finished" /></th>
-									<th><spring:message code="voided" /></th>
-									<th></th>
-								</tr>
-							</thead>
-							</table>
+							<spring:url value="/resources/img/loading.gif" var="loading" />
+							<div id="site_statistics_loading">
+								<img src="${loading}" alt="loading"/>
+							</div>
+							<div id="site_statistics_content" class="display-none">
+								<div id="consolidado-title" align="center"></div>
+								<div id="site_statistics" class="chart">
+								</div>
+								<div id="consolidado-foot"></div>
 							</div>
 						</div>
 					</div>
-					<!-- END TABLE PORTLET-->
+					<!-- END PORTLET-->
 				</div>
 			</div>
+		</div>
 		<!-- END PAGE CONTENT-->
 	</div>
 	<!-- END CONTENT -->
@@ -284,7 +320,7 @@
 <script src="${jQValidationLoc}"/></script>
 <spring:url value="/resources/plugins/select2/select2_locale_{language}.js" var="Select2Loc">
 	<spring:param name="language" value="${pageContext.request.locale.language}" />
-</spring:url>				
+</spring:url>			
 <script src="${Select2Loc}"/></script>
 <spring:url value="/resources/plugins/data-tables/jquery.dataTables.js" var="jQueryDataTables" />
 <script type="text/javascript" src="${jQueryDataTables}"></script>
@@ -293,24 +329,44 @@
 <spring:url value="/resources/plugins/data-tables/TableTools/js/dataTables.tableTools.js" var="dataTablesTT" />
 <script type="text/javascript" src="${dataTablesTT}"></script>
 <spring:url value="/resources/plugins/data-tables/TableTools/swf/copy_csv_xls_pdf.swf" var="dataTablesTTSWF" />
+<!-- jQuery Flot-->
+<spring:url value="/resources/plugins/flot/jquery.flot.js" var="jQFlot" />
+<script type="text/javascript" src="${jQFlot}"></script>
+<spring:url value="/resources/plugins/flot/jquery.flot.resize.js" var="jQFlotResize" />
+<script type="text/javascript" src="${jQFlotResize}"></script>
+<spring:url value="/resources/plugins/html2canvas/html2canvas.js" var="html2Canvas" />
+<script src="${html2Canvas}"></script>
+<spring:url value="/resources/plugins/flot/jquery.flot.categories.js" var="categories" />
+<script src="${categories}"></script>
 <!-- END PAGE LEVEL PLUGINS -->
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <spring:url value="/resources/scripts/app.js" var="App" />
 <script src="${App}" type="text/javascript"></script>
-<spring:url value="/resources/scripts/hsf-search.js" var="hsfSearch" />
-<script src="${hsfSearch}"></script>
+<!--<spring:url value="/resources/scripts/handleDatePickers.js" var="handleDatePickersJS" />
+<script src="${handleDatePickersJS}"></script>-->
+<spring:url value="/resources/scripts/view-report2.js" var="viewReport" />
+<script src="${viewReport}"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 
 <spring:url value="/opciones/municipios" var="opcMuniUrl"/>
 <spring:url value="/opciones/sectores" var="opcSectUrl"/>
 <spring:url value="/opciones/comunidades" var="opcComuUrl"/>
-<spring:url value="/info/hsfs" var="hsfsUrl"/>
-<spring:url value="/info/viewHsf" var="familiaUrl"/>
+<spring:url value="/report/visitsbyarea" var="reportUrl"/>
+<c:set var="initial"><spring:message code="visit.first" /></c:set>
+<c:set var="followup"><spring:message code="visit.followup" /></c:set>
+<c:set var="total"><spring:message code="total" /></c:set>
+<c:set var="exportar"><spring:message code="export" /></c:set>
+<c:set var="visitsArea"><spring:message code="visit.area" /></c:set>
+<c:set var="visitAreaNac"><spring:message code="visit.area1" /></c:set>
+<c:set var="titleApp"><spring:message code="title" /></c:set>
+<c:set var="heading"><spring:message code="heading" /></c:set>
+<c:set var="percent"><spring:message code="percent" /></c:set>
 
 <script>
     $(function () {
-    	$("li.hsf").removeClass("hsf").addClass("active");
-        $("li.hsfsearch").removeClass("hsfsearch").addClass("active");
+    	$("li.reports").removeClass("reports").addClass("active");
+    	$("li.agregados").removeClass("agregados").addClass("active");
+        $("li.reportarea").removeClass("reportarea").addClass("active");
     });
 </script>
 <script>
@@ -319,14 +375,31 @@
 		var parametros = {opcMuniUrl: "${opcMuniUrl}"
 			, opcSectUrl: "${opcSectUrl}"
 			, opcComuUrl: "${opcComuUrl}"
-			, hsfsUrl: "${hsfsUrl}"
-			, familiaUrl: "${familiaUrl}"
+			, reportUrl: "${reportUrl}"
 			, processSuccess: "${processSuccess}"
 			, processError: "${processError}"
-			,language:"${pageContext.request.locale.language}" };
-		SearchHSF.init(parametros);
-		$('#silais').change();
+			, noResults: "${noResults}"
+				, visitsArea: "${visitsArea}"
+					, visitAreaNac: "${visitAreaNac}"
+					, titleApp: "${titleApp}"
+					, heading: "${heading}"
+						, percent: "${percent}"
+			,language:"${pageContext.request.locale.language}",dataTablesTTSWF: "${dataTablesTTSWF}", exportar: "${exportar}"
+				, initial: "${initial}", followup: "${followup}", total: "${total}" };
+		//handleDatePickers("${pageContext.request.locale.language}");
+		ViewReport.init(parametros);
 	});
+	
+	function exportVisitaArea()
+	{
+		html2canvas($("#visitas-area-div"), {
+	        onrendered: function(canvas) {
+	            // canvas is the final rendered <canvas> element
+	        	var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");  /// here is the most important part because if you dont replace you will get a DOM 18 exception.
+	        	document.location.href=image;
+	        }
+	    });
+	}
 </script>
 <!-- END JAVASCRIPTS -->
 </body>

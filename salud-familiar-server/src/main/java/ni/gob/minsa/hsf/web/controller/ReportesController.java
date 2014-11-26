@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 
 import ni.gob.minsa.hsf.domain.catalogos.Areas;
 import ni.gob.minsa.hsf.domain.estructura.EntidadesAdtvas;
+import ni.gob.minsa.hsf.domain.report.Consolidado;
 import ni.gob.minsa.hsf.service.CatalogoService;
 import ni.gob.minsa.hsf.service.EntidadesAdtvasService;
 import ni.gob.minsa.hsf.service.ReportesService;
@@ -78,6 +79,141 @@ public class ReportesController {
         }
         return visitas;
         	
+    }
+    
+    @RequestMapping(value = "visitbyarea", method = RequestMethod.GET)
+    public String initReport2Form(Model model) throws ParseException { 	
+    	logger.debug("Inicia reportes por area");
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario);
+    	List<Areas> areas = catalogoService.getAreas(usuario);
+    	model.addAttribute("areas", areas);
+    	model.addAttribute("entidades", entidades);
+    	return "report/byarea";
+	}
+    
+    /**
+     * Retorna una lista de visitas. Acepta una solicitud GET para JSON
+     * @return Un arreglo JSON de unidades
+	 * @throws ParseException 
+     */
+    @RequestMapping(value = "visitsbyarea", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody List<Object> fetchVisitasAreaJson(@RequestParam(value = "area", required = true) String codArea,
+    		@RequestParam(value = "silais", required = false) Long codSilais,
+    		@RequestParam(value = "municipio", required = false, defaultValue = "") String codMunicipio,
+    		@RequestParam(value = "unidad", required = false) Long codUnidad,
+    		@RequestParam(value = "sector", required = false, defaultValue = "") String codSector,
+    		@RequestParam(value = "comunidad", required = false, defaultValue = "") String codComunidad,
+    		@RequestParam(value = "desde", required = true) String fec1,
+    		@RequestParam(value = "hasta", required = true) String fec2) throws ParseException {
+        logger.info("Obteniendo las visitas en JSON");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date date1 = formatter.parse(fec1);
+        Date date2 = formatter.parse(fec2);
+        List<Object> visitas = reportesService.visitasArea(codArea, codSilais, codMunicipio, codUnidad, codSector, codComunidad, date1.getTime(), date2.getTime());
+        if (visitas == null){
+        	logger.debug("Nulo");
+        }
+        return visitas;
+        	
+    }
+    
+    @RequestMapping(value = "consolidado", method = RequestMethod.GET)
+    public String initReport3Form(Model model) throws ParseException { 	
+    	logger.debug("Inicia consolidado");
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario);
+    	List<Areas> areas = catalogoService.getAreas(usuario);
+    	model.addAttribute("areas", areas);
+    	model.addAttribute("entidades", entidades);
+    	return "report/consolidado";
+	}
+    
+    
+    /**
+     * Retorna una lista de visitas. Acepta una solicitud GET para JSON
+     * @return Un arreglo JSON de unidades
+	 * @throws ParseException 
+     */
+    @RequestMapping(value = "consolidados", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody List<Consolidado> fetchConsolidadoAreaJson(@RequestParam(value = "area", required = true) String codArea,
+    		@RequestParam(value = "silais", required = false) Long codSilais,
+    		@RequestParam(value = "municipio", required = false, defaultValue = "") String codMunicipio,
+    		@RequestParam(value = "unidad", required = false) Long codUnidad,
+    		@RequestParam(value = "sector", required = false, defaultValue = "") String codSector,
+    		@RequestParam(value = "comunidad", required = false, defaultValue = "") String codComunidad)
+    		{
+        logger.info("Obteniendo consolidado en JSON");
+        List<Consolidado> consolidado = reportesService.getConsolidado(codArea, codSilais, codMunicipio, codUnidad, codSector, codComunidad);
+        if (consolidado == null){
+        	logger.debug("Nulo");
+        }
+        return consolidado;
+        	
+    }
+    
+    @RequestMapping(value = "embarazo", method = RequestMethod.GET)
+    public String initReport4Form(Model model) throws ParseException { 	
+    	logger.debug("Inicia reporte de embarazos");
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario);
+    	List<Areas> areas = catalogoService.getAreas(usuario);
+    	model.addAttribute("areas", areas);
+    	model.addAttribute("entidades", entidades);
+    	return "report/embarazos";
+	}
+    
+    /**
+     * Acepta una solicitud GET para JSON
+     * @return Un arreglo JSON 
+	 * @throws ParseException 
+     */
+    @RequestMapping(value = "embarazos", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody List<Object> fetchEmbarazosAreaJson(@RequestParam(value = "area", required = true) String codArea,
+    		@RequestParam(value = "silais", required = false) Long codSilais,
+    		@RequestParam(value = "municipio", required = false, defaultValue = "") String codMunicipio,
+    		@RequestParam(value = "unidad", required = false) Long codUnidad,
+    		@RequestParam(value = "sector", required = false, defaultValue = "") String codSector,
+    		@RequestParam(value = "comunidad", required = false, defaultValue = "") String codComunidad) {
+        logger.info("Obteniendo las embarazos en JSON");
+        List<Object> embarazos = reportesService.embarazosArea(codArea, codSilais, codMunicipio, 
+        		codUnidad, codSector, codComunidad);
+        if (embarazos == null){
+        	logger.debug("Nulo");
+        }
+        return embarazos;
+    }
+    
+    @RequestMapping(value = "cronico", method = RequestMethod.GET)
+    public String initReport5Form(Model model) throws ParseException { 	
+    	logger.debug("Inicia reporte de cronicos");
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario);
+    	List<Areas> areas = catalogoService.getAreas(usuario);
+    	model.addAttribute("areas", areas);
+    	model.addAttribute("entidades", entidades);
+    	return "report/cronicos";
+	}
+    
+    /**
+     * Acepta una solicitud GET para JSON
+     * @return Un arreglo JSON
+	 * @throws ParseException 
+     */
+    @RequestMapping(value = "cronicos", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody List<Object> fetchCronicosAreaJson(@RequestParam(value = "area", required = true) String codArea,
+    		@RequestParam(value = "silais", required = false) Long codSilais,
+    		@RequestParam(value = "municipio", required = false, defaultValue = "") String codMunicipio,
+    		@RequestParam(value = "unidad", required = false) Long codUnidad,
+    		@RequestParam(value = "sector", required = false, defaultValue = "") String codSector,
+    		@RequestParam(value = "comunidad", required = false, defaultValue = "") String codComunidad) {
+        logger.info("Obteniendo los cronicos en JSON");
+        List<Object> cronicos = reportesService.cronicosArea(codArea, codSilais, codMunicipio, 
+        		codUnidad, codSector, codComunidad);
+        if (cronicos == null){
+        	logger.debug("Nulo");
+        }
+        return cronicos;
     }
 	
 }

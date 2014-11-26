@@ -33,39 +33,37 @@ public class DashboardService {
 					"sum(case v.tipoVisita when '1' then 1 else 0 end) as inicial, " +
 					"sum(case v.tipoVisita when '0' then 1 else 0 end) as seguimiento, " +
 					"count(v.idVisita) as total " +
-					"from Visita v where v.fechaVisita between :fechaInicio and :fechaFinal group by v.fechaVisita order by v.fechaVisita");
+					"from Visita v where v.pasive =:pasivo and v.fechaVisita between :fechaInicio and :fechaFinal group by v.fechaVisita order by v.fechaVisita");
 			query.setTimestamp("fechaInicio", timeStampInicio);
 			query.setTimestamp("fechaFinal", timeStampFinal);
+			query.setParameter("pasivo", '0');
 		}
 		else if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|SILAIS")){
-			query = session.createSQLQuery("SELECT hsf_Visitas.FECHA_VISITA as fecha, " +
-					"sum(case hsf_visitas.TIPO_VISITA when '1' then 1 else 0 end) as inicial, " +
-					"sum(case hsf_visitas.TIPO_VISITA when '0' then 1 else 0 end) as seguimiento, count(id_visita) as total " +
-					"FROM ((((hsf_Visitas INNER JOIN hsf_familias ON hsf_Visitas.ID_FAMILIA = hsf_familias.ID_FAMILIA) " +
-					"INNER JOIN comunidades ON hsf_familias.COMUNIDAD = comunidades.CODIGO) " +
-					"INNER JOIN sectores ON comunidades.SECTOR = sectores.CODIGO) " +
-					"INNER JOIN divisionpolitica ON sectores.MUNICIPIO = divisionpolitica.CODIGO_NACIONAL) " +
-					"INNER JOIN entidades_adtvas ON divisionpolitica.DEPENDENCIA_SILAIS = entidades_adtvas.CODIGO " +
-					"WHERE (((hsf_Visitas.FECHA_VISITA) between :fechaInicio and :fechaFinal) and entidades_adtvas.CODIGO=:silais) " +
-					"GROUP BY hsf_Visitas.FECHA_VISITA order by hsf_Visitas.FECHA_VISITA");
+			query = session.createQuery("select v.fechaVisita as fecha, " +
+					"sum(case v.tipoVisita when '1' then 1 else 0 end) as inicial, " +
+					"sum(case v.tipoVisita when '0' then 1 else 0 end) as seguimiento, " +
+					"count(v.idVisita) as total " +
+					"from Visita v where v.pasive =:pasivo and v.fechaVisita between :fechaInicio and :fechaFinal " +
+					"and v.familia.comunidad.sector.municipio.dependenciaSilais.codigo =:silais " +
+					"group by v.fechaVisita order by v.fechaVisita");
 			query.setTimestamp("fechaInicio", timeStampInicio);
 			query.setTimestamp("fechaFinal", timeStampFinal);
 			query.setParameter("silais", usuario.getEntidad().getCodigo());
+			query.setParameter("pasivo", '0');
 		}
 		else if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|UNIDAD")){
-			query = session.createSQLQuery("SELECT hsf_Visitas.FECHA_VISITA as fecha, " +
-					"sum(case hsf_visitas.TIPO_VISITA when '1' then 1 else 0 end) as inicial, " +
-					"sum(case hsf_visitas.TIPO_VISITA when '0' then 1 else 0 end) as seguimiento, " +
-					"Count(hsf_Visitas.id_visita) AS total " +
-					"FROM ((hsf_Visitas INNER JOIN hsf_familias ON hsf_Visitas.ID_FAMILIA = hsf_familias.ID_FAMILIA) " +
-					"INNER JOIN comunidades ON hsf_familias.COMUNIDAD = comunidades.CODIGO) " +
-					"INNER JOIN sectores ON comunidades.SECTOR = sectores.CODIGO " +
-					"WHERE (((hsf_Visitas.FECHA_VISITA)  between :fechaInicio and :fechaFinal) " +
-					"and ((sectores.unidad) In (select codigo from unidades where codigo =:unidad or UNIDAD_ADTVA =:unidad))) " +
-					"GROUP BY hsf_Visitas.FECHA_VISITA order by hsf_Visitas.FECHA_VISITA");
+			query = session.createQuery("select v.fechaVisita as fecha, " +
+					"sum(case v.tipoVisita when '1' then 1 else 0 end) as inicial, " +
+					"sum(case v.tipoVisita when '0' then 1 else 0 end) as seguimiento, " +
+					"count(v.idVisita) as total " +
+					"from Visita v where v.pasive =:pasivo and v.fechaVisita between :fechaInicio and :fechaFinal " +
+					" and v.familia.comunidad.sector.unidad in " +
+					"(select lu.codigo from Unidades lu where lu.codigo = "+ usuario.getUnidad().getCodigo() +" or " +
+									"lu.unidadAdtva = "+ usuario.getUnidad().getCodigo() +") " +
+											"group by v.fechaVisita order by v.fechaVisita");
 			query.setTimestamp("fechaInicio", timeStampInicio);
 			query.setTimestamp("fechaFinal", timeStampFinal);
-			query.setParameter("unidad", usuario.getUnidad().getCodigo());
+			query.setParameter("pasivo", '0');
 		}
         // Retrieve all
 		return  query.list();
@@ -80,49 +78,42 @@ public class DashboardService {
 		// Create a Hibernate query (HQL)
 		Query query = null;
 		if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|CENTRAL")){
-			query = session.createSQLQuery("SELECT entidades_adtvas.NOMBRE as area, " +
-					"sum(case hsf_visitas.TIPO_VISITA when '1' then 1 else 0 end) as inicial, " +
-					"sum(case hsf_visitas.TIPO_VISITA when '0' then 1 else 0 end) as seguimiento, count(id_visita) as total " +
-					"FROM hsf_visitas " +
-					"INNER JOIN hsf_familias ON hsf_visitas.ID_FAMILIA = hsf_familias.ID_FAMILIA " +
-					"INNER JOIN comunidades ON hsf_familias.COMUNIDAD = comunidades.CODIGO " +
-					"INNER JOIN sectores ON comunidades.SECTOR = sectores.CODIGO " +
-					"INNER JOIN divisionpolitica ON sectores.MUNICIPIO = divisionpolitica.CODIGO_NACIONAL " +
-					"INNER JOIN entidades_adtvas ON divisionpolitica.DEPENDENCIA_SILAIS = entidades_adtvas.ENTIDAD_ADTVA_ID " +
-					"WHERE hsf_visitas.FECHA_VISITA between :fechaInicio and :fechaFinal " +
-					"GROUP BY entidades_adtvas.NOMBRE order BY entidades_adtvas.NOMBRE");
+			query = session.createQuery("select v.familia.comunidad.sector.municipio.dependenciaSilais.nombre as area, " +
+					"sum(case v.tipoVisita when '1' then 1 else 0 end) as inicial, " +
+					"sum(case v.tipoVisita when '0' then 1 else 0 end) as seguimiento, " +
+					"count(v.idVisita) as total " +
+					"from Visita v where v.pasive =:pasivo and v.fechaVisita between :fechaInicio and :fechaFinal " +
+					"group by v.familia.comunidad.sector.municipio.dependenciaSilais.nombre order by v.familia.comunidad.sector.municipio.dependenciaSilais.nombre");
 			query.setTimestamp("fechaInicio", timeStampInicio);
 			query.setTimestamp("fechaFinal", timeStampFinal);
+			query.setParameter("pasivo", '0');
 		}
 		else if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|SILAIS")){
-			query = session.createSQLQuery("SELECT divisionpolitica.NOMBRE as area, " +
-					"sum(case hsf_visitas.TIPO_VISITA when '1' then 1 else 0 end) as inicial, " +
-					"sum(case hsf_visitas.TIPO_VISITA when '0' then 1 else 0 end) as seguimiento, count(id_visita) as total " +
-					"FROM hsf_visitas " +
-					"INNER JOIN hsf_familias ON hsf_visitas.ID_FAMILIA = hsf_familias.ID_FAMILIA " +
-					"INNER JOIN comunidades ON hsf_familias.COMUNIDAD = comunidades.CODIGO " +
-					"INNER JOIN sectores ON comunidades.SECTOR = sectores.CODIGO " +
-					"INNER JOIN divisionpolitica ON sectores.MUNICIPIO = divisionpolitica.CODIGO_NACIONAL " +
-					"INNER JOIN entidades_adtvas ON divisionpolitica.DEPENDENCIA_SILAIS = entidades_adtvas.ENTIDAD_ADTVA_ID " +
-					"WHERE hsf_visitas.FECHA_VISITA between :fechaInicio and :fechaFinal and entidades_adtvas.codigo =:silais " +
-					"GROUP BY divisionpolitica.NOMBRE order BY entidades_adtvas.NOMBRE");
+			query = session.createQuery("select v.familia.comunidad.sector.municipio.nombre as area, " +
+					"sum(case v.tipoVisita when '1' then 1 else 0 end) as inicial, " +
+					"sum(case v.tipoVisita when '0' then 1 else 0 end) as seguimiento, " +
+					"count(v.idVisita) as total " +
+					"from Visita v where v.pasive =:pasivo and v.fechaVisita between :fechaInicio and :fechaFinal " +
+					"and v.familia.comunidad.sector.municipio.dependenciaSilais.codigo =:silais " +
+					"group by v.familia.comunidad.sector.municipio.nombre order by v.familia.comunidad.sector.municipio.nombre");
 			query.setTimestamp("fechaInicio", timeStampInicio);
 			query.setTimestamp("fechaFinal", timeStampFinal);
 			query.setParameter("silais", usuario.getEntidad().getCodigo());
+			query.setParameter("pasivo", '0');
 		}
 		else if (usuario.getNivel().getCodigo().equals("HSF_NIVELES|UNIDAD")){
-			query = session.createSQLQuery("SELECT sectores.NOMBRE as area, " +
-					"sum(case hsf_visitas.TIPO_VISITA when '1' then 1 else 0 end) as inicial, " +
-					"sum(case hsf_visitas.TIPO_VISITA when '0' then 1 else 0 end) as seguimiento, count(id_visita) as total " +
-					"FROM hsf_visitas " +
-					"INNER JOIN hsf_familias ON hsf_visitas.ID_FAMILIA = hsf_familias.ID_FAMILIA " +
-					"INNER JOIN comunidades ON hsf_familias.COMUNIDAD = comunidades.CODIGO " +
-					"INNER JOIN sectores ON comunidades.SECTOR = sectores.CODIGO " +
-					"WHERE hsf_visitas.FECHA_VISITA between :fechaInicio and :fechaFinal and sectores.unidad In (select codigo from unidades where codigo =:unidad or UNIDAD_ADTVA =:unidad) " +
-					"GROUP BY sectores.NOMBRE order BY entidades_adtvas.NOMBRE");
+			query = session.createQuery("select v.familia.comunidad.sector.nombre as area, " +
+					"sum(case v.tipoVisita when '1' then 1 else 0 end) as inicial, " +
+					"sum(case v.tipoVisita when '0' then 1 else 0 end) as seguimiento, " +
+					"count(v.idVisita) as total " +
+					"from Visita v where v.pasive =:pasivo and v.fechaVisita between :fechaInicio and :fechaFinal " +
+					"and v.familia.comunidad.sector.unidad in " +
+					"(select lu.codigo from Unidades lu where lu.codigo = "+ usuario.getUnidad().getCodigo() +" or " +
+									"lu.unidadAdtva = "+ usuario.getUnidad().getCodigo() +") " +
+					"group by v.familia.comunidad.sector.nombre order by v.familia.comunidad.sector.nombre");
 			query.setTimestamp("fechaInicio", timeStampInicio);
 			query.setTimestamp("fechaFinal", timeStampFinal);
-			query.setParameter("unidad", usuario.getUnidad().getCodigo());
+			query.setParameter("pasivo", '0');
 		}
         // Retrieve all
 		return  query.list();

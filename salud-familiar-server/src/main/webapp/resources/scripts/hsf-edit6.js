@@ -375,7 +375,33 @@ var FormEdit6HSF = function () {
     	    	$('#cuerpoEnfSocModal').html('<h4>'+parametros.quitarenf+'</h4>');
     	    	$('#basic2').modal('show');
     	     });
+    	    
+    	    $("#enferform").on("shown.bs.modal", function () { 
+            	$("#save-person").click();
+            });
+    	    
+    	    $("#enfersocform").on("shown.bs.modal", function () { 
+            	$("#save-person").click();
+            });
             
+    	    $('#save-person').click(function() {
+    	    	var IsValid = true;
+    	       	// Validate Each Bootstrap tab
+                $(".persona").find("div.tab-pane").each(function (index, tab) {
+                    var id = $(tab).attr("id");
+                    $('a[href="#' + id + '"]').tab('show');
+                    if (!form.valid()) {
+                        $('#enferform').modal('hide');
+                        IsValid = false;
+                        return false; // Break each loop
+                    }
+                });
+                if (IsValid){
+                	App.blockUI(pageContent, false);
+                	guardarPersonaTemp();
+                	App.unblockUI(pageContent);
+                }
+    	    });
             
             function guardarPersona()
         	{
@@ -400,6 +426,30 @@ var FormEdit6HSF = function () {
             	window.setTimeout(function(){
 			        window.location.href = parametros.familiaUrl;
 			    }, 1000);
+            	App.unblockUI(pageContent);
+        	}
+            
+            function guardarPersonaTemp()
+        	{
+            	App.blockUI(pageContent, false);
+            	$.post( parametros.editPersonaUrl
+    		            , $('#add-person-form').serialize()
+    		            , function( data )
+    		            {
+		            		if (data == ""){
+		    					toastr.error(parametros.deniedError);
+		    				}
+		    				else{
+		    					persona = JSON.parse(data);
+		    					$('#idPersona').val(persona.idPersona);
+		    					toastr.success(parametros.processSuccess);
+		    				}
+    		            }
+    		            , 'text' )
+    			  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {
+    			    		alert( parametros.processError + " : " + errorThrown);
+    			    		App.unblockUI(pageContent);
+    			  		});
             	App.unblockUI(pageContent);
         	}
             
