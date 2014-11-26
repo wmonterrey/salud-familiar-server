@@ -14,32 +14,6 @@ var ViewReport = function () {
         $("#comunidad").select2({
         });
    };
-   
-   var handleDatePickers = function (idioma) {
-       if (jQuery().datepicker) {
-           $('.date-picker').datepicker({
-               rtl: App.isRTL(),
-               language: idioma,
-               format:'dd/mm/yyyy',
-               autoclose: true
-           });
-           $('body').removeClass("modal-open"); // fix bug when inline picker is used in modal
-       }
-   };
-   
-   var handleInputMasks = function () {
-       $.extend($.inputmask.defaults, {
-           'autounmask': true
-       });
-       
-       $("#desde").inputmask("d/m/y", {
-           "placeholder": "dd/mm/yyyy"
-       }); //multi-char placeholder
-       
-       $("#hasta").inputmask("d/m/y", {
-           "placeholder": "dd/mm/yyyy"
-       }); //multi-char placeholder
-   };
 
     return {
         //main function to initiate the module
@@ -87,13 +61,7 @@ var ViewReport = function () {
                                 return $("#area option:selected").val()=="HSF_AREAS|COMU";
                             }
                         }
-                    },
-                    desde: {
-                    	required: true,
-            		},
-            		hasta: {
-            			required: true,
-            		},
+                    }
                 },
 
                 invalidHandler: function (event, validator) { //display error alert on form submit              
@@ -124,8 +92,6 @@ var ViewReport = function () {
                 }
             });
             handleSelect2();
-            handleDatePickers();
-            handleInputMasks();
             
             $('#area').change(
             		function() {
@@ -248,93 +214,102 @@ var ViewReport = function () {
             function getData() {
             	App.blockUI(pageContent, false);
             	$.getJSON(parametros.reportUrl, $('#parameters_form').serialize(), function(data) {
-            		
             		$('#site_statistics_loading').show();
                     $('#site_statistics_content').hide();
+                    $('#site_statistics_loading_2').show();
+                    $('#site_statistics_content_2').hide();
                     
                     if ($('#area option:selected').val() == "HSF_AREAS|CENTRAL"){
-    					title = parametros.visitsDay;
+    					title = parametros.allPreg + ' - ' + parametros.summaryNac;
     				}
     				else if ($('#area option:selected').val() == "HSF_AREAS|SILAIS"){
-    					title = parametros.visitsDay+' '+$('#silais option:selected').text();
+    					title = parametros.allPreg + ' - ' + parametros.summary+' '+$('#silais option:selected').text();
     				}
     				else if ($('#area option:selected').val() == "HSF_AREAS|UNI"){
-    					title = parametros.visitsDay+' '+$('#unidad option:selected').text();
+    					title = parametros.allPreg + ' - ' + parametros.summary+' '+$('#unidad option:selected').text();
     				}
     				else if ($('#area option:selected').val() == "HSF_AREAS|SECTOR"){
-    					title = parametros.visitsDay+' '+$('#sector option:selected').text();
+    					title = parametros.allPreg + ' - ' + parametros.summary+' '+$('#sector option:selected').text();
     				}
     				else if ($('#area option:selected').val() == "HSF_AREAS|COMU"){
-    					title = parametros.visitsDay+' '+$('#comunidad option:selected').text();
+    					title = parametros.allPreg + ' - ' + parametros.summary+' '+$('#comunidad option:selected').text();
     				}
                     var d = new Date();
                     fecha=d.toLocaleString(parametros.language);
-                    var pdfMes = title + ', ' +$('#desde').val() +' - '+$('#hasta').val();
-                    
-                    var table1 = $('#visitas_dia').dataTable( {  
-                        "aoColumns" : [null,{sClass: "aw-right" },{sClass: "aw-right" },{sClass: "aw-right" }],bFilter: false, bInfo: true, bPaginate: true, bDestroy: true,
-                        "aLengthMenu": [[5, 10, 15, 20, -1],[5, 10, 15, 20, "Todos"]], iDisplayLength: 5});
-                	
-                	var tt = new $.fn.dataTable.TableTools( table1, {
-                    	"sSwfPath": parametros.dataTablesTTSWF,
-                    	"aButtons": [
-                    	                {
-                    	                    "sExtends":    "collection",
-                    	                    "sButtonText": parametros.exportar,
-                    	                    "aButtons": [
-                    	                                 {
-                    	                                     "sExtends": "csv",
-                    	                                     "sFileName": title+"-*.csv",
-                    	                                     "sTitle": parametros.heading,
-                    	                                     "oSelectorOpts": { filter: 'applied', order: 'current' },
-                    	                                     "mColumns": [ 0, 1, 2, 3]
-                    	                                 },
-                    	                                 {
-                    	                                     "sExtends": "pdf",
-                    	                                     "sFileName": title+"-*.pdf",
+                    var table1 = $('#consolidado').dataTable( {  
+    	                "aoColumns" : [null,{sClass: "aw-right" },{sClass: "aw-right" },{sClass: "aw-right" }],bFilter: false, bInfo: true, bPaginate: true, bDestroy: true,
+    	                "aLengthMenu": [[5, 10, 15, 20, -1],[5, 10, 15, 20, "Todos"]], iDisplayLength: 5});
+    	        	
+    	        	var tt = new $.fn.dataTable.TableTools( table1, {
+    	            	"sSwfPath": parametros.dataTablesTTSWF,
+    	            	"aButtons": [
+    	            	                {
+    	            	                    "sExtends":    "collection",
+    	            	                    "sButtonText": parametros.exportar,
+    	            	                    "aButtons": [
+    	            	                                 {
+    	            	                                     "sExtends": "csv",
+    	            	                                     "sFileName": title+"-*.csv",
     	            	                                     "sTitle": parametros.heading,
-    	            	                                     "sPdfMessage": pdfMes,
-                    	                                     "oSelectorOpts": { filter: 'applied', order: 'current' },
-                    	                                     "mColumns": [ 0, 1, 2, 3],
-                    	                                     "sPdfOrientation": "landscape",
-                    	                                 }
-                    	                                 ]
-                    	                }
-                    	            ]
-                    } );
-                	
-                	$( tt.fnContainer() ).insertBefore('div.table-toolbar1');
-                	jQuery('#visitas_dia_wrapper .dataTables_length select').addClass("form-control input-small"); // modify table per page dropdown
-                	table1.fnClearTable();
-            		if (data == ''){
+    	            	                                     "oSelectorOpts": { filter: 'applied', order: 'current' },
+    	            	                                     "mColumns": [ 0, 1, 2, 3]
+    	            	                                 },
+    	            	                                 {
+    	            	                                     "sExtends": "pdf",
+    	            	                                     "sFileName": title+"-*.pdf",
+    	            	                                     "sTitle": parametros.heading,
+    	            	                                     "sPdfMessage": title + ' - ' + fecha,
+    	            	                                     "oSelectorOpts": { filter: 'applied', order: 'current' },
+    	            	                                     "mColumns": [ 0, 1, 2, 3],
+    	            	                                     "sPdfOrientation": "landscape",
+    	            	                                 }
+    	            	                                 ]
+    	            	                }
+    	            	            ]
+    	            } );
+    	        	
+    	        	$( tt.fnContainer() ).insertBefore('div.table-toolbar1');
+    	        	jQuery('#consolidado_wrapper .dataTables_length select').addClass("form-control input-small"); // modify table per page dropdown
+    	        	table1.fnClearTable();
+    	        	embarazos = [];
+        			embCpn = [];
+        			embNoCpn = [];
+        			porcEmbCpn = [];
+    				areas = [];
+    				sumEmbarazos = 0;
+    				sumEmbCpn = 0;
+    				sumEmbNoCpn = 0;
+    				porEmbCpn=0;
+    				porEmbNoCpn=0;
+            		if (data == '' || data == null){
     					toastr.error(parametros.noResults);
+    					nParametrosKnob = {knob1:0,knob2:0,knob3:0,knob4:0,knob5:0,knob6:0};
+            			ViewReport.initKnowElements(nParametrosKnob);
     				}
             		else{
-            			iniciales = [];
-        				segs = [];
-        				totales = [];
-        				fechas = [];
-        				sumInicial = 0;
-        				sumSeg = 0;
-        				sumTotal = 0;
             			for (var row in data) {
-            				var d = new Date(data[row][0]);
-	        				table1.fnAddData(
-	    							[d.yyyymmdd(), data[row][1], data[row][2], data[row][3]]);
-	        				
-	        				fechas.push([d.yyyymmdd()]);
-	    					iniciales.push([d.yyyymmdd(), data[row][1]]);
-	    					sumInicial = sumInicial + parseInt(data[row][1]);
-	    					segs.push([d.yyyymmdd(), data[row][2]]);
-	    					sumSeg = sumSeg + parseInt(data[row][2]);
-	    					totales.push([d.yyyymmdd(), data[row][3]]);
-	    					sumTotal = sumTotal + parseInt(data[row][3]);
-	        			}
-            			nParametrosChart = {fechas: fechas,iniciales: iniciales, segs: segs, totales: totales
-            					, sumInicial: sumInicial, sumSeg: sumSeg, sumTotal: sumTotal, title:title, fecha:fecha, titleApp: parametros.titleApp
-        						, heading: parametros.heading,
-            					initial: parametros.initial, followup: parametros.followup, total: parametros.total};
+    						table1.fnAddData(
+        							[data[row][0], data[row][1], data[row][2], data[row][3]]);
+    						areas.push([data[row][0]]);
+    						
+    						embarazos.push([data[row][0], data[row][1]]);
+    						sumEmbarazos = sumEmbarazos + parseInt(data[row][1]);
+    						embCpn.push([data[row][0], data[row][2]]);
+    						sumEmbCpn = sumEmbCpn + parseInt(data[row][2]);
+    						embNoCpn.push([data[row][0], data[row][3]]);
+    						sumEmbNoCpn = sumEmbNoCpn + parseInt(data[row][3]);
+    						porEmbCpn = (Math.round(data[row][2] / data[row][1] * 100 * 100)/100);
+    						porcEmbCpn.push([data[row][0], porEmbCpn]);
+        				}
+            			nParametrosChart = {areas: areas,embarazos: embarazos, porcEmbCpn:porcEmbCpn,embCpn: embCpn, embNoCpn: embNoCpn
+            					, sumEmbarazos: sumEmbarazos, sumEmbCpn: sumEmbCpn, sumEmbNoCpn: sumEmbNoCpn, 
+            					siCpn: parametros.siCpn, allPreg: parametros.allPreg, noCpn: parametros.noCpn, title:title, fecha:fecha, titleApp: parametros.titleApp
+            						, heading: parametros.heading,percent:parametros.percent};
             			ViewReport.initCharts(nParametrosChart);
+            			porEmbCpn = (sumEmbCpn / sumEmbarazos) * 100;
+            			porEmbNoCpn = (sumEmbNoCpn / sumEmbarazos) * 100;
+            			nParametrosKnob = {knob1:porEmbCpn,knob2:porEmbNoCpn,knob3:sumEmbCpn,knob4:sumEmbarazos,knob5:sumEmbNoCpn,knob6:sumEmbarazos};
+            			ViewReport.initKnowElements(nParametrosKnob);
             		}
         			App.unblockUI(pageContent);
         		})
@@ -345,14 +320,92 @@ var ViewReport = function () {
         		App.unblockUI(pageContent);
         	} 
             
-            Date.prototype.yyyymmdd = function() {         
+            Date.prototype.ddmmyyyyy = function() {         
                 
                 var yyyy = this.getFullYear().toString();                                    
                 var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based         
                 var dd  = this.getDate().toString();             
                                     
-                return yyyy + '-' + (mm[1]?mm:"0"+mm[0]) + '-' + (dd[1]?dd:"0"+dd[0]);
+                return (dd[1]?dd:"0"+dd[0]) + '-' + (mm[1]?mm:"0"+mm[0])+ '-' +yyyy;
             };
+        },
+        
+        initKnowElements : function (parametersKnob) {
+            //knob does not support ie8 so skip it
+            if (!jQuery().knob || App.isIE8()) {
+                return;
+            }
+            
+            if ($(".knobify").size() > 0) {
+            	$(".knobify").knob({
+                    readOnly: true,
+                    skin: "tron",
+                    'width': 100,
+                    'height': 100,
+                    'dynamicDraw': true,
+                    'thickness': 0.2,
+                    'tickColorizeValues': true,
+                    'skin': 'tron',
+                    draw: function () {
+                        // "tron" case
+                        if (this.$.data('skin') == 'tron') {
+
+                            var a = this.angle(this.cv) // Angle
+                            ,
+                                sa = this.startAngle // Previous start angle
+                                ,
+                                sat = this.startAngle // Start angle
+                                ,
+                                ea // Previous end angle
+                                ,
+                                eat = sat + a // End angle
+                                ,
+                                r = 1;
+
+                            this.g.lineWidth = this.lineWidth;
+
+                            this.o.cursor && (sat = eat - 0.3) && (eat = eat + 0.3);
+
+                            if (this.o.displayPrevious) {
+                                ea = this.startAngle + this.angle(this.v);
+                                this.o.cursor && (sa = ea - 0.3) && (ea = ea + 0.3);
+                                this.g.beginPath();
+                                this.g.strokeStyle = this.pColor;
+                                this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sa, ea, false);
+                                this.g.stroke();
+                            }
+
+                            this.g.beginPath();
+                            this.g.strokeStyle = r ? this.o.fgColor : this.fgColor;
+                            this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sat, eat, false);
+                            this.g.stroke();
+
+                            this.g.lineWidth = 2;
+                            this.g.beginPath();
+                            this.g.strokeStyle = this.o.fgColor;
+                            this.g.arc(this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false);
+                            this.g.stroke();
+
+                            return false;
+
+                        }
+                    }
+                });
+            }
+            
+            $('#knob1')
+            .val(parametersKnob.knob1)
+            .trigger('change');
+            
+            $('#knob2')
+            .val(parametersKnob.knob2)
+            .trigger('change');
+            
+            $('#knob1num').html(parametersKnob.knob3);
+            $('#knob2num').html(parametersKnob.knob4);
+            $('#knob3num').html(parametersKnob.knob5);
+            $('#knob4num').html(parametersKnob.knob6);
+            
         },
         
         initCharts: function (parametrosChart) {
@@ -361,26 +414,27 @@ var ViewReport = function () {
             if (!jQuery.plot) {
                 return;
             }
-            $('#consolidado-title').html("<h4>"+ parametrosChart.titleApp +"</h4><h5>"+ parametrosChart.heading +", "+ parametrosChart.title +", "+ $('#desde').val() +" - "+ $('#hasta').val() +"</h5>");
+            $('#consolidado-title').html("<h4>"+ parametrosChart.titleApp +"</h4><h5>"+ parametrosChart.heading +" - "+ parametrosChart.title +"</h5>");
             $('#consolidado-foot').html("<h5>" +parametrosChart.fecha +"</h5>");
-            
+            $('#consolidado-title-2').html("<h4>"+ parametrosChart.titleApp +"</h4><h5>"+ parametrosChart.heading +" - "+ parametrosChart.title +"</h5>");
+            $('#consolidado-foot-2').html("<h5>" +parametrosChart.fecha +"</h5>");
             if ($('#site_statistics').size() != 0) {
 
                 $('#site_statistics_loading').hide();
                 $('#site_statistics_content').show();
 
     			plot = $.plot("#site_statistics", [{
-                    data: parametrosChart.totales,
-                    label: parametrosChart.total+'-('+parametrosChart.sumTotal+')'
-                }, {
-    				data : parametrosChart.iniciales,
-    				label : parametrosChart.initial+'-('+parametrosChart.sumInicial+')'
+    				data : parametrosChart.embarazos,
+    				label : parametrosChart.allPreg+'-('+parametrosChart.sumEmbarazos+')'
     			}, {
-                    data: parametrosChart.segs,
-                    label: parametrosChart.followup+'-('+parametrosChart.sumSeg+')'
+                    data: parametrosChart.embCpn,
+                    label: parametrosChart.siCpn+'-('+parametrosChart.sumEmbCpn+')'
+                }, {
+                    data: parametrosChart.embNoCpn,
+                    label: parametrosChart.noCpn+'-('+parametrosChart.sumEmbNoCpn+')'
                 }], {
     				series : {
-    					lines : {
+    					bars : {
     						show : true,
     						fill : true,
     						fillColor: {
@@ -405,14 +459,12 @@ var ViewReport = function () {
     				},
     				xaxis : {
     					mode : "categories",
-    					ticks: 11,
-                        tickDecimals: 0
     				},
     				yaxis: {
                         ticks: 11,
                         tickDecimals: 0
                     },
-    				colors: ["#d12610", "#37b7f3", "#52e136"]
+    				colors: ["#37b7f3", "#52e136", "#d12610"]
     			});
     	
     			$('<div id="tooltip" class="chart-tooltip"><\/div>').css({
@@ -430,8 +482,79 @@ var ViewReport = function () {
     						if (item) {
     							var x = item.datapoint[0], y = item.datapoint[1];
     							$("#tooltip").html(
-    									'<div class="date">'+parametrosChart.fechas[x]+'</div>'+
+    									'<div class="date">'+parametrosChart.areas[x]+'</div>'+
     									'<div class="label label-warning">'+y+'</div>')
+    									.css({
+    								top : item.pageY + 5,
+    								left : item.pageX + 5
+    							}).fadeIn(200);
+    						} else {
+    							$("#tooltip").hide();
+    						}
+    						/*}*/
+    					});
+    		
+    		}
+            if ($('#site_statistics_2').size() != 0) {
+
+                $('#site_statistics_loading_2').hide();
+                $('#site_statistics_content_2').show();
+
+    			plot = $.plot("#site_statistics_2", [{
+    				data : parametrosChart.porcEmbCpn,
+    				label : '% ' + parametrosChart.percent + ' '+ parametrosChart.siCpn
+    			}], {
+    				series : {
+    					bars : {
+    						show : true,
+    						fill : true,
+    						fillColor: {
+                                colors: [{
+                                        opacity: 0.05
+                                    }, {
+                                        opacity: 0.01
+                                    }
+                                ]
+                            }
+    					},
+    					points: {
+                            show: true
+                        },
+                        shadowSize: 2
+    				},
+    				grid : {
+    					hoverable: true,
+                        clickable: true,
+                        tickColor: "#eee",
+                        borderWidth: 0
+    				},
+    				xaxis : {
+    					mode : "categories",
+    				},
+    				yaxis: {
+                        ticks: 11,
+                        tickDecimals: 0
+                    },
+    				colors: ["#37b7f3", "#52e136"]
+    			});
+    	
+    			$('<div id="tooltip" class="chart-tooltip"><\/div>').css({
+                    position: 'absolute',
+                    display: 'none',
+                    border: '0px solid #ccc',
+                    padding: '2px 6px',
+                    'background-color': '#fff',
+                }).appendTo("body").fadeIn(200);
+    	
+    			$("#site_statistics_2").bind("plothover",
+    					function(event, pos, item) {
+    	
+    						/*if ($("#enableTooltip:checked").length > 0) {*/
+    						if (item) {
+    							var x = item.datapoint[0], y = item.datapoint[1];
+    							$("#tooltip").html(
+    									'<div class="date">'+parametrosChart.areas[x]+'</div>'+
+    									'<div class="label label-warning">'+y+'%</div>')
     									.css({
     								top : item.pageY + 5,
     								left : item.pageX + 5

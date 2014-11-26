@@ -34,7 +34,7 @@ public class PersonaService {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
 		// Create a Hibernate query (HQL)
-		Query query = session.createQuery("FROM Persona per where per.familia.idFamilia = :idFamilia");
+		Query query = session.createQuery("FROM Persona per where per.familia.idFamilia = :idFamilia order by per.numPersona");
 		query.setParameter("idFamilia", idFamilia);
 		// Retrieve all
 		return  query.list();
@@ -46,6 +46,14 @@ public class PersonaService {
 		Query query = session.createQuery("FROM Persona p where p.idPersona = '"+ idPersona + "'");
 		Persona persona = (Persona) query.uniqueResult();
 		return persona;
+	}
+	
+	public Integer getCodePersona(String idFamilia) {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery("SELECT max(numPersona) FROM Persona per where per.familia.idFamilia = :idFamilia group by per.familia.idFamilia");
+		query.setParameter("idFamilia", idFamilia);
+		return (Integer) query.uniqueResult() + 1;
 	}
 	
 	public void addPersona(Persona persona) {

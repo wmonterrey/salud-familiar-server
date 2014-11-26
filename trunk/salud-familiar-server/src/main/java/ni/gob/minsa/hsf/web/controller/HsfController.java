@@ -93,6 +93,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.google.gson.Gson;
 
 /**
@@ -776,6 +778,49 @@ public class HsfController {
 		}
 	}
     
+    
+    @RequestMapping(value = "newPersona/{idFamilia}", method = RequestMethod.GET)
+	public String initNewPersonForm(@PathVariable("idFamilia") String idFamilia,Model model) {
+    	Familia familia = this.familiaService.getFamilia(idFamilia);
+    	if(familia ==null){
+    		return "404";
+    	}
+		else{
+			Integer numPer = personaService.getCodePersona(idFamilia);
+			Persona persona = new Persona();
+			persona.setFamilia(familia);
+			persona.setNumPersona(numPer);
+			List<SiNoNs> sinons = catalogoService.getSiNoNs();
+			List<Etnia> etnias = catalogoService.getEtnia();
+			List<Sexo> sexos = catalogoService.getSexo();
+	    	List<Escolaridad> escolaridades = catalogoService.getEscda();
+	    	List<Ocupacion> ocupaciones = ocupacionService.getAllOcupaciones();
+	    	List<Religion> religiones = catalogoService.getReligion();
+	    	List<FactRiesgoNoMod> frnms = catalogoService.getFactRiesgoNoMod();
+	    	List<FactRiesgoMod> frms = catalogoService.getFactRiesgoMod();
+	    	List<FactRiesgoSoc> frss = catalogoService.getFactRiesgoSoc();
+	    	List<Discapacidad> discps = catalogoService.getDiscapacidad();
+	    	List<GrupoDispensarial> gds = catalogoService.getGrupoDispensarial();
+	    	List<EnfSocioC> enfermedadessocs = catalogoService.getEnfSocioC();
+	    	List<Profesion> profesiones = catalogoService.getProfesiones();
+			model.addAttribute("sinons",sinons);
+			model.addAttribute("sexos", sexos);
+			model.addAttribute("etnias", etnias);
+	    	model.addAttribute("escolaridades", escolaridades);
+	    	model.addAttribute("ocupaciones", ocupaciones);
+	    	model.addAttribute("religiones", religiones);
+	    	model.addAttribute("frnms", frnms);
+	    	model.addAttribute("frss", frss);
+	    	model.addAttribute("frms", frms);
+	    	model.addAttribute("discps", discps);
+	    	model.addAttribute("gds", gds);
+	    	model.addAttribute("enfermedadessocs", enfermedadessocs);
+	    	model.addAttribute("profesiones", profesiones);
+			model.addAttribute("persona",persona);
+			return "hsf/editPersona";
+		}
+	}
+    
     @RequestMapping(value = "editChs/{idCaractHig}", method = RequestMethod.GET)
 	public String initUpdateCHSForm(@PathVariable("idCaractHig") String idCaractHig, Model model) {
     	CaractHigSanitarias chs = this.caractHigSanitariasService.getCaractHigSanitarias(idCaractHig);
@@ -1017,6 +1062,237 @@ public class HsfController {
 			return "404";
 		}
     }
+    
+    /**
+     * Custom handler for voiding a family.
+     *
+     * @param idFamily the ID of the family to avoid
+     * @return a String
+     */
+    @RequestMapping("/delete/anularFamilia/{idFamilia}")
+    public String voidFamily(@PathVariable("idFamilia") String idFamilia, 
+    		RedirectAttributes redirectAttributes) {
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	Familia familia = familiaService.getFamilia(idFamilia);
+    	if(hsfService.verificarPermisoDatos(familia.getComunidad(), usuario)){
+    		familia.setPasive('1');
+    		familiaService.addFamilia(familia);
+    		List<Visita> visitas = this.visitaService.getVisitas(idFamilia);
+    		for(Visita visita:visitas){
+    			visita.setPasive('1');
+    			visitaService.addVisita(visita);
+    		}
+    		List<Persona> personas = this.personaService.getPersonas(idFamilia);
+    		for(Persona persona:personas){
+    			persona.setPasive('1');
+    			List<Enfermedades> enfermedades = enfermedadesService.getEnfermedadesPersona(persona.getIdPersona());
+    			for(Enfermedades enfermedad:enfermedades){
+    				enfermedad.setPasive('1');
+    				enfermedadesService.addEnfermedades(enfermedad);
+    			}
+		    	List<EnfermedadesSocioCult> enfermedadesSoc = enfermedadesSocioCultService.getEnfermedadesSocioCultPersona(persona.getIdPersona());
+		    	for(EnfermedadesSocioCult enfermedadSoc:enfermedadesSoc){
+		    		enfermedadSoc.setPasive('1');
+		    		enfermedadesSocioCultService.addEnfermedadesSocioCult(enfermedadSoc);
+    			}
+    			personaService.addPersona(persona);
+    		}
+    		CaractHigSanitarias carHigSan = this.caractHigSanitariasService.getCaractHigSanitariasFamilia(idFamilia);
+    		if(carHigSan!=null){
+    			carHigSan.setPasive('1');
+    			caractHigSanitariasService.addCaractHigSanitarias(carHigSan);
+    		}
+	        FactSocioEconomicos factSocEc = this.factSocioEconomicosService.getFactSocioEconomicosFamilia(idFamilia);
+	        if(factSocEc!=null){
+	        	factSocEc.setPasive('1');
+	        	factSocioEconomicosService.addFactSocioEconomicos(factSocEc);
+	        }
+	        FuncFamiliar funcFam = this.funcFamiliarService.getFuncFamiliarFamilia(idFamilia);
+	        if(funcFam!=null){
+	        	funcFam.setPasive('1');
+	       		funcFamiliarService.addFuncFamiliar(funcFam);
+	        }
+    		redirectAttributes.addFlashAttribute("procesoCompleto", true);
+	    	return "redirect:/info/viewHsf/{idFamilia}";	
+    	}
+    	else{
+			return "403";
+		}
+    }
+    
+    /**
+     * Custom handler for unvoiding a family.
+     *
+     * @param idFamily the ID of the family to avoid
+     * @return a String
+     */
+    @RequestMapping("/delete/activarFamilia/{idFamilia}")
+    public String unvoidFamily(@PathVariable("idFamilia") String idFamilia, 
+    		RedirectAttributes redirectAttributes) {
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	Familia familia = familiaService.getFamilia(idFamilia);
+    	if(hsfService.verificarPermisoDatos(familia.getComunidad(), usuario)){
+    		familia.setPasive('0');
+    		familiaService.addFamilia(familia);
+    		List<Visita> visitas = this.visitaService.getVisitas(idFamilia);
+    		for(Visita visita:visitas){
+    			visita.setPasive('0');
+    			visitaService.addVisita(visita);
+    		}
+    		List<Persona> personas = this.personaService.getPersonas(idFamilia);
+    		for(Persona persona:personas){
+    			persona.setPasive('0');
+    			List<Enfermedades> enfermedades = enfermedadesService.getEnfermedadesPersona(persona.getIdPersona());
+    			for(Enfermedades enfermedad:enfermedades){
+    				enfermedad.setPasive('0');
+    				enfermedadesService.addEnfermedades(enfermedad);
+    			}
+		    	List<EnfermedadesSocioCult> enfermedadesSoc = enfermedadesSocioCultService.getEnfermedadesSocioCultPersona(persona.getIdPersona());
+		    	for(EnfermedadesSocioCult enfermedadSoc:enfermedadesSoc){
+		    		enfermedadSoc.setPasive('0');
+		    		enfermedadesSocioCultService.addEnfermedadesSocioCult(enfermedadSoc);
+    			}
+    			personaService.addPersona(persona);
+    		}
+    		CaractHigSanitarias carHigSan = this.caractHigSanitariasService.getCaractHigSanitariasFamilia(idFamilia);
+    		if(carHigSan!=null){
+    			carHigSan.setPasive('0');
+    			caractHigSanitariasService.addCaractHigSanitarias(carHigSan);
+    		}
+	        FactSocioEconomicos factSocEc = this.factSocioEconomicosService.getFactSocioEconomicosFamilia(idFamilia);
+	        if(factSocEc!=null){
+	        	factSocEc.setPasive('0');
+	        	factSocioEconomicosService.addFactSocioEconomicos(factSocEc);
+	        }
+	        FuncFamiliar funcFam = this.funcFamiliarService.getFuncFamiliarFamilia(idFamilia);
+	        if(funcFam!=null){
+	        	funcFam.setPasive('0');
+	       		funcFamiliarService.addFuncFamiliar(funcFam);
+	        }
+    		redirectAttributes.addFlashAttribute("procesoCompleto", true);    	
+	    	return "redirect:/info/viewHsf/{idFamilia}";	
+    	}
+    	else{
+			return "403";
+		}
+    }
+    
+    
+    /**
+     * Custom handler for voiding a persona.
+     *
+     * @param idPersona the ID of the persona to avoid
+     * @return a String
+     */
+    @RequestMapping("/delete/anularPersona/{idPersona}")
+    public String voidPersona(@PathVariable("idPersona") String idPersona, 
+    		RedirectAttributes redirectAttributes) {
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	Persona persona = personaService.getPersona(idPersona);
+    	if(hsfService.verificarPermisoDatos(persona.getFamilia().getComunidad(), usuario)){
+    		persona.setPasive('1');
+    		personaService.addPersona(persona);
+    		redirectAttributes.addFlashAttribute("procesoCompleto", true);
+    		String idFamilia = persona.getFamilia().getIdFamilia();
+	    	return "redirect:/info/viewHsf/"+idFamilia;	
+    	}
+    	else{
+			return "403";
+		}
+    }
+    
+    /**
+     * Custom handler for unvoiding a persona.
+     *
+     * @param idPersona the ID of the persona to avoid
+     * @return a String
+     */
+    @RequestMapping("/delete/activarPersona/{idPersona}")
+    public String unvoidPersona(@PathVariable("idPersona") String idPersona, 
+    		RedirectAttributes redirectAttributes) {
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	Persona persona = personaService.getPersona(idPersona);
+    	if(hsfService.verificarPermisoDatos(persona.getFamilia().getComunidad(), usuario)){
+    		persona.setPasive('0');
+    		personaService.addPersona(persona);
+    		redirectAttributes.addFlashAttribute("procesoCompleto", true);
+    		String idFamilia = persona.getFamilia().getIdFamilia();
+	    	return "redirect:/info/viewHsf/"+idFamilia;	
+    	}
+    	else{
+			return "403";
+		}
+    }
+    
+    /**
+     * Custom handler for voiding a chs.
+     *
+     * @param idPersona the ID of the chs to avoid
+     * @return a String
+     */
+    @RequestMapping("/delete/anularChs/{idChs}")
+    public String voidChs(@PathVariable("idChs") String idChs, 
+    		RedirectAttributes redirectAttributes) {
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	CaractHigSanitarias chs = caractHigSanitariasService.getCaractHigSanitarias(idChs);
+    	if(hsfService.verificarPermisoDatos(chs.getFamilia().getComunidad(), usuario)){
+    		chs.setPasive('1');
+    		caractHigSanitariasService.addCaractHigSanitarias(chs);
+    		redirectAttributes.addFlashAttribute("procesoCompleto", true);
+    		String idFamilia = chs.getFamilia().getIdFamilia();
+	    	return "redirect:/info/viewHsf/"+idFamilia;	
+    	}
+    	else{
+			return "403";
+		}
+    }
+    
+    /**
+     * Custom handler for voiding a fse.
+     *
+     * @param idFse the ID of the fse to avoid
+     * @return a String
+     */
+    @RequestMapping("/delete/anularFse/{idFse}")
+    public String voidFse(@PathVariable("idFse") String idFse, 
+    		RedirectAttributes redirectAttributes) {
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	FactSocioEconomicos factSocEc = this.factSocioEconomicosService.getFactSocioEconomicos(idFse);    	
+    	if(hsfService.verificarPermisoDatos(factSocEc.getFamilia().getComunidad(), usuario)){
+    		factSocEc.setPasive('1');
+    		factSocioEconomicosService.addFactSocioEconomicos(factSocEc);
+    		redirectAttributes.addFlashAttribute("procesoCompleto", true);
+    		String idFamilia = factSocEc.getFamilia().getIdFamilia();
+	    	return "redirect:/info/viewHsf/"+idFamilia;	
+    	}
+    	else{
+			return "403";
+		}
+    }
+    
+    /**
+     * Custom handler for voiding a ff.
+     *
+     * @param idFf the ID of the ff to avoid
+     * @return a String
+     */
+    @RequestMapping("/delete/anularFf/{idFf}")
+    public String voidFf(@PathVariable("idFf") String idFf, 
+    		RedirectAttributes redirectAttributes) {
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	FuncFamiliar funcFam = this.funcFamiliarService.getFuncFamiliar(idFf);  	
+    	if(hsfService.verificarPermisoDatos(funcFam.getFamilia().getComunidad(), usuario)){
+    		funcFam.setPasive('1');
+    		funcFamiliarService.addFuncFamiliar(funcFam);
+    		redirectAttributes.addFlashAttribute("procesoCompleto", true);
+    		String idFamilia = funcFam.getFamilia().getIdFamilia();
+	    	return "redirect:/info/viewHsf/"+idFamilia;	
+    	}
+    	else{
+			return "403";
+		}
+    }
+    
 	
 	private ResponseEntity<String> createJsonResponse( Object o )
 	{

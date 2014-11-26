@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="sec"	uri="http://www.springframework.org/security/tags"%>
 
 <!--[if IE 8]> <html class="ie8 no-js"> <![endif]-->
 <!--[if IE 9]> <html class="ie9 no-js"> <![endif]-->
@@ -75,6 +76,24 @@
 			</spring:url>
 			<spring:url value="/info/editFf/{idFuncFamiliar}" var="add4Url">
 				<spring:param name="idFuncFamiliar" value="${familia.idFamilia}" />
+			</spring:url>
+			<spring:url value="/info/newPersona/{idFamilia}" var="add5Url">
+				<spring:param name="idFamilia" value="${familia.idFamilia}" />
+			</spring:url>
+			<spring:url value="/info/delete/anularFamilia/{idFamilia}" var="borrarFamilia">
+				<spring:param name="idFamilia" value="${familia.idFamilia}" />
+			</spring:url>
+			<spring:url value="/info/delete/activarFamilia/{idFamilia}" var="activarFamilia">
+				<spring:param name="idFamilia" value="${familia.idFamilia}" />
+			</spring:url>
+			<spring:url value="/info/delete/anularChs/{idChs}" var="borrarChs">
+				<spring:param name="idChs" value="${carHigSan.idCaractHig}" />
+			</spring:url>
+			<spring:url value="/info/delete/anularFse/{idFse}" var="borrarFse">
+				<spring:param name="idFse" value="${factSocEc.idFactSocioEc}" />
+			</spring:url>
+			<spring:url value="/info/delete/anularFf/{idFf}" var="borrarFf">
+				<spring:param name="idFf" value="${funcFam.idFuncFamiliar}" />
 			</spring:url>
 			<div class="row">
 				<div class="col-md-12">
@@ -175,9 +194,47 @@
 									</div>
 									<!-- END ROW -->
 									<!-- START ROW -->
+									<div class="row">	
+										<div class="col-md-4">
+											<div class="form-group">
+												<label class="control-label col-md-6"><spring:message code="created.date" /></label>
+												<div class="col-md-6">
+													<p class="form-control-static"><fmt:formatDate value="${familia.created}" pattern="dd/MM/yyyy" /></p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label class="control-label col-md-6"><spring:message code="created.by" /></label>
+												<div class="col-md-6">
+													<p class="form-control-static"><c:out value="${familia.createdBy}" /></p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label class="control-label col-md-6"><spring:message code="voided" /></label>
+												<div class="col-md-6">
+													<p class="form-control-static"><c:out value="${familia.pasive}" /></p>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- END ROW -->
+									<!-- START ROW -->
 									<div class="row">
 										<div class="col-md-12 modal-footer">
-											<a href="${fn:escapeXml(edit1Url)}" class="btn btn-success"><i class="fa fa-edit"></i> <spring:message code="edit" /></a>
+											<c:if test="${familia.pasive=='0'.charAt(0)}">
+												<a href="${fn:escapeXml(edit1Url)}" class="btn btn-success"><i class="fa fa-edit"></i> <spring:message code="edit" /></a>
+											</c:if>
+											<sec:authorize url="/info/delete/">
+											<c:if test="${familia.pasive=='0'.charAt(0)}">
+												<a data-toggle="modal" data-id= "${fn:escapeXml(borrarFamilia)}" class="btn btn-danger desact"><i class="fa fa-trash-o"></i> <spring:message code="void" /></a>
+											</c:if>
+											<c:if test="${familia.pasive=='1'.charAt(0)}">
+												<a data-toggle="modal" data-id= "${fn:escapeXml(activarFamilia)}" class="btn btn-info act"><i class="fa fa-check"></i> <spring:message code="unvoid" /></a>
+											</c:if>
+											</sec:authorize>
 										</div>
 									</div>
 									<!-- END ROW -->
@@ -192,6 +249,9 @@
 													<th><spring:message code="visit.date" /></th>
 													<th><spring:message code="personnel" /></th>
 													<th><spring:message code="profession" /></th>
+													<th><spring:message code="created.date" /></th>
+													<th><spring:message code="created.by" /></th>
+													<th><spring:message code="voided" /></th>
 													<th></th>
 												</tr>
 											</thead>
@@ -203,7 +263,15 @@
 													<td><fmt:formatDate value="${visita.fechaVisita}" pattern="dd/MM/yyyy" /></td>
 													<td><c:out value="${visita.personaVisita}" /></td>
 													<td><c:out value="${visita.personaVisitaProfesion}" /></td>
-													<td><a href="${fn:escapeXml(edit6Url)}" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></a></td>
+													<td><fmt:formatDate value="${visita.created}" pattern="dd/MM/yyyy" /></td>
+													<td><c:out value="${visita.createdBy}" /></td>
+													<td><c:out value="${visita.pasive}" /></td>
+													<c:if test="${visita.pasive=='0'.charAt(0)}">
+														<td><a href="${fn:escapeXml(edit6Url)}" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></a></td>
+													</c:if>
+													<c:if test="${visita.pasive=='1'.charAt(0)}">
+														<td></td>
+													</c:if>
 												</tr>
 											</c:forEach>
 											</table>
@@ -226,11 +294,23 @@
 													<th><spring:message code="person.id" /></th>
 													<th><spring:message code="birthdate" /></th>
 													<th><spring:message code="person.gd" /></th>
+													<th><spring:message code="created.date" /></th>
+													<th><spring:message code="created.by" /></th>
+													<th><spring:message code="voided" /></th>
 													<th></th>
+													<sec:authorize url="/info/delete/">
+													<th></th>
+													</sec:authorize>
 												</tr>
 											</thead>
 											<c:forEach items="${personas}" var="persona">
 												<spring:url value="/info/editPersona/{idPersona}" var="edit5Url">
+													<spring:param name="idPersona" value="${persona.idPersona}" />
+												</spring:url>
+												<spring:url value="/info/delete/anularPersona/{idPersona}" var="anularPersonUrl">
+													<spring:param name="idPersona" value="${persona.idPersona}" />
+												</spring:url>
+												<spring:url value="/info/delete/activarPersona/{idPersona}" var="activarPersonUrl">
 													<spring:param name="idPersona" value="${persona.idPersona}" />
 												</spring:url>
 												<tr>
@@ -241,13 +321,44 @@
 													<td><c:out value="${persona.cedula}" /></td>
 													<td><fmt:formatDate value="${persona.fechaNacimiento}" pattern="dd/MM/yyyy" /></td>
 													<td><c:out value="${persona.grupoDisp}" /></td>
-													<td><a href="${fn:escapeXml(edit5Url)}" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></a></td>
+													<td><fmt:formatDate value="${persona.created}" pattern="dd/MM/yyyy" /></td>
+													<td><c:out value="${persona.createdBy}" /></td>
+													<td><c:out value="${persona.pasive}" /></td>
+													<c:choose>
+													<c:when test="${familia.pasive=='1'.charAt(0)}">
+														<td></td>
+														<sec:authorize url="/info/delete/">
+														<td></td>
+														</sec:authorize>
+													</c:when>
+													<c:when test="${persona.pasive=='0'.charAt(0)}">
+														<td><a href="${fn:escapeXml(edit5Url)}" class="btn btn-default btn-xs"><i class="fa fa-edit"></i></a></td>
+														<sec:authorize url="/info/delete/">
+															<td><a data-toggle="modal" data-id= "${fn:escapeXml(anularPersonUrl)}" class="btn btn-default btn-xs desactper"><i class="fa fa-trash-o"></i></a></td>
+														</sec:authorize>
+													</c:when>
+													<c:when test="${persona.pasive=='1'.charAt(0)}">
+														<td></td>
+														<sec:authorize url="/info/delete/">
+															<td><a data-toggle="modal" data-id= "${fn:escapeXml(activarPersonUrl)}" class="btn btn-default btn-xs actper"><i class="fa fa-check"></i></a></td>
+														</sec:authorize>
+													</c:when>
+													</c:choose>
 												</tr>
 											</c:forEach>
 											</table>
 											</div>
 										</div>
 									</div>
+									<!-- START ROW -->
+									<div class="row">
+										<c:if test="${familia.pasive=='0'.charAt(0)}">
+											<div class="col-md-12 modal-footer">
+												<a href="${fn:escapeXml(add5Url)}" class="btn btn-info"><i class="fa fa-plus"></i> <spring:message code="add" /></a>
+											</div>
+										</c:if>
+									</div>
+									<!-- END ROW -->
 									<!-- END ROW -->
 									<h4 class="form-section"><spring:message code="step3" /></h4>
 									<!-- START ROW -->
@@ -438,15 +549,48 @@
 									</div>
 									<!-- END ROW -->
 									<!-- START ROW -->
+									<div class="row">	
+										<div class="col-md-4">
+											<div class="form-group">
+												<label class="control-label col-md-6"><spring:message code="created.date" /></label>
+												<div class="col-md-6">
+													<p class="form-control-static"><fmt:formatDate value="${carHigSan.created}" pattern="dd/MM/yyyy" /></p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label class="control-label col-md-6"><spring:message code="created.by" /></label>
+												<div class="col-md-6">
+													<p class="form-control-static"><c:out value="${carHigSan.createdBy}" /></p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label class="control-label col-md-6"><spring:message code="voided" /></label>
+												<div class="col-md-6">
+													<p class="form-control-static"><c:out value="${carHigSan.pasive}" /></p>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- END ROW -->
+									<!-- START ROW -->
 									<div class="row">
+										<c:if test="${familia.pasive=='0'.charAt(0)}">
 										<div class="col-md-12 modal-footer">
 											<c:if test="${carHigSan.idCaractHig == null}">
 												<a href="${fn:escapeXml(add2Url)}" class="btn btn-info"><i class="fa fa-plus"></i> <spring:message code="add" /></a>
 											</c:if>
 											<c:if test="${carHigSan.idCaractHig != null}">
 												<a href="${fn:escapeXml(edit2Url)}" class="btn btn-success"><i class="fa fa-edit"></i> <spring:message code="edit" /></a>
+												<sec:authorize url="/info/delete/">
+													<a data-toggle="modal" data-id= "${fn:escapeXml(borrarChs)}" class="btn btn-danger desactchs"><i class="fa fa-trash-o"></i> <spring:message code="void" /></a>
+												</sec:authorize>
 											</c:if>
 										</div>
+										</c:if>
 									</div>
 									<!-- END ROW -->
 									<h4 class="form-section"><spring:message code="step4" /></h4>
@@ -546,15 +690,48 @@
 									</div>
 									<!-- END ROW -->
 									<!-- START ROW -->
+									<div class="row">	
+										<div class="col-md-4">
+											<div class="form-group">
+												<label class="control-label col-md-6"><spring:message code="created.date" /></label>
+												<div class="col-md-6">
+													<p class="form-control-static"><fmt:formatDate value="${factSocEc.created}" pattern="dd/MM/yyyy" /></p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label class="control-label col-md-6"><spring:message code="created.by" /></label>
+												<div class="col-md-6">
+													<p class="form-control-static"><c:out value="${factSocEc.createdBy}" /></p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label class="control-label col-md-6"><spring:message code="voided" /></label>
+												<div class="col-md-6">
+													<p class="form-control-static"><c:out value="${factSocEc.pasive}" /></p>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- END ROW -->
+									<!-- START ROW -->
 									<div class="row">
+										<c:if test="${familia.pasive=='0'.charAt(0)}">
 										<div class="col-md-12 modal-footer">
 											<c:if test="${factSocEc.idFactSocioEc == null}">
 												<a href="${fn:escapeXml(add3Url)}" class="btn btn-info"><i class="fa fa-plus"></i> <spring:message code="add" /></a>
 											</c:if>
 											<c:if test="${factSocEc.idFactSocioEc != null}">
 												<a href="${fn:escapeXml(edit3Url)}" class="btn btn-success"><i class="fa fa-edit"></i> <spring:message code="edit" /></a>
+												<sec:authorize url="/info/delete/">
+													<a data-toggle="modal" data-id= "${fn:escapeXml(borrarFse)}" class="btn btn-danger desactfse"><i class="fa fa-trash-o"></i> <spring:message code="void" /></a>
+												</sec:authorize>
 											</c:if>
 										</div>
+										</c:if>
 									</div>
 									<!-- END ROW -->
 									<h4 class="form-section"><spring:message code="step5" /></h4>
@@ -633,14 +810,47 @@
 									<!-- END ROW -->
 									<!-- START ROW -->
 									<div class="row">
+										<div class="col-md-4">
+											<div class="form-group">
+												<label class="control-label col-md-6"><spring:message code="created.date" /></label>
+												<div class="col-md-6">
+													<p class="form-control-static"><fmt:formatDate value="${funcFam.created}" pattern="dd/MM/yyyy" /></p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label class="control-label col-md-6"><spring:message code="created.by" /></label>
+												<div class="col-md-6">
+													<p class="form-control-static"><c:out value="${funcFam.createdBy}" /></p>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label class="control-label col-md-6"><spring:message code="voided" /></label>
+												<div class="col-md-6">
+													<p class="form-control-static"><c:out value="${funcFam.pasive}" /></p>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- END ROW -->
+									<!-- START ROW -->
+									<div class="row">
+										<c:if test="${familia.pasive=='0'.charAt(0)}">
 										<div class="col-md-12 modal-footer">
 											<c:if test="${funcFam.idFuncFamiliar == null}">
 												<a href="${fn:escapeXml(add4Url)}" class="btn btn-info"><i class="fa fa-plus"></i> <spring:message code="add" /></a>
 											</c:if>
 											<c:if test="${funcFam.idFuncFamiliar != null}">
 												<a href="${fn:escapeXml(edit4Url)}" class="btn btn-success"><i class="fa fa-edit"></i> <spring:message code="edit" /></a>
+												<sec:authorize url="/info/delete/">
+													<a data-toggle="modal" data-id= "${fn:escapeXml(borrarFf)}" class="btn btn-danger desactff"><i class="fa fa-trash-o"></i> <spring:message code="void" /></a>
+												</sec:authorize>
 											</c:if>
 										</div>
+										</c:if>
 									</div>
 									<!-- END ROW -->
 								</div>
@@ -648,6 +858,26 @@
 						</div>
 					</div>
 					<!-- END PORTLET -->
+					<div class="modal fade" id="basic" tabindex="-1" data-role="basic" data-backdrop="static" data-aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" data-aria-hidden="true"></button>
+									<div id="titulo"></div>
+								</div>
+								<div class="modal-body">
+									<input type=hidden id="accionUrl"/>
+									<div id="cuerpo"></div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal"><spring:message code="cancel" /></button>
+									<button type="button" class="btn btn-info" onclick="ejecutarAccion()"><spring:message code="ok" /></button>
+								</div>
+							</div>
+							<!-- /.modal-content -->
+						</div>
+						<!-- /.modal-dialog -->
+					</div>
 				</div>
 			</div>
 			<!-- END PAGE CONTENT-->
@@ -669,7 +899,19 @@
 <spring:url value="/resources/scripts/app.js" var="App" />
 <script src="${App}" type="text/javascript"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
-
+<c:set var="deshabilitar"><spring:message code="void.family" /></c:set>
+<c:set var="deshabilitarCuerpo"><spring:message code="void.family.text" /></c:set>
+<c:set var="habilitar"><spring:message code="unvoid.family" /></c:set>
+<c:set var="habilitarCuerpo"><spring:message code="unvoid.family.text" /></c:set>
+<c:set var="deshabilitarPer"><spring:message code="void.person" /></c:set>
+<c:set var="deshabilitarPerCuerpo"><spring:message code="void.person.text" /></c:set>
+<c:set var="habilitarPer"><spring:message code="unvoid.person" /></c:set>
+<c:set var="habilitarPerCuerpo"><spring:message code="unvoid.person.text" /></c:set>
+<c:set var="deshabilitarCHS"><spring:message code="void.chs" /></c:set>
+<c:set var="deshabilitarFSE"><spring:message code="void.fse" /></c:set>
+<c:set var="deshabilitarFF"><spring:message code="void.ff" /></c:set>
+<c:set var="processSuccess"><spring:message code="process.success" /></c:set>
+<c:set var="processError"><spring:message code="process.error" /></c:set>
 <script>
     $(function () {
     	$("li.hsf").removeClass("hsf").addClass("active");
@@ -679,7 +921,57 @@
 <script>
 	jQuery(document).ready(function() {
 		App.init();
+		if ("${procesoCompleto}"){
+			toastr.success("${processSuccess}");
+		}
+		$(".desact").click(function(){ 
+        	$('#accionUrl').val($(this).data('id'));
+        	$('#titulo').html('<h2 class="modal-title">'+"${deshabilitar}"+'</h2>');
+        	$('#cuerpo').html('<h4>'+"${deshabilitarCuerpo}"+'</h4>');
+        	$('#basic').modal('show');
+         });
+        
+        $(".act").click(function(){ 
+        	$('#accionUrl').val($(this).data('id'));
+        	$('#titulo').html('<h2 class="modal-title">'+"${habilitar}"+'</h2>');
+        	$('#cuerpo').html('<h4 class="modal-title">'+"${habilitarCuerpo}"+'</h4>');
+        	$('#basic').modal('show');
+         });
+        $(".desactper").click(function(){ 
+        	$('#accionUrl').val($(this).data('id'));
+        	$('#titulo').html('<h2 class="modal-title">'+"${deshabilitarPer}"+'</h2>');
+        	$('#cuerpo').html('<h4>'+"${deshabilitarPerCuerpo}"+'</h4>');
+        	$('#basic').modal('show');
+         });
+        
+        $(".actper").click(function(){ 
+        	$('#accionUrl').val($(this).data('id'));
+        	$('#titulo').html('<h2 class="modal-title">'+"${habilitarPer}"+'</h2>');
+        	$('#cuerpo').html('<h4 class="modal-title">'+"${habilitarPerCuerpo}"+'</h4>');
+        	$('#basic').modal('show');
+         });
+        
+        $(".desactchs").click(function(){ 
+        	$('#accionUrl').val($(this).data('id'));
+        	$('#cuerpo').html('<h4>'+"${deshabilitarCHS}"+'</h4>');
+        	$('#basic').modal('show');
+         });
+        
+        $(".desactfse").click(function(){ 
+        	$('#accionUrl').val($(this).data('id'));
+        	$('#cuerpo').html('<h4>'+"${deshabilitarFSE}"+'</h4>');
+        	$('#basic').modal('show');
+         });
+        
+        $(".desactff").click(function(){ 
+        	$('#accionUrl').val($(this).data('id'));
+        	$('#cuerpo').html('<h4>'+"${deshabilitarFF}"+'</h4>');
+        	$('#basic').modal('show');
+         });
 	});
+	function ejecutarAccion() {
+		window.location.href = $('#accionUrl').val();		
+	}
 </script>
 <!-- END JAVASCRIPTS -->
 </body>

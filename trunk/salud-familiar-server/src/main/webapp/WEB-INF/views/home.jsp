@@ -78,7 +78,7 @@
 								</c:choose>
 							</div>
 							<div class="actions">
-								<a href="#" onclick="exportVisitaDia();" class="btn btn-info btn-sm"><i class="fa fa-download"></i> <spring:message code="export" /></a>
+								<a href="#" onclick="exportVisitaDia();" class="btn btn-info btn-sm"><i class="fa fa-download"></i></a>
 							</div>
 						</div>
 						<div class="portlet-body">
@@ -110,7 +110,7 @@
 								</c:choose>
 							</div>
 							<div class="actions">
-								<a href="#" onclick="exportVisitaArea();" class="btn btn-info btn-sm"><i class="fa fa-download"></i> <spring:message code="export" /></a>
+								<a href="#" onclick="exportVisitaArea();" class="btn btn-info btn-sm"><i class="fa fa-download"></i></a>
 							</div>
 						</div>
 						<div class="portlet-body">
@@ -318,13 +318,12 @@
 		var atotales = [];
 		var areas = [];
 		<c:forEach var="visita" items="${visitasDia}">
-			var d = new Date("${visita[0]}");
-			fechas.push([ d.yyyymmdd()]);
-			iniciales.push([ d.yyyymmdd(), "${visita[1]}"]);
+			fechas.push(["${visita[0]}"]);
+			iniciales.push(["${visita[0]}", "${visita[1]}"]);
 			sumInicial = sumInicial + parseInt("${visita[1]}");
-			segs.push([ d.yyyymmdd(), "${visita[2]}"]);
+			segs.push(["${visita[0]}", "${visita[2]}"]);
 			sumSeg = sumSeg + parseInt("${visita[2]}");
-			totales.push([ d.yyyymmdd(), "${visita[3]}"]);
+			totales.push(["${visita[0]}", "${visita[3]}"]);
 			sumTotal = sumTotal + parseInt("${visita[3]}");
 		</c:forEach>
 		<c:forEach var="areas" items="${visitasArea}">
@@ -359,15 +358,6 @@
 	        }
 	    });
 	}
-	
-	Date.prototype.yyyymmdd = function() {         
-        
-        var yyyy = this.getFullYear().toString();                                    
-        var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based         
-        var dd  = this.getDate().toString();             
-                            
-        return yyyy + '-' + (mm[1]?mm:"0"+mm[0]) + '-' + (dd[1]?dd:"0"+dd[0]);
-    }; 
 </script>
 <!-- END JAVASCRIPTS -->
 </body>

@@ -59,7 +59,7 @@ var SearchHSF = function () {
             var table1 = $('#resultados').dataTable( {  
                 "aoColumns" : [   
                                null,   
-                               {sClass: "aw-right" },{sClass: "aw-right" },{sClass: "aw-right" },null,{sClass: "aw-right" },{sClass: "aw-right" },null  
+                               {sClass: "aw-right" },{sClass: "aw-right" },{sClass: "aw-right" },null,{sClass: "aw-right" },{sClass: "aw-right" },{sClass: "aw-right" },null  
                            ]   } );
     		$('#resultados_wrapper .dataTables_filter input').addClass("form-control input-medium"); // modify table search input
             $('#resultados_wrapper .dataTables_length select').addClass("form-control input-small"); // modify table per page dropdown
@@ -221,7 +221,7 @@ var SearchHSF = function () {
     				for ( var i = 0; i < len; i++) {
 						var famUrl = parametros.familiaUrl + '/'+data[i].idFamilia;
 						table1.fnAddData(
-    							[data[i].comunidad.nombre, data[i].numVivienda, data[i].numFamilia, data[i].numFicha, data[i].direccion, data[i].dispensarizada,data[i].infoCompleta,'<a href='+ famUrl + ' class="btn btn-default btn-xs"><i class="fa fa-search"></i></a>']);
+    							[data[i].comunidad.nombre, data[i].numVivienda, data[i].numFamilia, data[i].numFicha, data[i].direccion, data[i].dispensarizada,data[i].infoCompleta,data[i].pasive,'<a href='+ famUrl + ' class="btn btn-default btn-xs"><i class="fa fa-search"></i></a>']);
     				}
     				App.unblockUI(pageContent);
     			})
