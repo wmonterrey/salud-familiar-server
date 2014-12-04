@@ -98,42 +98,56 @@
 								</li>
 							</ul>
 						</li>
-						<li class="nominales">
+						<li class="listados">
 							<a href="javascript:;">
-							<i class="fa fa-list-ul"></i> <spring:message code="nominal"/>
+							<i class="fa fa-list-ul"></i> <spring:message code="lists"/>
 							<span class="arrow">
 							</span>
 							</a>
 							<ul class="sub-menu">
-								<li class="reportday">
-									<a href="<spring:url value="/report/visitbyday" htmlEscape="true "/>">
-									<i class="fa fa-calendar"></i>
-									<spring:message code="report.day"/></a>
+								<li class="reportfamily">
+									<a href="<spring:url value="/report/family" htmlEscape="true "/>">
+									<i class="fa fa-group"></i>
+									<spring:message code="report.family"/></a>
 								</li>
-								<li class="reportarea">
-									<a href="<spring:url value="/report/visitbyarea" htmlEscape="true "/>">
+								<li class="reportvisit">
+									<a href="<spring:url value="/report/visit" htmlEscape="true "/>">
 									<i class="fa fa-map-marker"></i>
-									<spring:message code="report.area"/></a>
+									<spring:message code="report.visit"/></a>
 								</li>
-								<li class="consolidado">
-									<a href="<spring:url value="/report/consolidado" htmlEscape="true "/>">
-									<i class="fa fa-table"></i>
-									<spring:message code="summary"/></a>
+								<li class="reportperson">
+									<a href="<spring:url value="/report/person" htmlEscape="true "/>">
+									<i class="fa fa-male"></i>
+									<spring:message code="report.person"/></a>
 								</li>
-								<li class="embarazos">
-									<a href="<spring:url value="/report/embarazo" htmlEscape="true "/>">
-									<i class="fa fa-heart"></i>
-									<spring:message code="pregnancies"/></a>
+								<li class="reportill">
+									<a href="<spring:url value="/report/ill" htmlEscape="true "/>">
+									<i class="fa fa-stethoscope"></i>
+									<spring:message code="report.ill"/></a>
 								</li>
-								<li class="cronicos">
-									<a href="<spring:url value="/report/cronico" htmlEscape="true "/>">
-									<i class="fa fa-user-md"></i>
-									<spring:message code="cronics"/></a>
+							</ul>
+						</li>
+						<li class="caracterizacion">
+							<a href="javascript:;">
+							<i class="fa fa-book"></i> <spring:message code="caract"/>
+							<span class="arrow">
+							</span>
+							</a>
+							<ul class="sub-menu">
+								<li class="chs">
+									<a href="<spring:url value="/report/chs" htmlEscape="true "/>">
+									<i class="fa fa-building"></i>
+									<spring:message code="step3"/></a>
 								</li>
-								<li class="enfermedades">
-									<a href="<spring:url value="/report/enfermedad" htmlEscape="true "/>">
-									<i class="fa fa-medkit"></i>
-									<spring:message code="diseases"/></a>
+								<li class="fse">
+									<a href="<spring:url value="/report/fse" htmlEscape="true "/>">
+									<i class="fa fa-money"></i>
+									<spring:message code="step4"/></a>
+								</li>
+								<li class="ff">
+									<a href="<spring:url value="/report/ff" htmlEscape="true "/>">
+									<i class="fa fa-group"></i>
+									<spring:message code="step5"/></a>
 								</li>
 							</ul>
 						</li>
