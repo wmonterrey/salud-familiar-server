@@ -188,6 +188,7 @@ var ViewReport = function () {
             				}
             				html += '</option>';
             				$('#unidad').html(html);
+            				App.unblockUI(pageContent);
             			});
                     });
             
@@ -216,26 +217,24 @@ var ViewReport = function () {
             	$.getJSON(parametros.reportUrl, $('#parameters_form').serialize(), function(data) {
                     
                     if ($('#area option:selected').val() == "HSF_AREAS|CENTRAL"){
-    					title = parametros.cronicos + ' - ' + parametros.summaryNac;
+    					title = parametros.enfermedades + ' - ' + parametros.summaryNac;
     				}
     				else if ($('#area option:selected').val() == "HSF_AREAS|SILAIS"){
-    					title = parametros.cronicos + ' - ' + parametros.summary+' '+$('#silais option:selected').text();
+    					title = parametros.enfermedades + ' - ' + parametros.summary+' '+$('#silais option:selected').text();
     				}
     				else if ($('#area option:selected').val() == "HSF_AREAS|UNI"){
-    					title = parametros.cronicos + ' - ' + parametros.summary+' '+$('#unidad option:selected').text();
+    					title = parametros.enfermedades + ' - ' + parametros.summary+' '+$('#unidad option:selected').text();
     				}
     				else if ($('#area option:selected').val() == "HSF_AREAS|SECTOR"){
-    					title = parametros.cronicos + ' - ' + parametros.summary+' '+$('#sector option:selected').text();
+    					title = parametros.enfermedades + ' - ' + parametros.summary+' '+$('#sector option:selected').text();
     				}
     				else if ($('#area option:selected').val() == "HSF_AREAS|COMU"){
-    					title = parametros.cronicos + ' - ' + parametros.summary+' '+$('#comunidad option:selected').text();
+    					title = parametros.enfermedades + ' - ' + parametros.summary+' '+$('#comunidad option:selected').text();
     				}
                     var d = new Date();
                     fecha=d.toLocaleString(parametros.language);
                     var table1 = $('#consolidado').dataTable( {  
-    	                "aoColumns" : [null,{sClass: "aw-right" },{sClass: "aw-right" },{sClass: "aw-right" }
-    	                ,{sClass: "aw-right" },{sClass: "aw-right" },{sClass: "aw-right" }
-    	                ,{sClass: "aw-right" },{sClass: "aw-right" }],bFilter: false, bInfo: true, bPaginate: true, bDestroy: true,
+    	                "aoColumns" : [null,null,{sClass: "aw-right" }],bFilter: true, bInfo: true, bPaginate: true, bDestroy: true,
     	                "aLengthMenu": [[5, 10, 15, 20, -1],[5, 10, 15, 20, "Todos"]], iDisplayLength: 15});
     	        	
     	        	var tt = new $.fn.dataTable.TableTools( table1, {
@@ -250,7 +249,7 @@ var ViewReport = function () {
     	            	                                     "sFileName": title+"-*.csv",
     	            	                                     "sTitle": parametros.heading,
     	            	                                     "oSelectorOpts": { filter: 'applied', order: 'current' },
-    	            	                                     "mColumns": [ 0, 1, 2, 3, 4, 5, 6, 7, 8]
+    	            	                                     "mColumns": [ 0, 1, 2]
     	            	                                 },
     	            	                                 {
     	            	                                     "sExtends": "pdf",
@@ -258,16 +257,20 @@ var ViewReport = function () {
     	            	                                     "sTitle": parametros.heading,
     	            	                                     "sPdfMessage": title + ' - ' + fecha,
     	            	                                     "oSelectorOpts": { filter: 'applied', order: 'current' },
-    	            	                                     "mColumns": [ 0, 1, 2, 3, 4, 5, 6, 7, 8],
-    	            	                                     "sPdfOrientation": "landscape",
+    	            	                                     "mColumns": [ 0, 1, 2],
+    	            	                                     "sPdfOrientation": "portrait",
     	            	                                 }
     	            	                                 ]
     	            	                }
     	            	            ]
     	            } );
     	        	
-    	        	$( tt.fnContainer() ).insertBefore('div.table-toolbar1');
-    	        	jQuery('#consolidado_wrapper .dataTables_length select').addClass("form-control input-small"); // modify table per page dropdown
+    	        	$( tt.fnContainer() ).insertBefore('div.table-toolbar');
+    	        	jQuery('#consolidado_wrapper .dataTables_filter input').addClass("form-control input-medium"); // modify table search input
+    	            jQuery('#consolidado_wrapper .dataTables_length select').addClass("form-control input-small"); // modify table per page dropdown
+    	            jQuery('#consolidado_wrapper .dataTables_length select').select2({
+    	            	 showSearchInput : false //hide search box with special css class
+    	            }); // initialize select2 dropdown
     	        	table1.fnClearTable();
             		if (data == '' || data == null){
     					toastr.error(parametros.noResults);
@@ -275,9 +278,7 @@ var ViewReport = function () {
             		else{
             			for (var row in data) {
     						table1.fnAddData(
-        							[data[row][0], data[row][1], data[row][2], data[row][3]
-        							, data[row][4], data[row][5], data[row][6]
-        							, data[row][7], data[row][8]]);
+        							[data[row][0], data[row][1], data[row][2]]);
             			}
             		}
         			App.unblockUI(pageContent);
@@ -286,7 +287,6 @@ var ViewReport = function () {
         		    alert( "error" );
         		    App.unblockUI(pageContent);
         		});
-        		App.unblockUI(pageContent);
         	} 
         }
     };

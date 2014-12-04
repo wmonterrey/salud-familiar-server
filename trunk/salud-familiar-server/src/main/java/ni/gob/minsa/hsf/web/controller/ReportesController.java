@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import ni.gob.minsa.hsf.domain.Familia;
 import ni.gob.minsa.hsf.domain.catalogos.Areas;
 import ni.gob.minsa.hsf.domain.estructura.EntidadesAdtvas;
 import ni.gob.minsa.hsf.domain.report.Consolidado;
@@ -214,6 +215,64 @@ public class ReportesController {
         	logger.debug("Nulo");
         }
         return cronicos;
+    }
+    
+    @RequestMapping(value = "enfermedad", method = RequestMethod.GET)
+    public String initReport6Form(Model model) throws ParseException { 	
+    	logger.debug("Inicia reporte de enfermedades");
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario);
+    	List<Areas> areas = catalogoService.getAreas(usuario);
+    	model.addAttribute("areas", areas);
+    	model.addAttribute("entidades", entidades);
+    	return "report/enfermedades";
+	}
+    
+    /**
+     * Acepta una solicitud GET para JSON
+     * @return Un arreglo JSON
+	 * @throws ParseException 
+     */
+    @RequestMapping(value = "enfermedades", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody List<Object> fetchEnfermedadesJson(@RequestParam(value = "area", required = true) String codArea,
+    		@RequestParam(value = "silais", required = false) Long codSilais,
+    		@RequestParam(value = "municipio", required = false, defaultValue = "") String codMunicipio,
+    		@RequestParam(value = "unidad", required = false) Long codUnidad,
+    		@RequestParam(value = "sector", required = false, defaultValue = "") String codSector,
+    		@RequestParam(value = "comunidad", required = false, defaultValue = "") String codComunidad) {
+        logger.info("Obteniendo los enfermedades en JSON");
+        List<Object> enfermedades = reportesService.getEnfermedades(codArea, codSilais, codMunicipio, 
+        		codUnidad, codSector, codComunidad);
+        if (enfermedades == null){
+        	logger.debug("Nulo");
+        }
+        return enfermedades;
+    }
+    
+    @RequestMapping(value = "family", method = RequestMethod.GET)
+    public String initReport7Form(Model model) throws ParseException { 	
+    	logger.debug("Inicia reporte de familias");
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario);
+    	List<Areas> areas = catalogoService.getAreas(usuario);
+    	model.addAttribute("areas", areas);
+    	model.addAttribute("entidades", entidades);
+    	return "report/familias";
+	}
+    
+    /**
+     * Acepta una solicitud GET para JSON
+     * @return Un arreglo JSON
+	 * @throws ParseException 
+     */
+    @RequestMapping(value = "families", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody List<Familia> fetchFamiliasJson(@RequestParam(value = "comunidad", required = true) String codComunidad) {
+        logger.info("Obteniendo los familias en JSON");
+        List<Familia> familias = reportesService.getFamilias(codComunidad);
+        if (familias == null){
+        	logger.debug("Nulo");
+        }
+        return familias;
     }
 	
 }

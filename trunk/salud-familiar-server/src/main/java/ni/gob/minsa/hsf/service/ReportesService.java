@@ -9,6 +9,7 @@ import java.util.TreeMap;
 
 import javax.annotation.Resource;
 
+import ni.gob.minsa.hsf.domain.Familia;
 import ni.gob.minsa.hsf.domain.report.Consolidado;
 import ni.gob.minsa.hsf.domain.report.FamEstComunidad;
 import ni.gob.minsa.hsf.domain.report.FamEstDivPol;
@@ -573,6 +574,71 @@ public class ReportesService {
 			query.setParameter("pasivo", '0');
 			query.setParameter("comunidad", codComunidad);
 		}
+        // Retrieve all
+		return  query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Object> getEnfermedades(String codArea, Long codSilais, String codMunicipio, Long codUnidad, String codSector, String codComunidad){
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = null;
+		if (codArea.equals("HSF_AREAS|CENTRAL")){
+			query = session.createQuery("select enfermedad.enfermedad.nombreCie10 as nomEnfermedad, enfermedad.enfermedad.codigoCie10 as codEnfermedad," +
+					"count(enfermedad.idEnfermedad) as total " +
+					"from Enfermedades enfermedad where enfermedad.pasive =:pasivo " +
+					"group by enfermedad.enfermedad.nombreCie10, enfermedad.enfermedad.codigoCie10 order by enfermedad.enfermedad.nombreCie10");
+			query.setParameter("pasivo", '0');
+		}
+		else if (codArea.equals("HSF_AREAS|SILAIS")){
+			query = session.createQuery("select enfermedad.enfermedad.nombreCie10 as nomEnfermedad, enfermedad.enfermedad.codigoCie10 as codEnfermedad," +
+					"count(enfermedad.idEnfermedad) as total " +
+					"from Enfermedades enfermedad where enfermedad.pasive =:pasivo and enfermedad.persona.familia.comunidad.sector.municipio.dependenciaSilais.codigo =:silais " +
+					"group by enfermedad.enfermedad.nombreCie10, enfermedad.enfermedad.codigoCie10 order by enfermedad.enfermedad.nombreCie10");
+			query.setParameter("pasivo", '0');
+			query.setParameter("silais", codSilais);
+		}
+		else if (codArea.equals("HSF_AREAS|UNI")){
+			query = session.createQuery("select enfermedad.enfermedad.nombreCie10 as nomEnfermedad, enfermedad.enfermedad.codigoCie10 as codEnfermedad," +
+					"count(enfermedad.idEnfermedad) as total " +
+					"from Enfermedades enfermedad where enfermedad.pasive =:pasivo and enfermedad.persona.familia.comunidad.sector.unidad in " +
+					"(select lu.codigo from Unidades lu where lu.codigo = "+ codUnidad +" or " +
+					"lu.unidadAdtva = "+ codUnidad +") " +
+					"group by enfermedad.enfermedad.nombreCie10, enfermedad.enfermedad.codigoCie10 order by enfermedad.enfermedad.nombreCie10");
+			query.setParameter("pasivo", '0');
+		}
+		else if (codArea.equals("HSF_AREAS|SECTOR")){
+			query = session.createQuery("select enfermedad.enfermedad.nombreCie10 as nomEnfermedad, enfermedad.enfermedad.codigoCie10 as codEnfermedad," +
+					"count(enfermedad.idEnfermedad) as total " +
+					"from Enfermedades enfermedad where enfermedad.pasive =:pasivo and enfermedad.persona.familia.comunidad.sector.codigo =:sector " +
+					"group by enfermedad.enfermedad.nombreCie10, enfermedad.enfermedad.codigoCie10 order by enfermedad.enfermedad.nombreCie10");
+			query.setParameter("pasivo", '0');
+			query.setParameter("sector", codSector);
+		}
+		else if (codArea.equals("HSF_AREAS|COMU")){
+			query = session.createQuery("select enfermedad.enfermedad.nombreCie10 as nomEnfermedad, enfermedad.enfermedad.codigoCie10 as codEnfermedad," +
+					"count(enfermedad.idEnfermedad) as total " +
+					"from Enfermedades enfermedad where enfermedad.pasive =:pasivo and enfermedad.persona.familia.comunidad.codigo =:comunidad " +
+					"group by enfermedad.enfermedad.nombreCie10, enfermedad.enfermedad.codigoCie10 order by enfermedad.enfermedad.nombreCie10");
+			query.setParameter("pasivo", '0');
+			query.setParameter("comunidad", codComunidad);
+		}
+        // Retrieve all
+		return  query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Familia> getFamilias(String codComunidad){
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = null;
+		query = session.createQuery("From Familia familia where familia.pasive =:pasivo " +
+					"and familia.comunidad.codigo =:comunidad " +
+					"order by familia.comunidad.nombre, familia.numVivienda, familia.numFamilia");
+		query.setParameter("pasivo", '0');
+		query.setParameter("comunidad", codComunidad);
         // Retrieve all
 		return  query.list();
 	}
