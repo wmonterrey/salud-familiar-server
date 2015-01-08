@@ -48,7 +48,7 @@
 					<li>
 						<i class="fa fa-home"></i>
 						<a href="<spring:url value="/" htmlEscape="true "/>"><spring:message code="dashboard" /></a>
-						<i class="fa fa-angle-right"></i> <a href="<spring:url value="/report/family" htmlEscape="true "/>"><spring:message code="report.family" /></a>
+						<i class="fa fa-angle-right"></i> <a href="<spring:url value="/report/pregnancy" htmlEscape="true "/>"><spring:message code="pregnancies" /></a>
 					</li>
 				</ul>
 				<!-- END PAGE TITLE & BREADCRUMB-->
@@ -191,11 +191,12 @@
 									<th><spring:message code="comunity" /></th>
 									<th><spring:message code="noviv" /></th>
 									<th><spring:message code="nofamilia" /></th>
-									<th><spring:message code="noficha" /></th>
-									<th class="hidden-xs"><spring:message code="shortadd" /></th>
-									<th><spring:message code="dispen" /></th>
-									<th><spring:message code="finished" /></th>
-									<th><spring:message code="voided" /></th>
+									<th><spring:message code="shortadd" /></th>
+									<th><spring:message code="completename" /></th>
+									<th><spring:message code="lastname1" /></th>
+									<th><spring:message code="lastname2" /></th>
+									<th><spring:message code="birthdate" /></th>
+									<th><spring:message code="person.cpn" /></th>
 								</tr>
 							</thead>
 							</table>
@@ -248,15 +249,15 @@
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <spring:url value="/resources/scripts/app.js" var="App" />
 <script src="${App}" type="text/javascript"></script>
-<spring:url value="/resources/scripts/view-report7.js" var="viewReport" />
+<spring:url value="/resources/scripts/view-report11.js" var="viewReport" />
 <script src="${viewReport}"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 
 <spring:url value="/opciones/municipios" var="opcMuniUrl"/>
 <spring:url value="/opciones/sectores" var="opcSectUrl"/>
 <spring:url value="/opciones/comunidades" var="opcComuUrl"/>
-<spring:url value="/report/families" var="reportUrl"/>
-<c:set var="families"><spring:message code="report.family" /></c:set>
+<spring:url value="/report/pregnancies" var="reportUrl"/>
+<c:set var="pregnancies"><spring:message code="pregnancies" /></c:set>
 <c:set var="heading"><spring:message code="heading" /></c:set>
 <c:set var="exportar"><spring:message code="export" /></c:set>
 
@@ -264,7 +265,7 @@
     $(function () {
     	$("li.reports").removeClass("reports").addClass("active");
     	$("li.listados").removeClass("listados").addClass("active");
-        $("li.reportfamily").removeClass("reportfamily").addClass("active");
+        $("li.reportpreg").removeClass("reportpreg").addClass("active");
     });
 </script>
 <script>
@@ -276,7 +277,7 @@
 			, reportUrl: "${reportUrl}"
 			, processSuccess: "${processSuccess}"
 			, processError: "${processError}"
-			, families: "${families}"
+			, pregnancies: "${pregnancies}"
 			, heading: "${heading}"
 			, exportar: "${exportar}"
 			,dataTablesTTSWF: "${dataTablesTTSWF}"

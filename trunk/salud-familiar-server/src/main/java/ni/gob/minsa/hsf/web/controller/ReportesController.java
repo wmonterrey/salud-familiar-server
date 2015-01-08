@@ -7,7 +7,10 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import ni.gob.minsa.hsf.domain.Enfermedades;
 import ni.gob.minsa.hsf.domain.Familia;
+import ni.gob.minsa.hsf.domain.Persona;
+import ni.gob.minsa.hsf.domain.Visita;
 import ni.gob.minsa.hsf.domain.catalogos.Areas;
 import ni.gob.minsa.hsf.domain.estructura.EntidadesAdtvas;
 import ni.gob.minsa.hsf.domain.report.Consolidado;
@@ -16,7 +19,6 @@ import ni.gob.minsa.hsf.service.EntidadesAdtvasService;
 import ni.gob.minsa.hsf.service.ReportesService;
 import ni.gob.minsa.hsf.service.UsuarioService;
 import ni.gob.minsa.hsf.users.model.UserSistema;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -254,8 +256,6 @@ public class ReportesController {
     	logger.debug("Inicia reporte de familias");
     	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
     	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario);
-    	List<Areas> areas = catalogoService.getAreas(usuario);
-    	model.addAttribute("areas", areas);
     	model.addAttribute("entidades", entidades);
     	return "report/familias";
 	}
@@ -274,5 +274,102 @@ public class ReportesController {
         }
         return familias;
     }
+    
+    @RequestMapping(value = "visit", method = RequestMethod.GET)
+    public String initReport8Form(Model model) throws ParseException { 	
+    	logger.debug("Inicia reporte de visitas");
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario);
+    	model.addAttribute("entidades", entidades);
+    	return "report/visitas";
+	}
+    
+    /**
+     * Acepta una solicitud GET para JSON
+     * @return Un arreglo JSON
+	 * @throws ParseException 
+     */
+    @RequestMapping(value = "visits", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody List<Visita> fetchVisitasJson(@RequestParam(value = "comunidad", required = true) String codComunidad) {
+        logger.info("Obteniendo las visitas en JSON");
+        List<Visita> visitas = reportesService.getVisitas(codComunidad);
+        if (visitas == null){
+        	logger.debug("Nulo");
+        }
+        return visitas;
+    }
+    
+    
+    @RequestMapping(value = "person", method = RequestMethod.GET)
+    public String initReport9Form(Model model) throws ParseException { 	
+    	logger.debug("Inicia reporte de personas");
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario);
+    	model.addAttribute("entidades", entidades);
+    	return "report/personas";
+	}
+    
+    /**
+     * Acepta una solicitud GET para JSON
+     * @return Un arreglo JSON
+	 * @throws ParseException 
+     */
+    @RequestMapping(value = "persons", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody List<Persona> fetchPersonasJson(@RequestParam(value = "comunidad", required = true) String codComunidad) {
+        logger.info("Obteniendo las personas en JSON");
+        List<Persona> personas = reportesService.getPersonas(codComunidad);
+        if (personas == null){
+        	logger.debug("Nulo");
+        }
+        return personas;
+    }
+    
+    @RequestMapping(value = "ill", method = RequestMethod.GET)
+    public String initReport10Form(Model model) throws ParseException { 	
+    	logger.debug("Inicia reporte de enfermedades");
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario);
+    	model.addAttribute("entidades", entidades);
+    	return "report/enfermos";
+	}
 	
+    /**
+     * Acepta una solicitud GET para JSON
+     * @return Un arreglo JSON
+	 * @throws ParseException 
+     */
+    @RequestMapping(value = "ills", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody List<Enfermedades> fetchEnfermedadesJson(@RequestParam(value = "comunidad", required = true) String codComunidad,
+    		@RequestParam(value = "enfermedad", required = true) String codEnfermedad) {
+        logger.info("Obteniendo las Enfermedades en JSON");
+        List<Enfermedades> enfermedades = reportesService.getEnfermedades(codComunidad, codEnfermedad);
+        if (enfermedades == null){
+        	logger.debug("Nulo");
+        }
+        return enfermedades;
+    }
+    
+    @RequestMapping(value = "pregnancy", method = RequestMethod.GET)
+    public String initReport11Form(Model model) throws ParseException { 	
+    	logger.debug("Inicia reporte de embarazadas");
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario);
+    	model.addAttribute("entidades", entidades);
+    	return "report/embarazadas";
+	}
+    
+    /**
+     * Acepta una solicitud GET para JSON
+     * @return Un arreglo JSON
+	 * @throws ParseException 
+     */
+    @RequestMapping(value = "pregnancies", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody List<Persona> fetchEmbarazosJson(@RequestParam(value = "comunidad", required = true) String codComunidad) {
+        logger.info("Obteniendo los embarazos en JSON");
+        List<Persona> embarazos = reportesService.getEmbarazos(codComunidad);
+        if (embarazos == null){
+        	logger.debug("Nulo");
+        }
+        return embarazos;
+    }
 }

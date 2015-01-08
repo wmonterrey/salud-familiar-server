@@ -66,6 +66,7 @@ public class EnfermedadesSocioCult extends BaseMetaData implements Auditable{
 		this.enfermedad = enfermedad;
 	}
 
+	@Column(name = "FECHA_OCURRENCIA", nullable = false)
 	public Date getFechaOcurrencia() {
 		return fechaOcurrencia;
 	}

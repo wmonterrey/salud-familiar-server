@@ -34,7 +34,7 @@ public class VisitaService {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
 		// Create a Hibernate query (HQL)
-		Query query = session.createQuery("FROM Visita v where v.familia.idFamilia = :idFamilia");
+		Query query = session.createQuery("FROM Visita v where v.familia.idFamilia = :idFamilia order by v.fechaVisita");
 		query.setParameter("idFamilia", idFamilia);
 		// Retrieve all
 		return  query.list();

@@ -23,6 +23,7 @@ import ni.gob.minsa.hsf.domain.catalogos.EnfSocioC;
 import ni.gob.minsa.hsf.domain.catalogos.Escolaridad;
 import ni.gob.minsa.hsf.domain.catalogos.EtapaCicloVital;
 import ni.gob.minsa.hsf.domain.catalogos.Etnia;
+import ni.gob.minsa.hsf.domain.catalogos.Evento;
 import ni.gob.minsa.hsf.domain.catalogos.FactRiesgoMod;
 import ni.gob.minsa.hsf.domain.catalogos.FactRiesgoNoMod;
 import ni.gob.minsa.hsf.domain.catalogos.FactRiesgoSoc;
@@ -760,6 +761,26 @@ public class CatalogoService {
 		Session session = sessionFactory.getCurrentSession();
 		// Create a Hibernate query (HQL)
 		Query query = session.createQuery("FROM EnfSocioC where pasivo = :pasivo order by orden");
+		query.setParameter("pasivo", false);
+		// Retrieve all
+		return  query.list();
+	}
+	
+	public Evento getEvento(String id) {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = session.getNamedQuery("obtenerEventoPorCodigo").setString("pCodigo", id);
+		// Retrieve all
+		return  (Evento) query.uniqueResult();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Evento> getEventos() {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = session.createQuery("FROM Evento where pasivo = :pasivo order by orden");
 		query.setParameter("pasivo", false);
 		// Retrieve all
 		return  query.list();

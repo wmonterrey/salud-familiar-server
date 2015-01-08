@@ -55,9 +55,21 @@
 			</div>
 			<!-- END PAGE HEADER-->
 			<!-- BEGIN PAGE CONTENT-->
-			<spring:url value="/info/viewHsf/{idFamilia}" var="familiaUrl">
-				<spring:param name="idFamilia" value="${identFamilia}" />
-			</spring:url>
+			<c:choose> 
+				<c:when test="${accion eq 1}">
+					<spring:url value="/info/viewHsf/{idFamilia}" var="familiaUrl">
+						<spring:param name="idFamilia" value="${identFamilia}" />
+					</spring:url>
+				</c:when>
+				<c:when test="${accion eq 2}">
+					<spring:url value="/info/updateHsf/{idFamilia}" var="familiaUrl">
+						<spring:param name="idFamilia" value="${identFamilia}" />
+					</spring:url>
+				</c:when>
+				<c:otherwise>
+					<spring:url value="/" var="familiaUrl"></spring:url>
+				</c:otherwise>
+			</c:choose> 
 			<c:set var="processSuccess"><spring:message code="process.success" /></c:set>
 			<c:set var="processError"><spring:message code="process.error" /></c:set>
 			<c:set var="deniedError"><spring:message code="denied" /></c:set>

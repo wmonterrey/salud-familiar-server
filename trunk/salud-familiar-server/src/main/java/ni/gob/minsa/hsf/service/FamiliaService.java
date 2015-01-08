@@ -38,8 +38,29 @@ public class FamiliaService {
 		if (numVivienda != null) strQuery = strQuery + " and fam.numVivienda = :numVivienda";
 		if (numFamilia != null) strQuery = strQuery + " and fam.numFamilia = :numFamilia";
 		if (numFicha != null) strQuery = strQuery + " and fam.numFicha = :numFicha";
+		strQuery = strQuery + " order by fam.comunidad.codigo, fam.numVivienda, fam.numFamilia";
 		Query query = session.createQuery(strQuery);
 		query.setParameter("codComunidad", comunidad);
+		if (numVivienda != null) query.setParameter("numVivienda", numVivienda);
+		if (numFamilia != null) query.setParameter("numFamilia", numFamilia);
+		if (numFicha != null) query.setParameter("numFicha", numFicha);
+		// Retrieve all
+		return  query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Familia> getFamiliasActivas(String comunidad, Integer numVivienda, Integer numFamilia, Integer numFicha) throws ParseException {
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		String strQuery = "FROM Familia fam where fam.comunidad.codigo = :codComunidad";
+		if (numVivienda != null) strQuery = strQuery + " and fam.numVivienda = :numVivienda";
+		if (numFamilia != null) strQuery = strQuery + " and fam.numFamilia = :numFamilia";
+		if (numFicha != null) strQuery = strQuery + " and fam.numFicha = :numFicha";
+		strQuery = strQuery + " and fam.pasive =:pasivo order by fam.comunidad.codigo, fam.numVivienda, fam.numFamilia";
+		Query query = session.createQuery(strQuery);
+		query.setParameter("codComunidad", comunidad);
+		query.setParameter("pasivo", '0');
 		if (numVivienda != null) query.setParameter("numVivienda", numVivienda);
 		if (numFamilia != null) query.setParameter("numFamilia", numFamilia);
 		if (numFicha != null) query.setParameter("numFicha", numFicha);

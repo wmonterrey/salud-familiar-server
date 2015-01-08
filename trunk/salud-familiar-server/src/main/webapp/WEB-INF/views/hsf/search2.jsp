@@ -48,7 +48,7 @@
 					<li>
 						<i class="fa fa-home"></i>
 						<a href="<spring:url value="/" htmlEscape="true "/>"><spring:message code="dashboard" /></a>
-						<i class="fa fa-angle-right"></i> <a href="<spring:url value="/report/family" htmlEscape="true "/>"><spring:message code="report.family" /></a>
+						<i class="fa fa-angle-right"></i> <a href="<spring:url value="/info/newVisit" htmlEscape="true "/>"><spring:message code="hsf.visit" /></a>
 					</li>
 				</ul>
 				<!-- END PAGE TITLE & BREADCRUMB-->
@@ -64,7 +64,7 @@
 				<div class="portlet" id="form_search">
 					<div class="portlet-title">
 						<div class="caption">
-							<i class="fa fa-search"></i> <spring:message code="select" />
+							<i class="fa fa-reorder"></i> <spring:message code="hsf.visit" />
 						</div>
 						<div class="tools hidden-xs">
 							<a href="javascript:;" class="collapse"></a>
@@ -151,11 +151,61 @@
 									</div>
 								</div>
 								<!-- END ROW -->
+								<!-- START ROW -->
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="control-label col-md-6"><spring:message code="novivienda" />:
+											</label>
+											<div class="col-md-6">
+												<div class="input-group">
+													<input type="text" placeholder="<spring:message code="please.enter" /> <spring:message code="novivienda" />" class="form-control" id="numVivienda" name="numVivienda" />
+													<span class="input-group-addon">
+														<i class="fa fa-sort-numeric-asc"></i>
+													</span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="control-label col-md-6"><spring:message code="nofamilia" />:
+											</label>
+											<div class="col-md-6">
+												<div class="input-group">
+													<input type="text" placeholder="<spring:message code="please.enter" /> <spring:message code="nofamilia" />" class="form-control" id="numFamilia" name="numFamilia"/>
+													<span class="input-group-addon">
+														<i class="fa fa-sort-numeric-asc"></i>
+													</span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- END ROW -->
+								<!-- START ROW -->
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="control-label col-md-6"><spring:message code="noficha" />:
+											</label>
+											<div class="col-md-6">
+												<div class="input-group">
+													<input type="text" placeholder="<spring:message code="please.enter" /> <spring:message code="noficha" />" class="form-control" id="numFicha" name="numFicha"/>
+													<span class="input-group-addon">
+														<i class="fa fa-sort-numeric-asc"></i>
+													</span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- END ROW -->
 								<div class="form-actions fluid">
 									<div class="row">
 										<div class="col-md-12">
 											<div class="col-md-offset-11 col-md-1">
-												<button type="submit" id="search-hsf" class="btn btn-info"><i class="fa fa-refresh"></i> <spring:message code="update" /></button>
+												<button type="submit" id="search-hsf" class="btn btn-info"><i class="fa fa-search"></i> <spring:message code="search" /></button>
 											</div>
 										</div>
 									</div>
@@ -182,8 +232,6 @@
 							</div>
 						</div>
 						<div class="portlet-body">
-							<div class="table-toolbar1">
-							</div>
 							<div class="table-responsive">
 							<table class="table table-striped table-hover table-bordered" id="resultados">
 							<thead>
@@ -196,6 +244,7 @@
 									<th><spring:message code="dispen" /></th>
 									<th><spring:message code="finished" /></th>
 									<th><spring:message code="voided" /></th>
+									<th></th>
 								</tr>
 							</thead>
 							</table>
@@ -248,23 +297,20 @@
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <spring:url value="/resources/scripts/app.js" var="App" />
 <script src="${App}" type="text/javascript"></script>
-<spring:url value="/resources/scripts/view-report7.js" var="viewReport" />
-<script src="${viewReport}"></script>
+<spring:url value="/resources/scripts/hsf-search.js" var="hsfSearch" />
+<script src="${hsfSearch}"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 
 <spring:url value="/opciones/municipios" var="opcMuniUrl"/>
 <spring:url value="/opciones/sectores" var="opcSectUrl"/>
 <spring:url value="/opciones/comunidades" var="opcComuUrl"/>
-<spring:url value="/report/families" var="reportUrl"/>
-<c:set var="families"><spring:message code="report.family" /></c:set>
-<c:set var="heading"><spring:message code="heading" /></c:set>
-<c:set var="exportar"><spring:message code="export" /></c:set>
+<spring:url value="/info/hsfsact" var="hsfsUrl"/>
+<spring:url value="/info/newVisit" var="familiaUrl"/>
 
 <script>
     $(function () {
-    	$("li.reports").removeClass("reports").addClass("active");
-    	$("li.listados").removeClass("listados").addClass("active");
-        $("li.reportfamily").removeClass("reportfamily").addClass("active");
+    	$("li.hsf").removeClass("hsf").addClass("active");
+        $("li.hsfsearch").removeClass("hsfsearch").addClass("active");
     });
 </script>
 <script>
@@ -273,15 +319,12 @@
 		var parametros = {opcMuniUrl: "${opcMuniUrl}"
 			, opcSectUrl: "${opcSectUrl}"
 			, opcComuUrl: "${opcComuUrl}"
-			, reportUrl: "${reportUrl}"
+			, hsfsUrl: "${hsfsUrl}"
+			, familiaUrl: "${familiaUrl}"
 			, processSuccess: "${processSuccess}"
 			, processError: "${processError}"
-			, families: "${families}"
-			, heading: "${heading}"
-			, exportar: "${exportar}"
-			,dataTablesTTSWF: "${dataTablesTTSWF}"
 			,language:"${pageContext.request.locale.language}" };
-		ViewReport.init(parametros);
+		SearchHSF.init(parametros);
 		$('#silais').change();
 	});
 </script>

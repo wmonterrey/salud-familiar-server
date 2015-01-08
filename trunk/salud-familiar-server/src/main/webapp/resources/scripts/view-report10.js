@@ -9,6 +9,40 @@ var ViewReport = function () {
         });
         $("#comunidad").select2({
         });
+        $('#enfermedad').select2({
+        	minimumInputLength: 3,
+        	id: function(enfermedad){ return enfermedad.codigoCie10; },
+            ajax: {
+                url: '/hsf/opciones/enfermedades',
+                dataType: 'json',
+                quietMillis: 100,
+                data: function(term, page) {
+                    return {
+                    	filtro: term
+                    };
+                },
+                results: function(data, page ) {
+                    return {
+                    	results: data
+                    };
+                }
+            },
+            formatResult: function(enfermedad) { 
+            	var markup = "<table'><tr>";
+                markup += "<td valign='top'><h5>" + enfermedad.codigoCie10 + "</h5>";
+                markup += "<div>" + enfermedad.nombreCie10 + "</div>";
+                markup += "</td></tr></table>";
+                return markup; 
+            },
+            formatSelection: function(enfermedad) { 
+                return enfermedad.nombreCie10; 
+            },
+            dropdownCssClass: "bigdrop",
+            initSelection: function (item, callback) {
+                return item;
+            },
+            escapeMarkup: function (m) { return m; }
+        });
    };
 
     return {
@@ -107,6 +141,9 @@ var ViewReport = function () {
                     },
                     comunidad: {
                         required: true
+                    },
+                    enfermedad: {
+                        required: true
                     }
                 },
 
@@ -141,21 +178,21 @@ var ViewReport = function () {
                     success.hide();
                     error.hide();
                     //add here some ajax code to submit your form or just call form.submit() if you want to submit the form without ajax
-                    getFamilias();
+                    getEnfermedades();
                 }
             });
             
-            function getFamilias() {
+            function getEnfermedades() {
     			App.blockUI(pageContent, false);
     			$.getJSON(parametros.reportUrl, {
-    				comunidad : $('#comunidad').val(),
+    				comunidad : $('#comunidad').val(),enfermedad : $('#enfermedad').val(),
     				ajax : 'true'
     			}, function(data) {
-    				title = parametros.families + ' - ' + $('#comunidad option:selected').text();
+    				title = $('#enfermedad').val() + ' - ' + $('#comunidad option:selected').text();
     				var d = new Date();
                     fecha=d.toLocaleString(parametros.language);
     				var table1 = $('#resultados').dataTable( {  
-    	                "aoColumns" : [null,{sClass: "aw-right" },{sClass: "aw-right" },{sClass: "aw-right" },null,{sClass: "aw-right" },{sClass: "aw-right" },{sClass: "aw-right" }],
+    	                "aoColumns" : [null,null,null,null,null,null,null,null,null],
     	                bFilter: false, bInfo: true, bPaginate: true, bDestroy: true,
     	                "aLengthMenu": [[5, 10, 15, 20, -1],[5, 10, 15, 20, "Todos"]], iDisplayLength: 10});
     				var tt = new $.fn.dataTable.TableTools( table1, {
@@ -188,8 +225,11 @@ var ViewReport = function () {
     	        	table1.fnClearTable();
     				var len = data.length;
     				for ( var i = 0; i < len; i++) {
+    					var d = new Date(data[i].persona.fechaNacimiento);
+    					var e = new Date(data[i].fechaOcurrencia);
 						table1.fnAddData(
-    							[data[i].comunidad.nombre, data[i].numVivienda, data[i].numFamilia, data[i].numFicha, data[i].direccion, data[i].dispensarizada,data[i].infoCompleta,data[i].pasive]);
+    							[data[i].persona.familia.comunidad.nombre, data[i].persona.familia.direccion, data[i].persona.nombres,
+    							 data[i].persona.primerApellido,data[i].persona.segundoApellido,d.yyyymmdd(),data[i].persona.sexo.valor,e.yyyymmdd(),data[i].personaAtendio.valor]);
     				}
     				App.unblockUI(pageContent);
     			})
@@ -197,6 +237,14 @@ var ViewReport = function () {
 				    alert( "error" );
 				    App.unblockUI(pageContent);
 				});
+            };
+            Date.prototype.yyyymmdd = function() {         
+                
+                var yyyy = this.getFullYear().toString();                                    
+                var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based         
+                var dd  = this.getDate().toString();             
+                                    
+                return yyyy + '-' + (mm[1]?mm:"0"+mm[0]) + '-' + (dd[1]?dd:"0"+dd[0]);
             };
         }
     };

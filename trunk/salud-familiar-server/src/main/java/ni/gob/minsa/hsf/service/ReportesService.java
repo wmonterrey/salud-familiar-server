@@ -9,7 +9,10 @@ import java.util.TreeMap;
 
 import javax.annotation.Resource;
 
+import ni.gob.minsa.hsf.domain.Enfermedades;
 import ni.gob.minsa.hsf.domain.Familia;
+import ni.gob.minsa.hsf.domain.Persona;
+import ni.gob.minsa.hsf.domain.Visita;
 import ni.gob.minsa.hsf.domain.report.Consolidado;
 import ni.gob.minsa.hsf.domain.report.FamEstComunidad;
 import ni.gob.minsa.hsf.domain.report.FamEstDivPol;
@@ -202,11 +205,11 @@ public class ReportesService {
 				consFamilias.add(new Consolidado(objeto[0].toString(),objeto[1].toString(),(Long)objeto[2],null,null,null,(Long)objeto[3],null));
 			}
 			query = session.createSQLQuery("SELECT vivs.silais as codigo, Count(vivs.silais) AS viviendas " +
-					"FROM (SELECT divisionpolitica.DEPENDENCIA_SILAIS AS silais " +
-					"FROM (((hsf_familias INNER JOIN comunidades ON hsf_familias.COMUNIDAD = comunidades.CODIGO) " +
-					"INNER JOIN sectores ON comunidades.SECTOR = sectores.CODIGO) " +
-					"INNER JOIN divisionpolitica ON sectores.MUNICIPIO = divisionpolitica.CODIGO_NACIONAL) " +
-					"WHERE hsf_familias.pasivo = '0' GROUP BY divisionpolitica.DEPENDENCIA_SILAIS, hsf_familias.COMUNIDAD, hsf_familias.NUM_VIVIENDA) vivs " +
+					"FROM (SELECT general.divisionpolitica.DEPENDENCIA_SILAIS AS silais " +
+					"FROM (((hsf.hsf_familias INNER JOIN hsf.comunidades ON hsf.hsf_familias.COMUNIDAD = hsf.comunidades.CODIGO) " +
+					"INNER JOIN hsf.sectores ON hsf.comunidades.SECTOR = hsf.sectores.CODIGO) " +
+					"INNER JOIN general.divisionpolitica ON hsf.sectores.MUNICIPIO = general.divisionpolitica.CODIGO_NACIONAL) " +
+					"WHERE hsf.hsf_familias.pasivo = '0' GROUP BY general.divisionpolitica.DEPENDENCIA_SILAIS, hsf.hsf_familias.COMUNIDAD, hsf.hsf_familias.NUM_VIVIENDA) vivs " +
 					"GROUP BY vivs.silais ORDER BY vivs.silais");
 			List<Object[]> consViviendasResult = query.list();
 			for(Object[] objeto:consViviendasResult){
@@ -242,10 +245,10 @@ public class ReportesService {
 				consFamilias.add(new Consolidado(objeto[0].toString(),objeto[1].toString(),(Long)objeto[2],null,null,null,(Long)objeto[3],null));
 			}
 			query = session.createSQLQuery("SELECT vivs.municipio as codigo, Count(vivs.municipio) AS viviendas " +
-					"FROM (SELECT divisionpolitica.codigo_nacional AS municipio FROM (((hsf_familias INNER JOIN comunidades ON hsf_familias.COMUNIDAD = comunidades.CODIGO) " +
-					"INNER JOIN sectores ON comunidades.SECTOR = sectores.CODIGO) " +
-					"INNER JOIN divisionpolitica ON sectores.MUNICIPIO = divisionpolitica.CODIGO_NACIONAL) " +
-					"WHERE hsf_familias.pasivo = '0' and divisionpolitica.dependencia_silais = " + codSilais + " GROUP BY divisionpolitica.codigo_nacional, hsf_familias.COMUNIDAD, hsf_familias.NUM_VIVIENDA) vivs " +
+					"FROM (SELECT general.divisionpolitica.codigo_nacional AS municipio FROM (((hsf.hsf_familias INNER JOIN general.comunidades ON hsf.hsf_familias.COMUNIDAD = general.comunidades.CODIGO) " +
+					"INNER JOIN general.sectores ON general.comunidades.SECTOR = general.sectores.CODIGO) " +
+					"INNER JOIN general.divisionpolitica ON general.sectores.MUNICIPIO = general.divisionpolitica.CODIGO_NACIONAL) " +
+					"WHERE hsf.hsf_familias.pasivo = '0' and general.divisionpolitica.dependencia_silais = " + codSilais + " GROUP BY general.divisionpolitica.codigo_nacional, hsf.hsf_familias.COMUNIDAD, hsf.hsf_familias.NUM_VIVIENDA) vivs " +
 					"GROUP BY vivs.municipio ORDER BY vivs.municipio");
 			List<Object[]> consViviendasResult = query.list();
 			for(Object[] objeto:consViviendasResult){
@@ -285,10 +288,10 @@ public class ReportesService {
 				consFamilias.add(new Consolidado(objeto[0].toString(),objeto[1].toString(),(Long)objeto[2],null,null,null,(Long)objeto[3],null));
 			}
 			query = session.createSQLQuery("SELECT vivs.sector as codigo, Count(vivs.sector) AS viviendas " +
-					"FROM (SELECT sectores.codigo AS sector FROM ((hsf_familias INNER JOIN comunidades ON hsf_familias.COMUNIDAD = comunidades.CODIGO) " +
-					"INNER JOIN sectores ON comunidades.SECTOR = sectores.CODIGO) " +
-					"WHERE hsf_familias.pasivo = '0' and sectores.unidad in (select codigo from Unidades where codigo = " + codUnidad + " or unidad_Adtva = " + codUnidad + ") " +
-					"GROUP BY sectores.codigo, hsf_familias.COMUNIDAD, hsf_familias.NUM_VIVIENDA) vivs " +
+					"FROM (SELECT general.sectores.codigo AS sector FROM ((hsf.hsf_familias INNER JOIN general.comunidades ON hsf.hsf_familias.COMUNIDAD = general.comunidades.CODIGO) " +
+					"INNER JOIN general.sectores ON general.comunidades.SECTOR = general.sectores.CODIGO) " +
+					"WHERE hsf.hsf_familias.pasivo = '0' and general.sectores.unidad in (select codigo from general.Unidades where codigo = " + codUnidad + " or unidad_Adtva = " + codUnidad + ") " +
+					"GROUP BY general.sectores.codigo, hsf.hsf_familias.COMUNIDAD, hsf.hsf_familias.NUM_VIVIENDA) vivs " +
 					"GROUP BY vivs.sector ORDER BY vivs.sector");
 			List<Object[]> consViviendasResult = query.list();
 			for(Object[] objeto:consViviendasResult){
@@ -329,8 +332,8 @@ public class ReportesService {
 				consFamilias.add(new Consolidado(objeto[0].toString(),objeto[1].toString(),(Long)objeto[2],null,null,null,(Long)objeto[3],null));
 			}
 			query = session.createSQLQuery("SELECT vivs.comunidad as codigo, Count(vivs.comunidad) AS viviendas " +
-					"FROM (SELECT comunidades.codigo AS comunidad FROM hsf_familias INNER JOIN comunidades ON hsf_familias.COMUNIDAD = comunidades.CODIGO " +
-					"WHERE hsf_familias.pasivo = '0' and comunidades.sector = '" + codSector + "' GROUP BY comunidades.codigo, hsf_familias.COMUNIDAD, hsf_familias.NUM_VIVIENDA) vivs " +
+					"FROM (SELECT general.comunidades.codigo AS comunidad FROM hsf.hsf_familias INNER JOIN general.comunidades ON hsf.hsf_familias.COMUNIDAD = general.comunidades.CODIGO " +
+					"WHERE hsf.hsf_familias.pasivo = '0' and general.comunidades.sector = '" + codSector + "' GROUP BY general.comunidades.codigo, hsf.hsf_familias.COMUNIDAD, hsf.hsf_familias.NUM_VIVIENDA) vivs " +
 					"GROUP BY vivs.comunidad ORDER BY vivs.comunidad");
 			List<Object[]> consViviendasResult = query.list();
 			for(Object[] objeto:consViviendasResult){
@@ -369,8 +372,8 @@ public class ReportesService {
 				consFamilias.add(new Consolidado(objeto[0].toString(),objeto[1].toString(),(Long)objeto[2],null,null,null,(Long)objeto[3],null));
 			}
 			query = session.createSQLQuery("SELECT vivs.comunidad as codigo, Count(vivs.comunidad) AS viviendas " +
-					"FROM (SELECT comunidades.codigo AS comunidad FROM hsf_familias INNER JOIN comunidades ON hsf_familias.COMUNIDAD = comunidades.CODIGO " +
-					"WHERE hsf_familias.pasivo = '0' and comunidades.codigo = '" + codComunidad + "' GROUP BY comunidades.codigo, hsf_familias.COMUNIDAD, hsf_familias.NUM_VIVIENDA) vivs " +
+					"FROM (SELECT general.comunidades.codigo AS comunidad FROM hsf.hsf_familias INNER JOIN general.comunidades ON hsf.hsf_familias.COMUNIDAD = general.comunidades.CODIGO " +
+					"WHERE hsf.hsf_familias.pasivo = '0' and general.comunidades.codigo = '" + codComunidad + "' GROUP BY general.comunidades.codigo, hsf.hsf_familias.COMUNIDAD, hsf.hsf_familias.NUM_VIVIENDA) vivs " +
 					"GROUP BY vivs.comunidad ORDER BY vivs.comunidad");
 			List<Object[]> consViviendasResult = query.list();
 			for(Object[] objeto:consViviendasResult){
@@ -639,6 +642,69 @@ public class ReportesService {
 					"order by familia.comunidad.nombre, familia.numVivienda, familia.numFamilia");
 		query.setParameter("pasivo", '0');
 		query.setParameter("comunidad", codComunidad);
+        // Retrieve all
+		return  query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Visita> getVisitas(String codComunidad){
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = null;
+		query = session.createQuery("From Visita visita where visita.pasive =:pasivo " +
+					"and visita.familia.comunidad.codigo =:comunidad " +
+					"order by visita.fechaVisita");
+		query.setParameter("pasivo", '0');
+		query.setParameter("comunidad", codComunidad);
+        // Retrieve all
+		return  query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Persona> getPersonas(String codComunidad){
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = null;
+		query = session.createQuery("From Persona persona where persona.pasive =:pasivo " +
+					"and persona.familia.comunidad.codigo =:comunidad " +
+					"order by persona.familia.comunidad.nombre, persona.familia.numVivienda, persona.familia.numFamilia, persona.numPersona");
+		query.setParameter("pasivo", '0');
+		query.setParameter("comunidad", codComunidad);
+        // Retrieve all
+		return  query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Enfermedades> getEnfermedades(String codComunidad, String codEnfermedad){
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = null;
+		query = session.createQuery("From Enfermedades enf where enf.pasive =:pasivo " +
+					"and enf.persona.familia.comunidad.codigo =:comunidad and enf.enfermedad.codigoCie10 =:enfermedad " +
+					"order by enf.persona.familia.comunidad.nombre, enf.persona.familia.numVivienda, enf.persona.familia.numFamilia, enf.persona.numPersona, enf.enfermedad.nombreCie10");
+		query.setParameter("pasivo", '0');
+		query.setParameter("comunidad", codComunidad);
+		query.setParameter("enfermedad", codEnfermedad);
+        // Retrieve all
+		return  query.list();
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public List<Persona> getEmbarazos(String codComunidad){
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = null;
+		query = session.createQuery("From Persona persona where persona.pasive =:pasivo " + 
+					"and persona.familia.comunidad.codigo =:comunidad and persona.embarazada =:embarazo " +
+					"order by persona.familia.comunidad.nombre, persona.familia.numVivienda, persona.familia.numFamilia, persona.numPersona");
+		query.setParameter("pasivo", '0');
+		query.setParameter("comunidad", codComunidad);
+		query.setParameter("embarazo", "1");
         // Retrieve all
 		return  query.list();
 	}

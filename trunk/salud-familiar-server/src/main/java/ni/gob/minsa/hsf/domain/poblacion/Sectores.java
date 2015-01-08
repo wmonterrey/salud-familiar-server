@@ -19,7 +19,7 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 @Entity
-@Table(name = "sectores", catalog = "hsf")
+@Table(name = "sectores", catalog = "general")
 public class Sectores implements Serializable{
 
 	/**

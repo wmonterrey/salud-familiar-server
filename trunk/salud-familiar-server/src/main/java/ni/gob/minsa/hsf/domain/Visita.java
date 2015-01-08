@@ -27,6 +27,8 @@ public class Visita extends BaseMetaData implements Auditable{
 	private Date fechaVisita;
 	private char tipoVisita = '1';
 	private String personaVisita;
+	private String motivoVisita;
+	private String problemasEncontrados;
 	private Profesion personaVisitaProfesion;
 	private MovilInfo movilInfo;
 	
@@ -91,6 +93,24 @@ public class Visita extends BaseMetaData implements Auditable{
 
 	public void setPersonaVisitaProfesion(Profesion personaVisitaProfesion) {
 		this.personaVisitaProfesion = personaVisitaProfesion;
+	}
+	
+	@Column(name = "MOTIVO_VISITA", nullable = true, length = 100)
+	public String getMotivoVisita() {
+		return motivoVisita;
+	}
+
+	public void setMotivoVisita(String motivoVisita) {
+		this.motivoVisita = motivoVisita;
+	}
+
+	@Column(name = "PROBLEMAS_ENCONTRADOS", nullable = true, length = 400)
+	public String getProblemasEncontrados() {
+		return problemasEncontrados;
+	}
+
+	public void setProblemasEncontrados(String problemasEncontrados) {
+		this.problemasEncontrados = problemasEncontrados;
 	}
 
 	public MovilInfo getMovilInfo() {
