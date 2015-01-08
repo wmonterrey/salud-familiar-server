@@ -251,8 +251,7 @@ var ViewReport = function () {
     	            	                                     "sExtends": "csv",
     	            	                                     "sFileName": title+"-*.csv",
     	            	                                     "sTitle": parametros.heading,
-    	            	                                     "oSelectorOpts": { filter: 'applied', order: 'current' },
-    	            	                                     "mColumns": [ 0, 1, 2, 3]
+    	            	                                     "oSelectorOpts": { filter: 'applied', order: 'current' }
     	            	                                 },
     	            	                                 {
     	            	                                     "sExtends": "pdf",
@@ -260,8 +259,7 @@ var ViewReport = function () {
     	            	                                     "sTitle": parametros.heading,
     	            	                                     "sPdfMessage": title + ' - ' + fecha,
     	            	                                     "oSelectorOpts": { filter: 'applied', order: 'current' },
-    	            	                                     "mColumns": [ 0, 1, 2, 3],
-    	            	                                     "sPdfOrientation": "landscape",
+    	            	                                     "sPdfSize": "letter"
     	            	                                 }
     	            	                                 ]
     	            	                }

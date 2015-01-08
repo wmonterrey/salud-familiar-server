@@ -59,9 +59,31 @@
 			</div>
 			<!-- END PAGE HEADER-->
 			<!-- BEGIN PAGE CONTENT-->
-			<spring:url value="/info/viewHsf/{idFamilia}" var="familiaUrl">
-				<spring:param name="idFamilia" value="${persona.familia.idFamilia}" />
-			</spring:url>
+			<c:choose> 
+				<c:when test="${accion eq 1}">
+					<spring:url value="/info/viewHsf/{idFamilia}" var="familiaUrl">
+						<spring:param name="idFamilia" value="${persona.familia.idFamilia}" />
+					</spring:url>
+				</c:when>
+				<c:when test="${accion eq 2}">
+					<spring:url value="/info/updateHsf/{idFamilia}" var="familiaUrl">
+						<spring:param name="idFamilia" value="${persona.familia.idFamilia}" />
+					</spring:url>
+				</c:when>
+				<c:when test="${accion eq 3}">
+					<spring:url value="/info/updateHsf/{idFamilia}" var="familiaUrl">
+						<spring:param name="idFamilia" value="${persona.familia.idFamilia}" />
+					</spring:url>
+				</c:when>
+				<c:when test="${accion eq 4}">
+					<spring:url value="/info/updateHsf/{idFamilia}" var="familiaUrl">
+						<spring:param name="idFamilia" value="${persona.familia.idFamilia}" />
+					</spring:url>
+				</c:when>
+				<c:otherwise>
+					<spring:url value="/" var="familiaUrl"></spring:url>
+				</c:otherwise>
+			</c:choose>
 			<c:set var="processSuccess"><spring:message code="process.success" /></c:set>
 			<c:set var="processError"><spring:message code="process.error" /></c:set>
 			<c:set var="quitarenf"><spring:message code="disable.enf" /></c:set>
@@ -174,6 +196,23 @@
 														<div class="col-md-6">
 															<div class="input-group">
 																<input type="text" value="${persona.idPersona}" id="idPersona" name="idPersona" class="form-control"/>
+																<span class="input-group-addon">
+																	<i class="fa fa-sort-alpha-asc"></i>
+																</span>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-6" hidden="true">
+													<div class="form-group">
+														<label class="control-label col-md-6"><spring:message code="nopersona" />:
+														<span class="required">
+															 *
+														</span>
+														</label>
+														<div class="col-md-6">
+															<div class="input-group">
+																<input type="text" value="${accion}" id="accion" name="accion" class="form-control"/>
 																<span class="input-group-addon">
 																	<i class="fa fa-sort-alpha-asc"></i>
 																</span>

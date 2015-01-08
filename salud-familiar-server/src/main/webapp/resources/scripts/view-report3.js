@@ -253,7 +253,6 @@ var ViewReport = function () {
     	            	                                     "sFileName": title+"-*.csv",
     	            	                                     "sTitle": parametros.heading,
     	            	                                     "oSelectorOpts": { filter: 'applied', order: 'current' },
-    	            	                                     "mColumns": [ 0, 1, 2, 3, 4, 5, 6]
     	            	                                 },
     	            	                                 {
     	            	                                     "sExtends": "pdf",
@@ -261,8 +260,7 @@ var ViewReport = function () {
     	            	                                     "sTitle": parametros.heading,
     	            	                                     "sPdfMessage": title + ' - ' + fecha,
     	            	                                     "oSelectorOpts": { filter: 'applied', order: 'current' },
-    	            	                                     "mColumns": [ 0, 1, 2, 3, 4, 5, 6],
-    	            	                                     "sPdfOrientation": "landscape",
+    	            	                                     "sPdfOrientation": "landscape"
     	            	                                 }
     	            	                                 ]
     	            	                }

@@ -45,6 +45,11 @@
 							<i class="fa fa-search"></i>
 							<spring:message code="hsf.search"/></a>
 						</li>
+						<li class="hsffollow">
+							<a href="<spring:url value="/info/newVisit" htmlEscape="true "/>">
+							<i class="fa fa-edit"></i>
+							<spring:message code="hsf.visit"/></a>
+						</li>
 					</ul>
 				</li>
 				</sec:authorize>
@@ -125,8 +130,14 @@
 									<i class="fa fa-stethoscope"></i>
 									<spring:message code="report.ill"/></a>
 								</li>
+								<li class="reportpreg">
+									<a href="<spring:url value="/report/pregnancy" htmlEscape="true "/>">
+									<i class="fa fa-heart"></i>
+									<spring:message code="pregnancies"/></a>
+								</li>
 							</ul>
 						</li>
+						<sec:authorize url="/noshown/">
 						<li class="caracterizacion">
 							<a href="javascript:;">
 							<i class="fa fa-book"></i> <spring:message code="caract"/>
@@ -134,6 +145,11 @@
 							</span>
 							</a>
 							<ul class="sub-menu">
+								<li class="pers">
+									<a href="<spring:url value="/report/pers" htmlEscape="true "/>">
+									<i class="fa fa-user"></i>
+									<spring:message code="report.person"/></a>
+								</li>
 								<li class="chs">
 									<a href="<spring:url value="/report/chs" htmlEscape="true "/>">
 									<i class="fa fa-building"></i>
@@ -151,6 +167,7 @@
 								</li>
 							</ul>
 						</li>
+						</sec:authorize>
 					</ul>
 				</li>
 				</sec:authorize>

@@ -248,8 +248,7 @@ var ViewReport = function () {
     	            	                                     "sExtends": "csv",
     	            	                                     "sFileName": title+"-*.csv",
     	            	                                     "sTitle": parametros.heading,
-    	            	                                     "oSelectorOpts": { filter: 'applied', order: 'current' },
-    	            	                                     "mColumns": [ 0, 1, 2]
+    	            	                                     "oSelectorOpts": { filter: 'applied', order: 'current' }
     	            	                                 },
     	            	                                 {
     	            	                                     "sExtends": "pdf",
@@ -259,6 +258,7 @@ var ViewReport = function () {
     	            	                                     "oSelectorOpts": { filter: 'applied', order: 'current' },
     	            	                                     "mColumns": [ 0, 1, 2],
     	            	                                     "sPdfOrientation": "portrait",
+    	            	                                     "sPdfSize": "letter"
     	            	                                 }
     	            	                                 ]
     	            	                }
