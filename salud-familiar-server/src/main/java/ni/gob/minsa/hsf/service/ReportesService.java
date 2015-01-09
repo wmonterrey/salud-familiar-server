@@ -204,11 +204,12 @@ public class ReportesService {
 			for(Object[] objeto:consFamiliasResult){
 				consFamilias.add(new Consolidado(objeto[0].toString(),objeto[1].toString(),(Long)objeto[2],null,null,null,(Long)objeto[3],null));
 			}
+			
 			query = session.createSQLQuery("SELECT vivs.silais as codigo, Count(vivs.silais) AS viviendas " +
 					"FROM (SELECT general.divisionpolitica.DEPENDENCIA_SILAIS AS silais " +
-					"FROM (((hsf.hsf_familias INNER JOIN hsf.comunidades ON hsf.hsf_familias.COMUNIDAD = hsf.comunidades.CODIGO) " +
-					"INNER JOIN hsf.sectores ON hsf.comunidades.SECTOR = hsf.sectores.CODIGO) " +
-					"INNER JOIN general.divisionpolitica ON hsf.sectores.MUNICIPIO = general.divisionpolitica.CODIGO_NACIONAL) " +
+					"FROM (((hsf.hsf_familias INNER JOIN general.comunidades ON hsf.hsf_familias.COMUNIDAD = general.comunidades.CODIGO) " +
+					"INNER JOIN general.sectores ON general.comunidades.SECTOR = general.sectores.CODIGO) " +
+					"INNER JOIN general.divisionpolitica ON general.sectores.MUNICIPIO = general.divisionpolitica.CODIGO_NACIONAL) " +
 					"WHERE hsf.hsf_familias.pasivo = '0' GROUP BY general.divisionpolitica.DEPENDENCIA_SILAIS, hsf.hsf_familias.COMUNIDAD, hsf.hsf_familias.NUM_VIVIENDA) vivs " +
 					"GROUP BY vivs.silais ORDER BY vivs.silais");
 			List<Object[]> consViviendasResult = query.list();
