@@ -53,7 +53,14 @@ public class PersonaService {
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("SELECT max(numPersona) FROM Persona per where per.familia.idFamilia = :idFamilia group by per.familia.idFamilia");
 		query.setParameter("idFamilia", idFamilia);
-		return (Integer) query.uniqueResult() + 1;
+		Integer numMax = (Integer) query.uniqueResult();
+		if (numMax==null){
+			numMax=1;
+		}
+		else{
+			numMax=numMax+1;
+		}
+		return numMax;
 	}
 	
 	public void addPersona(Persona persona) {

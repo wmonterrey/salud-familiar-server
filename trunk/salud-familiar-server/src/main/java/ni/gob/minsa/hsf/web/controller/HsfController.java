@@ -638,7 +638,7 @@ public class HsfController {
 			, @RequestParam(value="factRiesgoSocial", required=false ) String factRiesgoSocial
 			, @RequestParam(value="discapacidades", required=false ) String discapacidades
 			, @RequestParam(value="grupoDisp", required=false ) String grupoDisp
-			, @RequestParam(value="accion", required=true ) int opcion
+			, @RequestParam(value="accion", required=false, defaultValue="") String opcion
 			, @RequestParam( value="idPersona", required=false, defaultValue="" ) String idPersona
 	        ) throws ParseException
 	{
@@ -688,7 +688,7 @@ public class HsfController {
 	        	familiaService.addFamilia(familia);
 	        }
 	        personaService.addPersona(persona);
-	        if (opcion == 3){
+	        if (opcion.equals("3")){
 	        	Eventos eventoData = new Eventos();
 	        	eventoData.setPersona(persona);
 	        	Visita visita = this.visitaService.getUltimaVisita(familia.getIdFamilia());
@@ -701,7 +701,7 @@ public class HsfController {
 				eventoData.setCreated(new Date());
 				eventosService.addEventos(eventoData);
 	        }
-	        else if(opcion == 4){
+	        else if(opcion.equals("4")){
 	        	Eventos eventoData = new Eventos();
 	        	eventoData.setPersona(persona);
 	        	Visita visita = this.visitaService.getUltimaVisita(familia.getIdFamilia());
