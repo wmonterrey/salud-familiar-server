@@ -68,7 +68,7 @@ public class Paises {
 		this.nombre = nombre;
 	}
 
-	@Column(name = "CODIGO_NUMERICO", unique = true, nullable = false, length = 20)
+	@Column(name = "CODIGO_NUMERICO", nullable = false, length = 20)
 	public String getCodigoNumerico() {
 		return this.codigoNumerico;
 	}
@@ -77,7 +77,7 @@ public class Paises {
 		this.codigoNumerico = codigoNumerico;
 	}
 
-	@Column(name = "CODIGO_ALFADOS", unique = true, nullable = false, length = 2)
+	@Column(name = "CODIGO_ALFADOS", nullable = false, length = 2)
 	public String getCodigoAlfados() {
 		return this.codigoAlfados;
 	}
@@ -86,7 +86,7 @@ public class Paises {
 		this.codigoAlfados = codigoAlfados;
 	}
 
-	@Column(name = "CODIGO_ALFATRES", unique = true, nullable = false, length = 3)
+	@Column(name = "CODIGO_ALFATRES", nullable = false, length = 3)
 	public String getCodigoAlfatres() {
 		return this.codigoAlfatres;
 	}

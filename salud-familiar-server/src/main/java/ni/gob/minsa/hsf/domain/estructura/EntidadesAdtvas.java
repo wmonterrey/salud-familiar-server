@@ -164,7 +164,7 @@ public class EntidadesAdtvas implements Serializable{
 		this.longitud = longitud;
 	}
 
-	@Column(name = "CODIGO", unique = true, nullable = false)
+	@Column(name = "CODIGO", nullable = false)
 	public long getCodigo() {
 		return this.codigo;
 	}

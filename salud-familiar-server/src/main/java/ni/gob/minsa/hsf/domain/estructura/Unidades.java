@@ -266,7 +266,7 @@ public class Unidades implements Serializable{
 		this.conectividad = conectividad;
 	}
 
-	@Column(name = "CODIGO", unique = true, nullable = false)
+	@Column(name = "CODIGO", nullable = false)
 	public long getCodigo() {
 		return this.codigo;
 	}
