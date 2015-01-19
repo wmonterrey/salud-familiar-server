@@ -1,4 +1,4 @@
-package ni.gob.minsa.hsf.service;
+package ni.gob.minsa.hsf.webservice;
 
 import javax.annotation.Resource;
 
