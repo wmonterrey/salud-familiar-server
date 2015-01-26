@@ -137,7 +137,6 @@
 								</li>
 							</ul>
 						</li>
-						<sec:authorize url="/noshown/">
 						<li class="caracterizacion">
 							<a href="javascript:;">
 							<i class="fa fa-book"></i> <spring:message code="caract"/>
@@ -167,11 +166,10 @@
 								</li>
 							</ul>
 						</li>
-						</sec:authorize>
 					</ul>
 				</li>
 				</sec:authorize>
-				<sec:authorize url="/noshown/">
+				<sec:authorize url="/monitor/">
 				<li class="monitor">
 					<a href="javascript:;">
 					<i class="fa fa-dashboard"></i>
@@ -183,26 +181,59 @@
 					</a>
 					<ul class="sub-menu">
 						<li class="monitoractivity">
-							<a href="<spring:url value="/" htmlEscape="true "/>">
+							<a href="<spring:url value="/monitor/activity" htmlEscape="true "/>">
 							<i class="fa fa-cogs"></i>
 							<spring:message code="monitor.activity"/></a>
 						</li>
 						<li class="monitornoactivity">
-							<a href="<spring:url value="/" htmlEscape="true "/>">
+							<a href="<spring:url value="/monitor/noactivity" htmlEscape="true "/>">
 							<i class="fa fa-frown-o"></i>
 							<spring:message code="monitor.noactivity"/></a>
 						</li>
 					</ul>
 				</li>
 				</sec:authorize>
-				<sec:authorize url="/noshown/">
-				<li class="catalog">
-					<a href="<spring:url value="/catalog/catalogs/" htmlEscape="true "/>">
+				<sec:authorize url="/catalog/">
+				<li class="catalogs">
+					<a href="javascript:;">
 					<i class="fa fa-suitcase"></i>
 					<span class="title">
 						<spring:message code="catalog"/>
 					</span>
+					<span class="arrow ">
+					</span>
 					</a>
+					<ul class="sub-menu">
+						<li class="famest">
+							<a href="javascript:;">
+							<i class="fa fa-group"></i> <spring:message code="families.estimated"/>
+							<span class="arrow">
+							</span>
+							</a>
+							<ul class="sub-menu">
+								<li class="entidades">
+									<a href="<spring:url value="/catalog/famest/entidad" htmlEscape="true "/>">
+									<i class="fa fa-check-circle"></i>
+									<spring:message code="silais"/></a>
+								</li>
+								<li class="municipios">
+									<a href="<spring:url value="/catalog/famest/divpol" htmlEscape="true "/>">
+									<i class="fa fa-check-circle-o"></i>
+									<spring:message code="muni"/></a>
+								</li>
+								<li class="sectores">
+									<a href="<spring:url value="/catalog/famest/sector" htmlEscape="true "/>">
+									<i class="fa fa-check-square"></i>
+									<spring:message code="sector"/></a>
+								</li>
+								<li class="comunidades">
+									<a href="<spring:url value="/catalog/famest/comunidad" htmlEscape="true "/>">
+									<i class="fa fa-check-square-o"></i>
+									<spring:message code="comunity"/></a>
+								</li>
+							</ul>
+						</li>
+					</ul>
 				</li>
 				</sec:authorize>
 				<sec:authorize url="/admin/">

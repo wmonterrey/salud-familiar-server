@@ -199,5 +199,27 @@ public class Divisionpolitica implements Serializable{
 	public void setDependenciaSilais(EntidadesAdtvas dependenciaSilais) {
 		this.dependenciaSilais = dependenciaSilais;
 	}
+	
+	@Override
+	public String toString(){
+		return nombre;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		
+		if ((this == other))
+			return true;
+		if ((other == null))
+			return false;
+		if (!(other instanceof Divisionpolitica))
+			return false;
+		
+		Divisionpolitica castOther = (Divisionpolitica) other;
+		
+		
+		return ((this.getCodigoNacional().equals(castOther.getCodigoNacional())) 
+				&& (this.getNombre().equals(castOther.getNombre())));
+	}
 
 }
