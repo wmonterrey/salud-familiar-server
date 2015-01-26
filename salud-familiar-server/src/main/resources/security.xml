@@ -14,7 +14,6 @@
 	    <intercept-url pattern="/info/.*" access="ROLE_INFO" />
 	    <intercept-url pattern="/report/.*" access="ROLE_REPORT" />
 	    <intercept-url pattern="/monitor/.*" access="ROLE_MONITOR" />
-	    <intercept-url pattern="/ws/.*" access="ROLE_WS" />
 		<intercept-url pattern="/login" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<intercept-url pattern="/loginfailed" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<intercept-url pattern="/logout" access="IS_AUTHENTICATED_ANONYMOUSLY" />

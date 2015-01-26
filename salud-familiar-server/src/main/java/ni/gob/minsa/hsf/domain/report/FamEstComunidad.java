@@ -8,14 +8,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.ForeignKey;
 
+import ni.gob.minsa.hsf.domain.audit.Auditable;
 import ni.gob.minsa.hsf.domain.poblacion.Comunidades;
 
 @Entity
-@Table(name = "hsf_fam_est_comu", catalog = "hsf")
-public class FamEstComunidad implements Serializable{
+@Table(name = "hsf_fam_est_comu", catalog = "hsf", uniqueConstraints = {
+		@UniqueConstraint(columnNames = "CODIGO_COMU") })
+public class FamEstComunidad implements Serializable, Auditable{
 	/**
 	 * 
 	 */
@@ -35,7 +38,7 @@ public class FamEstComunidad implements Serializable{
 	}
 
 	@ManyToOne(optional=true)
-	@JoinColumn(name="CODIGO_COMU",referencedColumnName="CODIGO", nullable=true)
+	@JoinColumn(name="CODIGO_COMU",referencedColumnName="CODIGO", nullable=false)
 	@ForeignKey(name = "FAMEST_SECTOR_FK")
 	public Comunidades getComunidad() {
 		return comunidad;
@@ -45,12 +48,20 @@ public class FamEstComunidad implements Serializable{
 		this.comunidad = comunidad;
 	}
 
-	@Column(name = "FAM_ESTIMADAS", nullable = true)
+	@Column(name = "FAM_ESTIMADAS", nullable = false)
 	public long getFamEstimadas() {
 		return famEstimadas;
 	}
 	
 	public void setFamEstimadas(long famEstimadas) {
 		this.famEstimadas = famEstimadas;
+	}
+	
+	@Override
+	public boolean isFieldAuditable(String fieldname) {
+		if(fieldname.matches("created")||fieldname.matches("createdBy")){
+			return false;
+		}
+		return true;
 	}
 }

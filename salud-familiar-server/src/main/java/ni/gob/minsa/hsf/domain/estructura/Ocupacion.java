@@ -130,6 +130,26 @@ public class Ocupacion  implements java.io.Serializable {
     public void setFechaRegistro(Timestamp fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
     } 
+    @Override
+	public String toString(){
+		return nombre;
+	}
+    @Override
+	public boolean equals(Object other) {
+		
+		if ((this == other))
+			return true;
+		if ((other == null))
+			return false;
+		if (!(other instanceof Catalogo))
+			return false;
+		
+		Ocupacion castOther = (Ocupacion) other;
+		
+		return (this.getOcupacionId() == castOther.getOcupacionId())
+				&& (this.getCodigo().equals(castOther.getCodigo())) 
+						&& (this.getNombre().equals(castOther.getNombre()));
+	}
 }
 
 

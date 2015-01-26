@@ -139,5 +139,29 @@ public class Sectores implements Serializable{
 	public void setFechaRegistro(DateTime fechaRegistro) {
 		this.fechaRegistro = fechaRegistro;
 	}
+	
+	@Override
+	public String toString(){
+		return nombre;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		
+		if ((this == other))
+			return true;
+		if ((other == null))
+			return false;
+		if (!(other instanceof Sectores))
+			return false;
+		
+		Sectores castOther = (Sectores) other;
+		
+		
+		return ((this.getSectorId().equals(castOther.getSectorId()))
+				&& (this.getCodigo().equals(castOther.getCodigo())) 
+				&& (this.getNombre().equals(castOther.getNombre())));
+	}
+
 
 }
