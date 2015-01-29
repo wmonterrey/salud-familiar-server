@@ -14,6 +14,7 @@ import ni.gob.minsa.hsf.domain.Visita;
 import ni.gob.minsa.hsf.domain.catalogos.Areas;
 import ni.gob.minsa.hsf.domain.estructura.EntidadesAdtvas;
 import ni.gob.minsa.hsf.domain.report.Consolidado;
+import ni.gob.minsa.hsf.domain.report.ReporteCaract;
 import ni.gob.minsa.hsf.service.CatalogoService;
 import ni.gob.minsa.hsf.service.EntidadesAdtvasService;
 import ni.gob.minsa.hsf.service.ReportesService;
@@ -371,5 +372,39 @@ public class ReportesController {
         	logger.debug("Nulo");
         }
         return embarazos;
+    }
+    
+    @RequestMapping(value = "pers", method = RequestMethod.GET)
+    public String initReport12Form(Model model) throws ParseException { 	
+    	logger.debug("Inicia reporte de caract de personas");
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario);
+    	List<Areas> areas = catalogoService.getAreas(usuario);
+    	model.addAttribute("areas", areas);
+    	model.addAttribute("entidades", entidades);
+    	return "report/caractpers";
+	}
+    
+    /**
+     * Acepta una solicitud GET para JSON
+     * @return Un arreglo JSON 
+	 * @throws ParseException 
+     */
+    @RequestMapping(value = "caractpers", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody List<ReporteCaract> fetchCaractPersAreaJson(@RequestParam(value = "area", required = true) String codArea,
+    		@RequestParam(value = "variable", required = true) String codVariable,
+    		@RequestParam(value = "silais", required = false) Long codSilais,
+    		@RequestParam(value = "municipio", required = false, defaultValue = "") String codMunicipio,
+    		@RequestParam(value = "unidad", required = false) Long codUnidad,
+    		@RequestParam(value = "sector", required = false, defaultValue = "") String codSector,
+    		@RequestParam(value = "comunidad", required = false, defaultValue = "") String codComunidad) {
+        logger.info("Obteniendo las caracterizacion de personas en JSON");
+        
+        List<ReporteCaract> datos = reportesService.caratPersonas(codArea, codVariable, codSilais, codMunicipio, 
+        		codUnidad, codSector, codComunidad);
+        if (datos == null){
+        	logger.debug("Nulo");
+        }
+        return datos;
     }
 }
