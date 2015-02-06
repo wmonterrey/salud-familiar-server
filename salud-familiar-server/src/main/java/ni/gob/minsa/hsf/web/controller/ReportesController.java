@@ -407,4 +407,106 @@ public class ReportesController {
         }
         return datos;
     }
+    
+    @RequestMapping(value = "chs", method = RequestMethod.GET)
+    public String initReport13Form(Model model) throws ParseException { 	
+    	logger.debug("Inicia reporte de caract de chs");
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario);
+    	List<Areas> areas = catalogoService.getAreas(usuario);
+    	model.addAttribute("areas", areas);
+    	model.addAttribute("entidades", entidades);
+    	return "report/caractchs";
+	}
+    
+    /**
+     * Acepta una solicitud GET para JSON
+     * @return Un arreglo JSON 
+	 * @throws ParseException 
+     */
+    @RequestMapping(value = "caractchs", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody List<ReporteCaract> fetchCaractChsAreaJson(@RequestParam(value = "area", required = true) String codArea,
+    		@RequestParam(value = "variable", required = true) String codVariable,
+    		@RequestParam(value = "silais", required = false) Long codSilais,
+    		@RequestParam(value = "municipio", required = false, defaultValue = "") String codMunicipio,
+    		@RequestParam(value = "unidad", required = false) Long codUnidad,
+    		@RequestParam(value = "sector", required = false, defaultValue = "") String codSector,
+    		@RequestParam(value = "comunidad", required = false, defaultValue = "") String codComunidad) {
+        logger.info("Obteniendo las caracterizacion de CHS en JSON");
+        
+        List<ReporteCaract> datos = reportesService.caratChs(codArea, codVariable, codSilais, codMunicipio, 
+        		codUnidad, codSector, codComunidad);
+        if (datos == null){
+        	logger.debug("Nulo");
+        }
+        return datos;
+    }
+    
+    @RequestMapping(value = "fse", method = RequestMethod.GET)
+    public String initReport14Form(Model model) throws ParseException { 	
+    	logger.debug("Inicia reporte de caract de fse");
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario);
+    	List<Areas> areas = catalogoService.getAreas(usuario);
+    	model.addAttribute("areas", areas);
+    	model.addAttribute("entidades", entidades);
+    	return "report/caractfse";
+	}
+    
+    /**
+     * Acepta una solicitud GET para JSON
+     * @return Un arreglo JSON 
+	 * @throws ParseException 
+     */
+    @RequestMapping(value = "caractfse", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody List<ReporteCaract> fetchCaractFseAreaJson(@RequestParam(value = "area", required = true) String codArea,
+    		@RequestParam(value = "variable", required = true) String codVariable,
+    		@RequestParam(value = "silais", required = false) Long codSilais,
+    		@RequestParam(value = "municipio", required = false, defaultValue = "") String codMunicipio,
+    		@RequestParam(value = "unidad", required = false) Long codUnidad,
+    		@RequestParam(value = "sector", required = false, defaultValue = "") String codSector,
+    		@RequestParam(value = "comunidad", required = false, defaultValue = "") String codComunidad) {
+        logger.info("Obteniendo las caracterizacion de FSE en JSON");
+        
+        List<ReporteCaract> datos = reportesService.caratFse(codArea, codVariable, codSilais, codMunicipio, 
+        		codUnidad, codSector, codComunidad);
+        if (datos == null){
+        	logger.debug("Nulo"); 
+        }
+        return datos;
+    }
+    
+    @RequestMapping(value = "ff", method = RequestMethod.GET)
+    public String initReport15Form(Model model) throws ParseException { 	
+    	logger.debug("Inicia reporte de caract de ff");
+    	UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	List<EntidadesAdtvas> entidades = entidadAdtvaService.getEntidadesAdtvas(usuario);
+    	List<Areas> areas = catalogoService.getAreas(usuario);
+    	model.addAttribute("areas", areas);
+    	model.addAttribute("entidades", entidades);
+    	return "report/caractff";
+	}
+    
+    /**
+     * Acepta una solicitud GET para JSON
+     * @return Un arreglo JSON 
+	 * @throws ParseException 
+     */
+    @RequestMapping(value = "caractff", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody List<ReporteCaract> fetchCaractFfAreaJson(@RequestParam(value = "area", required = true) String codArea,
+    		@RequestParam(value = "variable", required = true) String codVariable,
+    		@RequestParam(value = "silais", required = false) Long codSilais,
+    		@RequestParam(value = "municipio", required = false, defaultValue = "") String codMunicipio,
+    		@RequestParam(value = "unidad", required = false) Long codUnidad,
+    		@RequestParam(value = "sector", required = false, defaultValue = "") String codSector,
+    		@RequestParam(value = "comunidad", required = false, defaultValue = "") String codComunidad) {
+        logger.info("Obteniendo las caracterizacion de FF en JSON");
+        
+        List<ReporteCaract> datos = reportesService.caratFf(codArea, codVariable, codSilais, codMunicipio, 
+        		codUnidad, codSector, codComunidad);
+        if (datos == null){
+        	logger.debug("Nulo"); 
+        }
+        return datos;
+    }
 }

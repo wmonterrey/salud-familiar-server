@@ -745,112 +745,51 @@ public class ReportesService {
 			}
 			query.setParameter("pasivo", '0');
 		}
-		else{
-		else if(codVariable.equals("discapacidades")){
-			String sqlQuery = "Select Count(per.idPersona) as total, " +
-					"sum(case per.discapacidades when 'HSF_DISCAP|NING' then 1 else 0 end) as Ninguna "+ 
-					", sum(case when per.discapacidades like '%HSF_DISCAP|VISUAL%' then 1 else 0 end) as Visual"+
-					", sum(case when per.discapacidades like '%HSF_DISCAP|AUDIO%' then 1 else 0 end) as Auditiva"+
-					", sum(case when per.discapacidades like '%HSF_DISCAP|MOTORA%' then 1 else 0 end) as Motora"+
-					", sum(case when per.discapacidades like '%HSF_DISCAP|MENTAL%' then 1 else 0 end) as Mental"+
-					", sum(case when per.discapacidades like '%HSF_DISCAP|CONG%' then 1 else 0 end) as Congénita"+
-					" From Persona per where per.pasive =:pasivo";
-			if (codArea.equals("HSF_AREAS|CENTRAL")){
-				query = session.createQuery(sqlQuery);
+		else if(codVariable.equals("discapacidades")||codVariable.equals("factRiesgoMod")||codVariable.equals("factRiesgoNoMod")||codVariable.equals("factRiesgoSocial")){
+			String sqlQuery = "";
+			if(codVariable.equals("discapacidades")){
+				sqlQuery = "Select Count(per.idPersona) as total, " +
+						"sum(case per.discapacidades when 'HSF_DISCAP|NING' then 1 else 0 end) as Ninguna "+ 
+						", sum(case when per.discapacidades like '%HSF_DISCAP|VISUAL%' then 1 else 0 end) as Visual"+
+						", sum(case when per.discapacidades like '%HSF_DISCAP|AUDIO%' then 1 else 0 end) as Auditiva"+
+						", sum(case when per.discapacidades like '%HSF_DISCAP|MOTORA%' then 1 else 0 end) as Motora"+
+						", sum(case when per.discapacidades like '%HSF_DISCAP|MENTAL%' then 1 else 0 end) as Mental"+
+						", sum(case when per.discapacidades like '%HSF_DISCAP|CONG%' then 1 else 0 end) as Congénita"+
+						" From Persona per where per.pasive =:pasivo";
 			}
-			else if (codArea.equals("HSF_AREAS|SILAIS")){
-				query = session.createQuery(sqlQuery + " and per.familia.comunidad.sector.municipio.dependenciaSilais.codigo =:silais");
-				query.setParameter("silais", codSilais);
+			else if(codVariable.equals("factRiesgoMod")){
+				sqlQuery = "Select Count(per.idPersona) as total, " +
+						"sum(case per.factRiesgoMod when 'HSF_FRMOD|NING' then 1 else 0 end) as Ninguno "+ 
+						", sum(case when per.factRiesgoMod like '%HSF_FRMOD|HTOX%' then 1 else 0 end) as HabitosTox"+
+						", sum(case when per.factRiesgoMod like '%HSF_FRMOD|SED%' then 1 else 0 end) as Sedentarismo"+
+						", sum(case when per.factRiesgoMod like '%HSF_FRMOD|OBE%' then 1 else 0 end) as Obesidad"+
+						", sum(case when per.factRiesgoMod like '%HSF_FRMOD|DES%' then 1 else 0 end) as Desnutrición"+
+						", sum(case when per.factRiesgoMod like '%HSF_FRMOD|ACC%' then 1 else 0 end) as Accidentes"+
+						", sum(case when per.factRiesgoMod like '%HSF_FRMOD|ITS%' then 1 else 0 end) as ITS"+
+						", sum(case when per.factRiesgoMod like '%HSF_FRMOD|PREC%' then 1 else 0 end) as Riesgo_Preconcepcional"+
+						" From Persona per where per.pasive =:pasivo";
 			}
-			else if (codArea.equals("HSF_AREAS|UNI")){
-				query = session.createQuery(sqlQuery + " and per.familia.comunidad.sector.unidad in " +
-						"(select lu.codigo from Unidades lu where lu.codigo = "+ codUnidad +" or " +
-						"lu.unidadAdtva = "+ codUnidad +")");				
+			else if(codVariable.equals("factRiesgoNoMod")){
+				sqlQuery = "Select Count(per.idPersona) as total, " +
+						"sum(case per.factRiesgoNoMod when 'HSF_FRNOMOD|NING' then 1 else 0 end) as Ninguno "+ 
+						", sum(case when per.factRiesgoNoMod like '%HSF_FRNOMOD|EDAD%' then 1 else 0 end) as Edad"+
+						", sum(case when per.factRiesgoNoMod like '%HSF_FRNOMOD|SEXO%' then 1 else 0 end) as Sexo"+
+						", sum(case when per.factRiesgoNoMod like '%HSF_FRNOMOD|RAZA%' then 1 else 0 end) as Raza"+
+						", sum(case when per.factRiesgoNoMod like '%HSF_FRNOMOD|GSANG%' then 1 else 0 end) as Grupo_Sanguíneo"+
+						" From Persona per where per.pasive =:pasivo";
 			}
-			else if (codArea.equals("HSF_AREAS|SECTOR")){
-				query = session.createQuery(sqlQuery + " and per.familia.comunidad.sector.codigo =:sector");
-				query.setParameter("sector", codSector);
+			else if(codVariable.equals("factRiesgoSocial")){
+				sqlQuery = "Select Count(per.idPersona) as total, " +
+						"sum(case per.factRiesgoSocial when 'HSF_FRSOC|NING' then 1 else 0 end) as Ninguno "+ 
+						", sum(case when per.factRiesgoSocial like '%HSF_FRSOC|AAUT%' then 1 else 0 end) as Abuso_Autoridad"+
+						", sum(case when per.factRiesgoSocial like '%HSF_FRSOC|TDES%' then 1 else 0 end) as Total_Desamparo"+
+						", sum(case when per.factRiesgoSocial like '%HSF_FRSOC|NTRA%' then 1 else 0 end) as Niños_Trabajadores"+
+						", sum(case when per.factRiesgoSocial like '%HSF_FRSOC|EXSC%' then 1 else 0 end) as Explotación_Sexual_Comercial"+
+						", sum(case when per.factRiesgoSocial like '%HSF_FRSOC|MFIS%' then 1 else 0 end) as Maltrato_Físico_Psicológico"+
+						", sum(case when per.factRiesgoSocial like '%HSF_FRSOC|DISC%' then 1 else 0 end) as Discapacidad"+
+						", sum(case when per.factRiesgoSocial like '%HSF_FRSOC|TRATA%' then 1 else 0 end) as Trata_Personas"+
+						" From Persona per where per.pasive =:pasivo";
 			}
-			else if (codArea.equals("HSF_AREAS|COMU")){
-				query = session.createQuery(sqlQuery + " and per.familia.comunidad.codigo =:comunidad");
-				query.setParameter("comunidad", codComunidad);
-			}
-			query.setParameter("pasivo", '0');
-		}
-		else if(codVariable.equals("factRiesgoMod")){
-			String sqlQuery = "Select Count(per.idPersona) as total, " +
-					"sum(case per.factRiesgoMod when 'HSF_FRMOD|NING' then 1 else 0 end) as Ninguno "+ 
-					", sum(case when per.factRiesgoMod like '%HSF_FRMOD|HTOX%' then 1 else 0 end) as HabitosTox"+
-					", sum(case when per.factRiesgoMod like '%HSF_FRMOD|SED%' then 1 else 0 end) as Sedentarismo"+
-					", sum(case when per.factRiesgoMod like '%HSF_FRMOD|OBE%' then 1 else 0 end) as Obesidad"+
-					", sum(case when per.factRiesgoMod like '%HSF_FRMOD|DES%' then 1 else 0 end) as Desnutrición"+
-					", sum(case when per.factRiesgoMod like '%HSF_FRMOD|ACC%' then 1 else 0 end) as Accidentes"+
-					", sum(case when per.factRiesgoMod like '%HSF_FRMOD|ITS%' then 1 else 0 end) as ITS"+
-					", sum(case when per.factRiesgoMod like '%HSF_FRMOD|PREC%' then 1 else 0 end) as Riesgo_Preconcepcional"+
-					" From Persona per where per.pasive =:pasivo";
-			if (codArea.equals("HSF_AREAS|CENTRAL")){
-				query = session.createQuery(sqlQuery);
-			}
-			else if (codArea.equals("HSF_AREAS|SILAIS")){
-				query = session.createQuery(sqlQuery + " and per.familia.comunidad.sector.municipio.dependenciaSilais.codigo =:silais");
-				query.setParameter("silais", codSilais);
-			}
-			else if (codArea.equals("HSF_AREAS|UNI")){
-				query = session.createQuery(sqlQuery + " and per.familia.comunidad.sector.unidad in " +
-						"(select lu.codigo from Unidades lu where lu.codigo = "+ codUnidad +" or " +
-						"lu.unidadAdtva = "+ codUnidad +")");				
-			}
-			else if (codArea.equals("HSF_AREAS|SECTOR")){
-				query = session.createQuery(sqlQuery + " and per.familia.comunidad.sector.codigo =:sector");
-				query.setParameter("sector", codSector);
-			}
-			else if (codArea.equals("HSF_AREAS|COMU")){
-				query = session.createQuery(sqlQuery + " and per.familia.comunidad.codigo =:comunidad");
-				query.setParameter("comunidad", codComunidad);
-			}
-			query.setParameter("pasivo", '0');
-		}
-		else if(codVariable.equals("factRiesgoNoMod")){
-			String sqlQuery = "Select Count(per.idPersona) as total, " +
-					"sum(case per.factRiesgoNoMod when 'HSF_FRNOMOD|NING' then 1 else 0 end) as Ninguno "+ 
-					", sum(case when per.factRiesgoNoMod like '%HSF_FRNOMOD|EDAD%' then 1 else 0 end) as Edad"+
-					", sum(case when per.factRiesgoNoMod like '%HSF_FRNOMOD|SEXO%' then 1 else 0 end) as Sexo"+
-					", sum(case when per.factRiesgoNoMod like '%HSF_FRNOMOD|RAZA%' then 1 else 0 end) as Raza"+
-					", sum(case when per.factRiesgoNoMod like '%HSF_FRNOMOD|GSANG%' then 1 else 0 end) as Grupo_Sanguíneo"+
-					" From Persona per where per.pasive =:pasivo";
-			if (codArea.equals("HSF_AREAS|CENTRAL")){
-				query = session.createQuery(sqlQuery);
-			}
-			else if (codArea.equals("HSF_AREAS|SILAIS")){
-				query = session.createQuery(sqlQuery + " and per.familia.comunidad.sector.municipio.dependenciaSilais.codigo =:silais");
-				query.setParameter("silais", codSilais);
-			}
-			else if (codArea.equals("HSF_AREAS|UNI")){
-				query = session.createQuery(sqlQuery + " and per.familia.comunidad.sector.unidad in " +
-						"(select lu.codigo from Unidades lu where lu.codigo = "+ codUnidad +" or " +
-						"lu.unidadAdtva = "+ codUnidad +")");				
-			}
-			else if (codArea.equals("HSF_AREAS|SECTOR")){
-				query = session.createQuery(sqlQuery + " and per.familia.comunidad.sector.codigo =:sector");
-				query.setParameter("sector", codSector);
-			}
-			else if (codArea.equals("HSF_AREAS|COMU")){
-				query = session.createQuery(sqlQuery + " and per.familia.comunidad.codigo =:comunidad");
-				query.setParameter("comunidad", codComunidad);
-			}
-			query.setParameter("pasivo", '0');
-		}
-		else if(codVariable.equals("factRiesgoSocial")){
-			String sqlQuery = "Select Count(per.idPersona) as total, " +
-					"sum(case per.factRiesgoSocial when 'HSF_FRSOC|NING' then 1 else 0 end) as Ninguno "+ 
-					", sum(case when per.factRiesgoSocial like '%HSF_FRSOC|AAUT%' then 1 else 0 end) as Abuso_Autoridad"+
-					", sum(case when per.factRiesgoSocial like '%HSF_FRSOC|TDES%' then 1 else 0 end) as Total_Desamparo"+
-					", sum(case when per.factRiesgoSocial like '%HSF_FRSOC|NTRA%' then 1 else 0 end) as Niños_Trabajadores"+
-					", sum(case when per.factRiesgoSocial like '%HSF_FRSOC|EXSC%' then 1 else 0 end) as Explotación_Sexual_Comercial"+
-					", sum(case when per.factRiesgoSocial like '%HSF_FRSOC|MFIS%' then 1 else 0 end) as Maltrato_Físico_Psicológico"+
-					", sum(case when per.factRiesgoSocial like '%HSF_FRSOC|DISC%' then 1 else 0 end) as Discapacidad"+
-					", sum(case when per.factRiesgoSocial like '%HSF_FRSOC|TRATA%' then 1 else 0 end) as Trata_Personas"+
-					" From Persona per where per.pasive =:pasivo";
 			if (codArea.equals("HSF_AREAS|CENTRAL")){
 				query = session.createQuery(sqlQuery);
 			}
@@ -901,10 +840,15 @@ public class ReportesService {
 		
 		
 		//PROCESS DATA IN REPORTECARACT FORMAT
-		if(codVariable.equals("discapacidades")){
+		if(codVariable.equals("discapacidades")||codVariable.equals("factRiesgoMod")||codVariable.equals("factRiesgoNoMod")||codVariable.equals("factRiesgoSocial")){
+			int numCampos = 0;
+			if(codVariable.equals("discapacidades")) numCampos = 7;
+			if(codVariable.equals("factRiesgoMod")) numCampos = 9;
+			if(codVariable.equals("factRiesgoNoMod")) numCampos = 6;
+			if(codVariable.equals("factRiesgoSocial")) numCampos = 9;
 			String[] campos = query.getReturnAliases();
 			Object[] reporteResult = (Object[]) query.uniqueResult();
-			for (int i=1;i<7;i++){
+			for (int i=1;i<numCampos;i++){
 				if((Long) reporteResult[i]!=null){
 					ReporteCaract rep = new ReporteCaract();
 					rep.setValor(campos[i]);
@@ -917,10 +861,180 @@ public class ReportesService {
 				}
 			}
 		}
-		else if(codVariable.equals("factRiesgoMod")){
+		else{
+			List<Object[]> reporteResult = query.list();
+			Long total = 0L;
+			for(Object[] objeto:reporteResult){
+				reporte.add(new ReporteCaract(objeto[0].toString(),(Long)objeto[1], 0F));
+				total = total + (Long)objeto[1];
+			}
+			for (ReporteCaract rep:reporte){
+				float num = (float) rep.getCuenta();
+				float tot = (float) total;
+				float porc = num / tot * 100;
+				rep.setPorcentaje(porc);
+			}
+		}
+		return reporte;
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public List<ReporteCaract> caratChs(String codArea, String codVariable, Long codSilais, String codMunicipio, Long codUnidad, String codSector, String codComunidad){
+		List<ReporteCaract> reporte = new ArrayList<ReporteCaract>();
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = null;
+		//GET DATA FROM DATABASE
+		if(codVariable.equals("hacinamiento")||codVariable.equals("animalesDom")||codVariable.equals("riesgoNatural")||codVariable.equals("riesgoMeteorologico")
+				||codVariable.equals("riesgoBiologico")||codVariable.equals("riesgoSocial")||codVariable.equals("factoresMedAmb")||codVariable.equals("combCocinar")){
+			String sqlQuery = "";
+			if(codVariable.equals("hacinamiento")){
+				sqlQuery = "Select Count(chs.idCaractHig) as total, " +
+						"sum(case chs.hacinamiento when '1' then 1 else 0 end) as Si "+ 
+						", sum(case chs.hacinamiento when '0' then 1 else 0 end) as No "+ 
+						", sum(case chs.hacinamiento when '8' then 1 else 0 end) as No_Sabe "+ 
+						", sum(case chs.hacinamiento when '9' then 1 else 0 end) as No_Responde "+ 
+						" From CaractHigSanitarias chs where chs.pasive =:pasivo";
+			}
+			else if(codVariable.equals("animalesDom")){
+				sqlQuery = "Select Count(chs.idCaractHig) as total, " +
+						"sum(case chs.animalesDom when 'HSF_ANIMDOM|NING' then 1 else 0 end) as Ninguno "+ 
+						", sum(case when chs.animalesDom like '%HSF_ANIMDOM|PERRO%' then 1 else 0 end) as Perro"+
+						", sum(case when chs.animalesDom like '%HSF_ANIMDOM|GATO%' then 1 else 0 end) as Gato"+
+						", sum(case when chs.animalesDom like '%HSF_ANIMDOM|GALL%' then 1 else 0 end) as Gallinas"+
+						", sum(case when chs.animalesDom like '%HSF_ANIMDOM|VACUNO%' then 1 else 0 end) as Ganado_Vacuno"+
+						", sum(case when chs.animalesDom like '%HSF_ANIMDOM|PORCINO%' then 1 else 0 end) as Ganado_Porcino"+
+						", sum(case when chs.animalesDom like '%HSF_ANIMDOM|OTROS%' then 1 else 0 end) as Otros"+
+						" From CaractHigSanitarias chs where chs.pasive =:pasivo";
+			}
+			else if(codVariable.equals("riesgoNatural")){
+				sqlQuery = "Select Count(chs.idCaractHig) as total, " +
+						"sum(case chs.riesgoNatural when 'HSF_RIESGONAT|NING' then 1 else 0 end) as Sin_riesgo "+ 
+						", sum(case when chs.riesgoNatural like '%HSF_RIESGONAT|TERR%' then 1 else 0 end) as Terremotos"+
+						", sum(case when chs.riesgoNatural like '%HSF_RIESGONAT|VOLC%' then 1 else 0 end) as Erupción_Volcánica"+
+						", sum(case when chs.riesgoNatural like '%HSF_RIESGONAT|TSUN%' then 1 else 0 end) as Tsunami"+
+						", sum(case when chs.riesgoNatural like '%HSF_RIESGONAT|DESLIZAMIENTO%' then 1 else 0 end) as Deslizamientos"+
+						", sum(case when chs.riesgoNatural like '%HSF_RIESGONAT|DESLAVE%' then 1 else 0 end) as Deslaves"+
+						", sum(case when chs.riesgoNatural like '%HSF_RIESGONAT|OTRO%' then 1 else 0 end) as Otro"+
+						" From CaractHigSanitarias chs where chs.pasive =:pasivo";
+			}
+			else if(codVariable.equals("riesgoMeteorologico")){
+				sqlQuery = "Select Count(chs.idCaractHig) as total, " +
+						"sum(case chs.riesgoMeteorologico when 'HSF_RIESGOMET|NING' then 1 else 0 end) as Sin_riesgo "+ 
+						", sum(case when chs.riesgoMeteorologico like '%HSF_RIESGOMET|HURA%' then 1 else 0 end) as Huracanes"+
+						", sum(case when chs.riesgoMeteorologico like '%HSF_RIESGOMET|INUN%' then 1 else 0 end) as Inundación"+
+						", sum(case when chs.riesgoMeteorologico like '%HSF_RIESGOMET|SEQUIA%' then 1 else 0 end) as Sequía"+
+						", sum(case when chs.riesgoMeteorologico like '%HSF_RIESGOMET|TORM%' then 1 else 0 end) as Tormentas_Tropicales"+
+						", sum(case when chs.riesgoMeteorologico like '%HSF_RIESGOMET|OTRO%' then 1 else 0 end) as Otros"+
+						" From CaractHigSanitarias chs where chs.pasive =:pasivo";
+			}
+			else if(codVariable.equals("riesgoBiologico")){
+				sqlQuery = "Select Count(chs.idCaractHig) as total, " +
+						"sum(case chs.riesgoBiologico when 'HSF_RIESGOBIO|NING' then 1 else 0 end) as Sin_riesgo "+ 
+						", sum(case when chs.riesgoBiologico like '%HSF_RIESGOBIO|PLAGA%' then 1 else 0 end) as Plagas"+
+						", sum(case when chs.riesgoBiologico like '%HSF_RIESGOBIO|EPID%' then 1 else 0 end) as Epidemias"+
+						", sum(case when chs.riesgoBiologico like '%HSF_RIESGOBIO|IND%' then 1 else 0 end) as Riesgos_Industriales"+
+						", sum(case when chs.riesgoBiologico like '%HSF_RIESGOBIO|OTRO%' then 1 else 0 end) as Otros"+
+						" From CaractHigSanitarias chs where chs.pasive =:pasivo";
+			}
+			else if(codVariable.equals("riesgoSocial")){
+				sqlQuery = "Select Count(chs.idCaractHig) as total, " +
+						"sum(case chs.riesgoSocial when 'HSF_RIESGOSOC|NING' then 1 else 0 end) as Sin_riesgo "+ 
+						", sum(case when chs.riesgoSocial like '%HSF_RIESGOSOC|HUELGA%' then 1 else 0 end) as Huelgas"+
+						", sum(case when chs.riesgoSocial like '%HSF_RIESGOSOC|PAND%' then 1 else 0 end) as Pandillas"+
+						", sum(case when chs.riesgoSocial like '%HSF_RIESGOSOC|OTRO%' then 1 else 0 end) as Otros"+
+						" From CaractHigSanitarias chs where chs.pasive =:pasivo";
+			}
+			else if(codVariable.equals("factoresMedAmb")){
+				sqlQuery = "Select Count(chs.idCaractHig) as total, " +
+						"sum(case chs.factoresMedAmb when 'HSF_FACTMA|NING' then 1 else 0 end) as Ninguno "+ 
+						", sum(case when chs.factoresMedAmb like '%HSF_FACTMA|MALVENT%' then 1 else 0 end) as Mala_ventilación"+
+						", sum(case when chs.factoresMedAmb like '%HSF_FACTMA|MALILU%' then 1 else 0 end) as Mala_iluminación"+
+						", sum(case when chs.factoresMedAmb like '%HSF_FACTMA|RUIDO%' then 1 else 0 end) as Ruido"+
+						", sum(case when chs.factoresMedAmb like '%HSF_FACTMA|VECTORES%' then 1 else 0 end) as Presencia_vectores"+
+						", sum(case when chs.factoresMedAmb like '%HSF_FACTMA|REODORES%' then 1 else 0 end) as Presencia_roedores"+
+						", sum(case when chs.factoresMedAmb like '%HSF_FACTMA|VERT%' then 1 else 0 end) as Vertederos"+
+						", sum(case when chs.factoresMedAmb like '%HSF_FACTMA|HUMO%' then 1 else 0 end) as Exposición_humo"+
+						", sum(case when chs.factoresMedAmb like '%HSF_FACTMA|OTRO%' then 1 else 0 end) as Otros"+
+						" From CaractHigSanitarias chs where chs.pasive =:pasivo";
+			}
+			else if(codVariable.equals("combCocinar")){
+				sqlQuery = "Select Count(chs.idCaractHig) as total, " +
+						"sum(case chs.combCocinar when 'HSF_COMB|NING' then 1 else 0 end) as Ninguno "+ 
+						", sum(case when chs.combCocinar like '%HSF_COMB|GAS%' then 1 else 0 end) as Gas_licuado"+
+						", sum(case when chs.combCocinar like '%HSF_COMB|KERS%' then 1 else 0 end) as Kerosene"+
+						", sum(case when chs.combCocinar like '%HSF_COMB|CARB%' then 1 else 0 end) as Carbón"+
+						", sum(case when chs.combCocinar like '%HSF_COMB|LENA%' then 1 else 0 end) as Leña"+
+						", sum(case when chs.combCocinar like '%HSF_COMB|ELECT%' then 1 else 0 end) as Electricidad"+
+						", sum(case when chs.combCocinar like '%HSF_COMB|OTRO%' then 1 else 0 end) as Otro"+
+						" From CaractHigSanitarias chs where chs.pasive =:pasivo";
+			}
+			if (codArea.equals("HSF_AREAS|CENTRAL")){
+				query = session.createQuery(sqlQuery);
+			}
+			else if (codArea.equals("HSF_AREAS|SILAIS")){
+				query = session.createQuery(sqlQuery + " and chs.familia.comunidad.sector.municipio.dependenciaSilais.codigo =:silais");
+				query.setParameter("silais", codSilais);
+			}
+			else if (codArea.equals("HSF_AREAS|UNI")){
+				query = session.createQuery(sqlQuery + " and chs.familia.comunidad.sector.unidad in " +
+						"(select lu.codigo from Unidades lu where lu.codigo = "+ codUnidad +" or " +
+						"lu.unidadAdtva = "+ codUnidad +")");				
+			}
+			else if (codArea.equals("HSF_AREAS|SECTOR")){
+				query = session.createQuery(sqlQuery + " and chs.familia.comunidad.sector.codigo =:sector");
+				query.setParameter("sector", codSector);
+			}
+			else if (codArea.equals("HSF_AREAS|COMU")){
+				query = session.createQuery(sqlQuery + " and chs.familia.comunidad.codigo =:comunidad");
+				query.setParameter("comunidad", codComunidad);
+			}
+			query.setParameter("pasivo", '0');
+		}
+		else{
+			String sqlQuery = "select chs."+codVariable+".valor, count(chs."+codVariable+".valor) " +
+						"from CaractHigSanitarias chs where chs.pasive =:pasivo";
+			if (codArea.equals("HSF_AREAS|CENTRAL")){
+				query = session.createQuery(sqlQuery +" group by chs."+codVariable+".valor");
+			}
+			else if (codArea.equals("HSF_AREAS|SILAIS")){
+				query = session.createQuery(sqlQuery +" and chs.familia.comunidad.sector.municipio.dependenciaSilais.codigo =:silais group by chs."+codVariable+".valor");
+				query.setParameter("silais", codSilais);
+			}
+			else if (codArea.equals("HSF_AREAS|UNI")){
+				query = session.createQuery(sqlQuery + " and chs.familia.comunidad.sector.unidad in " +
+						"(select lu.codigo from Unidades lu where lu.codigo = "+ codUnidad +" or " +
+						"lu.unidadAdtva = "+ codUnidad +") group by chs."+codVariable+".valor");
+			}
+			else if (codArea.equals("HSF_AREAS|SECTOR")){
+				query = session.createQuery(sqlQuery +" and chs.familia.comunidad.sector.codigo =:sector group by chs."+codVariable+".valor");
+				query.setParameter("sector", codSector);
+			}
+			else if (codArea.equals("HSF_AREAS|COMU")){
+				query = session.createQuery(sqlQuery +" and chs.familia.comunidad.codigo =:comunidad group by chs."+codVariable+".valor");
+				query.setParameter("comunidad", codComunidad);
+			}
+			query.setParameter("pasivo", '0');
+		}
+		
+		
+		//PROCESS DATA IN REPORTECARACT FORMAT
+		if(codVariable.equals("hacinamiento")||codVariable.equals("animalesDom")||codVariable.equals("riesgoNatural")||codVariable.equals("riesgoMeteorologico")
+				||codVariable.equals("riesgoBiologico")||codVariable.equals("riesgoSocial")||codVariable.equals("factoresMedAmb")||codVariable.equals("combCocinar")){
+			int numCampos = 0;
+			if(codVariable.equals("hacinamiento")) numCampos = 5;
+			if(codVariable.equals("animalesDom")) numCampos = 8;
+			if(codVariable.equals("riesgoNatural")) numCampos = 8;
+			if(codVariable.equals("riesgoMeteorologico")) numCampos = 7;
+			if(codVariable.equals("riesgoBiologico")) numCampos = 6;
+			if(codVariable.equals("riesgoSocial")) numCampos = 5;
+			if(codVariable.equals("factoresMedAmb")) numCampos = 10;
+			if(codVariable.equals("combCocinar")) numCampos = 8;
 			String[] campos = query.getReturnAliases();
 			Object[] reporteResult = (Object[]) query.uniqueResult();
-			for (int i=1;i<9;i++){
+			for (int i=1;i<numCampos;i++){
 				if((Long) reporteResult[i]!=null){
 					ReporteCaract rep = new ReporteCaract();
 					rep.setValor(campos[i]);
@@ -933,10 +1047,114 @@ public class ReportesService {
 				}
 			}
 		}
-		else if(codVariable.equals("factRiesgoNoMod")){
+		else{
+			List<Object[]> reporteResult = query.list();
+			Long total = 0L;
+			for(Object[] objeto:reporteResult){
+				reporte.add(new ReporteCaract(objeto[0].toString(),(Long)objeto[1], 0F));
+				total = total + (Long)objeto[1];
+			}
+			for (ReporteCaract rep:reporte){
+				float num = (float) rep.getCuenta();
+				float tot = (float) total;
+				float porc = num / tot * 100;
+				rep.setPorcentaje(porc);
+			}
+		}
+		return reporte;
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public List<ReporteCaract> caratFse(String codArea, String codVariable, Long codSilais, String codMunicipio, Long codUnidad, String codSector, String codComunidad){
+		List<ReporteCaract> reporte = new ArrayList<ReporteCaract>();
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = null;
+		//GET DATA FROM DATABASE
+		if(codVariable.equals("satNecBasicas")||codVariable.equals("accionesComunitarias")){
+			String sqlQuery = "";
+			if(codVariable.equals("satNecBasicas")){
+				sqlQuery = "Select Count(fse.idFactSocioEc) as total, " +
+						"sum(case fse.satNecBasicas when '1' then 1 else 0 end) as Si "+ 
+						", sum(case fse.satNecBasicas when '0' then 1 else 0 end) as No "+ 
+						", sum(case fse.satNecBasicas when '8' then 1 else 0 end) as No_sabe "+ 
+						", sum(case fse.satNecBasicas when '9' then 1 else 0 end) as No_Responde "+ 
+						" From FactSocioEconomicos fse where fse.pasive =:pasivo";
+			}
+			else if(codVariable.equals("accionesComunitarias")){
+				sqlQuery = "Select Count(fse.idFactSocioEc) as total, " +
+						"sum(case fse.accionesComunitarias when 'HSF_ACOM|NO' then 1 else 0 end) as No_Participa "+ 
+						", sum(case when fse.accionesComunitarias like '%HSF_ACOM|BRIGADISTA%' then 1 else 0 end) as Brigadistas"+
+						", sum(case when fse.accionesComunitarias like '%HSF_ACOM|PARTERA%' then 1 else 0 end) as Parteras"+
+						", sum(case when fse.accionesComunitarias like '%HSF_ACOM|COLVOL%' then 1 else 0 end) as Colaborador_Voluntario"+
+						", sum(case when fse.accionesComunitarias like '%HSF_ACOM|PROMOTOR%' then 1 else 0 end) as Promotor"+
+						", sum(case when fse.accionesComunitarias like '%HSF_ACOM|LIDER%' then 1 else 0 end) as Lider_salud"+
+						", sum(case when fse.accionesComunitarias like '%HSF_ACOM|OTRO%' then 1 else 0 end) as Otros"+
+						" From FactSocioEconomicos fse where fse.pasive =:pasivo";
+			}
+			if (codArea.equals("HSF_AREAS|CENTRAL")){
+				query = session.createQuery(sqlQuery);
+			}
+			else if (codArea.equals("HSF_AREAS|SILAIS")){
+				query = session.createQuery(sqlQuery + " and fse.familia.comunidad.sector.municipio.dependenciaSilais.codigo =:silais");
+				query.setParameter("silais", codSilais);
+			}
+			else if (codArea.equals("HSF_AREAS|UNI")){
+				query = session.createQuery(sqlQuery + " and fse.familia.comunidad.sector.unidad in " +
+						"(select lu.codigo from Unidades lu where lu.codigo = "+ codUnidad +" or " +
+						"lu.unidadAdtva = "+ codUnidad +")");				
+			}
+			else if (codArea.equals("HSF_AREAS|SECTOR")){
+				query = session.createQuery(sqlQuery + " and fse.familia.comunidad.sector.codigo =:sector");
+				query.setParameter("sector", codSector);
+			}
+			else if (codArea.equals("HSF_AREAS|COMU")){
+				query = session.createQuery(sqlQuery + " and fse.familia.comunidad.codigo =:comunidad");
+				query.setParameter("comunidad", codComunidad);
+			}
+			query.setParameter("pasivo", '0');
+		}
+		else{
+			String sqlQuery = "select fse."+codVariable+".valor, count(fse."+codVariable+".valor) " +
+						"from FactSocioEconomicos fse where fse.pasive =:pasivo";
+			if (codArea.equals("HSF_AREAS|CENTRAL")){
+				query = session.createQuery(sqlQuery +" group by fse."+codVariable+".valor");
+			}
+			else if (codArea.equals("HSF_AREAS|SILAIS")){
+				query = session.createQuery(sqlQuery +" and fse.familia.comunidad.sector.municipio.dependenciaSilais.codigo =:silais group by fse."+codVariable+".valor");
+				query.setParameter("silais", codSilais);
+			}
+			else if (codArea.equals("HSF_AREAS|UNI")){
+				query = session.createQuery(sqlQuery + " and fse.familia.comunidad.sector.unidad in " +
+						"(select lu.codigo from Unidades lu where lu.codigo = "+ codUnidad +" or " +
+						"lu.unidadAdtva = "+ codUnidad +") group by fse."+codVariable+".valor");
+			}
+			else if (codArea.equals("HSF_AREAS|SECTOR")){
+				query = session.createQuery(sqlQuery +" and fse.familia.comunidad.sector.codigo =:sector group by fse."+codVariable+".valor");
+				query.setParameter("sector", codSector);
+			}
+			else if (codArea.equals("HSF_AREAS|COMU")){
+				query = session.createQuery(sqlQuery +" and fse.familia.comunidad.codigo =:comunidad group by fse."+codVariable+".valor");
+				query.setParameter("comunidad", codComunidad);
+			}
+			query.setParameter("pasivo", '0');
+		}
+		
+		
+		//PROCESS DATA IN REPORTECARACT FORMAT
+		if(codVariable.equals("satNecBasicas")||codVariable.equals("accionesComunitarias")){
+			int numCampos = 0;
+			if(codVariable.equals("satNecBasicas")) numCampos = 5;
+			if(codVariable.equals("accionesComunitarias")) numCampos = 8;
 			String[] campos = query.getReturnAliases();
 			Object[] reporteResult = (Object[]) query.uniqueResult();
-			for (int i=1;i<6;i++){
+			reporteResult.toString();
+			
+			
+			
+			for (int i=1;i<numCampos;i++){
 				if((Long) reporteResult[i]!=null){
 					ReporteCaract rep = new ReporteCaract();
 					rep.setValor(campos[i]);
@@ -948,11 +1166,124 @@ public class ReportesService {
 					reporte.add(rep);
 				}
 			}
+			
 		}
-		else if(codVariable.equals("factRiesgoSocial")){
+		else{
+			List<Object[]> reporteResult = query.list();
+			Long total = 0L;
+			for(Object[] objeto:reporteResult){
+				reporte.add(new ReporteCaract(objeto[0].toString(),(Long)objeto[1], 0F));
+				total = total + (Long)objeto[1];
+			}
+			for (ReporteCaract rep:reporte){
+				float num = (float) rep.getCuenta();
+				float tot = (float) total;
+				float porc = num / tot * 100;
+				rep.setPorcentaje(porc);
+			}
+		}
+		return reporte;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ReporteCaract> caratFf(String codArea, String codVariable, Long codSilais, String codMunicipio, Long codUnidad, String codSector, String codComunidad){
+		List<ReporteCaract> reporte = new ArrayList<ReporteCaract>();
+		// Retrieve session from Hibernate
+		Session session = sessionFactory.getCurrentSession();
+		// Create a Hibernate query (HQL)
+		Query query = null;
+		//GET DATA FROM DATABASE
+		if(codVariable.equals("usoMedTradicional")||codVariable.equals("crisisNormativa")||codVariable.equals("crisisParanormativa")){
+			String sqlQuery = "";
+			if(codVariable.equals("usoMedTradicional")){
+				sqlQuery = "Select Count(ff.idFuncFamiliar) as total, " +
+						"sum(case ff.usoMedTradicional when '1' then 1 else 0 end) as Si "+ 
+						", sum(case ff.usoMedTradicional when '0' then 1 else 0 end) as No "+ 
+						", sum(case ff.usoMedTradicional when '8' then 1 else 0 end) as No_sabe "+ 
+						", sum(case ff.usoMedTradicional when '9' then 1 else 0 end) as No_Responde "+ 
+						" From FuncFamiliar ff where ff.pasive =:pasivo";
+			}
+			else if(codVariable.equals("crisisNormativa")){
+				sqlQuery = "Select Count(ff.idFuncFamiliar) as total, " +
+						"sum(case ff.crisisNormativa when 'HSF_CRSNOR|NING' then 1 else 0 end) as No_existe "+ 
+						", sum(case when ff.crisisNormativa like '%HSF_CRSNOR|JUB%' then 1 else 0 end) as Jubilación"+
+						", sum(case when ff.crisisNormativa like '%HSF_CRSNOR|MAT%' then 1 else 0 end) as Matrimonio"+
+						", sum(case when ff.crisisNormativa like '%HSF_CRSNOR|EMB%' then 1 else 0 end) as Embarazo"+
+						", sum(case when ff.crisisNormativa like '%HSF_CRSNOR|NAC%' then 1 else 0 end) as Nac_primer_hijo"+
+						", sum(case when ff.crisisNormativa like '%HSF_CRSNOR|ENT%' then 1 else 0 end) as Ent_primer_hijo_inst"+
+						" From FuncFamiliar ff where ff.pasive =:pasivo";
+			}
+			else if(codVariable.equals("crisisParanormativa")){
+				sqlQuery = "Select Count(ff.idFuncFamiliar) as total, " +
+						"sum(case ff.crisisParanormativa when 'HSF_CRSPNR|NING' then 1 else 0 end) as No_existe "+ 
+						", sum(case when ff.crisisParanormativa like '%HSF_CRSPNR|INCREM%' then 1 else 0 end) as Incremento"+
+						", sum(case when ff.crisisParanormativa like '%HSF_CRSPNR|DESMEM%' then 1 else 0 end) as Desmembramiento"+
+						", sum(case when ff.crisisParanormativa like '%HSF_CRSPNR|DESMOR%' then 1 else 0 end) as Desmoralización"+
+						", sum(case when ff.crisisParanormativa like '%HSF_CRSPNR|DESOR%' then 1 else 0 end) as Desorganización"+
+						" From FuncFamiliar ff where ff.pasive =:pasivo";
+			}
+			if (codArea.equals("HSF_AREAS|CENTRAL")){
+				query = session.createQuery(sqlQuery);
+			}
+			else if (codArea.equals("HSF_AREAS|SILAIS")){
+				query = session.createQuery(sqlQuery + " and ff.familia.comunidad.sector.municipio.dependenciaSilais.codigo =:silais");
+				query.setParameter("silais", codSilais);
+			}
+			else if (codArea.equals("HSF_AREAS|UNI")){
+				query = session.createQuery(sqlQuery + " and ff.familia.comunidad.sector.unidad in " +
+						"(select lu.codigo from Unidades lu where lu.codigo = "+ codUnidad +" or " +
+						"lu.unidadAdtva = "+ codUnidad +")");				
+			}
+			else if (codArea.equals("HSF_AREAS|SECTOR")){
+				query = session.createQuery(sqlQuery + " and ff.familia.comunidad.sector.codigo =:sector");
+				query.setParameter("sector", codSector);
+			}
+			else if (codArea.equals("HSF_AREAS|COMU")){
+				query = session.createQuery(sqlQuery + " and ff.familia.comunidad.codigo =:comunidad");
+				query.setParameter("comunidad", codComunidad);
+			}
+			query.setParameter("pasivo", '0');
+		}
+		else{
+			String sqlQuery = "select ff."+codVariable+".valor, count(ff."+codVariable+".valor) " +
+						"from FuncFamiliar ff where ff.pasive =:pasivo";
+			if (codArea.equals("HSF_AREAS|CENTRAL")){
+				query = session.createQuery(sqlQuery +" group by ff."+codVariable+".valor");
+			}
+			else if (codArea.equals("HSF_AREAS|SILAIS")){
+				query = session.createQuery(sqlQuery +" and ff.familia.comunidad.sector.municipio.dependenciaSilais.codigo =:silais group by ff."+codVariable+".valor");
+				query.setParameter("silais", codSilais);
+			}
+			else if (codArea.equals("HSF_AREAS|UNI")){
+				query = session.createQuery(sqlQuery + " and ff.familia.comunidad.sector.unidad in " +
+						"(select lu.codigo from Unidades lu where lu.codigo = "+ codUnidad +" or " +
+						"lu.unidadAdtva = "+ codUnidad +") group by ff."+codVariable+".valor");
+			}
+			else if (codArea.equals("HSF_AREAS|SECTOR")){
+				query = session.createQuery(sqlQuery +" and ff.familia.comunidad.sector.codigo =:sector group by ff."+codVariable+".valor");
+				query.setParameter("sector", codSector);
+			}
+			else if (codArea.equals("HSF_AREAS|COMU")){
+				query = session.createQuery(sqlQuery +" and ff.familia.comunidad.codigo =:comunidad group by ff."+codVariable+".valor");
+				query.setParameter("comunidad", codComunidad);
+			}
+			query.setParameter("pasivo", '0');
+		}
+		
+		
+		//PROCESS DATA IN REPORTECARACT FORMAT
+		if(codVariable.equals("usoMedTradicional")||codVariable.equals("crisisNormativa")||codVariable.equals("crisisParanormativa")){
+			int numCampos = 0;
+			if(codVariable.equals("usoMedTradicional")) numCampos = 5;
+			if(codVariable.equals("crisisNormativa")) numCampos = 7;
+			if(codVariable.equals("crisisParanormativa")) numCampos = 6;
 			String[] campos = query.getReturnAliases();
 			Object[] reporteResult = (Object[]) query.uniqueResult();
-			for (int i=1;i<9;i++){
+			reporteResult.toString();
+			
+			
+			
+			for (int i=1;i<numCampos;i++){
 				if((Long) reporteResult[i]!=null){
 					ReporteCaract rep = new ReporteCaract();
 					rep.setValor(campos[i]);
