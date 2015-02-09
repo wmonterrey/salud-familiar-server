@@ -127,7 +127,11 @@ var FormEdit6HSF = function () {
                 	isValid = false;
                 }
                 return isValid;
-	      	}, "Invalido");
+	      	}, "Inválido");
+            
+            jQuery.validator.addMethod("notEqual", function(value, element, param) {
+  	    	  return this.optional(element) || value != param;
+  	    	}, "Inválido");
                        
             var validatorPerson = form.validate({
                 errorElement: 'span', //default input error message container
@@ -201,6 +205,10 @@ var FormEdit6HSF = function () {
     	            },
     	            grupoDisp: {
     	                required: true
+    	            },
+    	            edad:{
+    	            	required:true,
+    	            	notEqual: "Edad inválida!"
     	            }
                 },
                 
@@ -497,16 +505,19 @@ var FormEdit6HSF = function () {
             
  		   $("#fechaNacimiento").change(
  	           		function() {
- 	           			$("#edad").val(getAge($("#fechaNacimiento").val()));
+ 	           			$("#edad").val(getAge($("#fechaNacimiento").val(), $("#fechaVisita").val()));
  	           			$("#sexo").change();
  	           });
  		   
- 		  function getAge(dateString) {
-			   var now = new Date();
-
-			   var yearNow = now.getYear();
-			   var monthNow = now.getMonth();
-			   var dateNow = now.getDate();
+ 		  function getAge(dateString,dateVisita) {
+ 			 var dov = new Date(dateVisita.substring(6,10),
+					   dateVisita.substring(3,5)-1,                   
+					   dateVisita.substring(0,2)                  
+	                      );
+			   
+			   var yearNow = dov.getYear();
+			   var monthNow = dov.getMonth();
+			   var dateNow = dov.getDate();
 
 			   var dob = new Date(dateString.substring(6,10),
 			                      dateString.substring(3,5)-1,                   

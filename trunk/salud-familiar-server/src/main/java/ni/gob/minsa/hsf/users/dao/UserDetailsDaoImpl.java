@@ -90,19 +90,22 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 		Session session = sessionFactory.getCurrentSession();
 		WebAuthenticationDetails wad  = (WebAuthenticationDetails) auth.getDetails();
 		Date fechaAcceso = new Date();
-		Query query = session.createQuery("update UserSistema set lastAccess = :fechaIngreso" +
+		Query query = session.createQuery("From UserSistema where username = :username");
+		query.setParameter("username", auth.getName());
+		UserSistema usuario = (UserSistema) query.uniqueResult();
+		query = session.createQuery("update UserSistema set lastAccess = :fechaIngreso" +
 				" where username = :username");
 		query.setParameter("fechaIngreso", fechaAcceso);
 		query.setParameter("username", auth.getName());
 		query.executeUpdate();
-		session.save(new UserAccess(auth.getName(),fechaAcceso, wad.getSessionId(), wad.getRemoteAddress()));
+		session.save(new UserAccess(usuario,fechaAcceso, wad.getSessionId(), wad.getRemoteAddress()));
 	}
 	
 	@Override
 	public void updateAccessDateLogout(String username, String idSesion, String direccionIp) {
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("update UserAccess set logoutDate = :fechaSalida" +
-				" where username = :username and sessionId = :idSesion and remoteIpAddress = :direccionIp");
+				" where usuario.username = :username and sessionId = :idSesion and remoteIpAddress = :direccionIp");
 		query.setParameter("fechaSalida", new Date());
 		query.setParameter("username", username);
 		query.setParameter("idSesion", idSesion);
@@ -114,7 +117,7 @@ public class UserDetailsDaoImpl implements UserDetailsDao {
 	public void updateAccessUrl(String username, String idSesion, String direccionIp, String url) {
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("update UserAccess set logoutRefererUrl = :urlSalida" +
-				" where username = :username and sessionId = :idSesion and remoteIpAddress = :direccionIp");
+				" where usuario.username = :username and sessionId = :idSesion and remoteIpAddress = :direccionIp");
 		query.setParameter("urlSalida", url);
 		query.setParameter("username", username);
 		query.setParameter("idSesion", idSesion);

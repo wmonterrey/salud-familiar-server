@@ -70,7 +70,7 @@
 							<div class="caption">
 								<i class="fa fa-reorder"></i> <spring:message code="hsf.nuevo" /> -
 								<span class="step-title">
-									 <spring:message code="step" /> 1 <spring:message code="of" /> 5
+									 <spring:message code="step" /> 1 <spring:message code="of" /> 6
 								</span>
 							</div>
 							<div class="tools hidden-xs">
@@ -368,7 +368,7 @@
 															</span>
 															</label>
 															<div class="col-md-6">
-																<div class="input-group date date-picker" data-date-format="dd/MM/yyyy" data-date-end-date="+0d">
+																<div class="input-group date date-picker" data-date-format="dd/MM/yyyy" data-date-start-date="-2920d" data-date-end-date="+0d">
 																	<input id="fechaVisita" name="fechaVisita" type="text" class="form-control" placeholder="<spring:message code="please.enter" /> <spring:message code="visit.date" />">
 																	<span class="input-group-btn">
 																		<button class="btn btn-info" type="button"><i class="fa fa-calendar"></i></button>

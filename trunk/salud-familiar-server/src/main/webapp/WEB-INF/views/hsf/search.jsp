@@ -201,6 +201,38 @@
 									</div>
 								</div>
 								<!-- END ROW -->
+								<!-- START ROW -->
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="control-label col-md-6"><spring:message code="visit.date" /> <spring:message code="fromLabel" />:
+											</label>
+											<div class="col-md-6">
+												<div class="input-group date date-picker" data-date-format="dd/MM/yyyy" data-date-end-date="+0d">
+													<input id="fechaVisitaDesde" name="fechaVisitaDesde" type="text" class="form-control" placeholder="<spring:message code="please.enter" /> <spring:message code="visit.date" />">
+													<span class="input-group-btn">
+														<button class="btn btn-info" type="button"><i class="fa fa-calendar"></i></button>
+													</span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="control-label col-md-6"><spring:message code="visit.date" /> <spring:message code="toLabel" />:
+											</label>
+											<div class="col-md-6">
+												<div class="input-group date date-picker" data-date-format="dd/MM/yyyy" data-date-end-date="+0d">
+													<input id="fechaVisitaHasta" name="fechaVisitaHasta" type="text" class="form-control" placeholder="<spring:message code="please.enter" /> <spring:message code="visit.date" />">
+													<span class="input-group-btn">
+														<button class="btn btn-info" type="button"><i class="fa fa-calendar"></i></button>
+													</span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- END ROW -->
 								<div class="form-actions fluid">
 									<div class="row">
 										<div class="col-md-12">
@@ -237,6 +269,7 @@
 							<thead>
 								<tr>
 									<th><spring:message code="comunity" /></th>
+									<th><spring:message code="visit.date" /></th>
 									<th><spring:message code="noviv" /></th>
 									<th><spring:message code="nofamilia" /></th>
 									<th><spring:message code="noficha" /></th>
