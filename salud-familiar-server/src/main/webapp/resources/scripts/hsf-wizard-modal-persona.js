@@ -41,6 +41,9 @@ var FormWizardHSFModalPersonaValidation = function () {
     	    }else{
     	    	$('#numPersona').val(parseInt($('#noPersonasFamilia').val()) + 1);
     	    }
+    	    jQuery.validator.addMethod("notEqual", function(value, element, param) {
+    	    	  return this.optional(element) || value != param;
+    	    	}, "Inválido");
     	    var validatorPerson = personForm.validate({
     	        doNotHideMessage: true, //this option enables to show the error/success messages on tab switch.
     	        errorElement: 'span', //default input error message container
@@ -123,6 +126,10 @@ var FormWizardHSFModalPersonaValidation = function () {
     	            },
     	            grupoDisp: {
     	                required: true
+    	            },
+    	            edad:{
+    	            	required:true,
+    	            	notEqual: "Edad inválida!"
     	            }
     	        },
     	
@@ -298,7 +305,7 @@ var FormWizardHSFModalPersonaValidation = function () {
 		   
 		   $("#fechaNacimiento").change(
            		function() {
-           			$("#edad").val(getAge($("#fechaNacimiento").val()));
+           			$("#edad").val(getAge($("#fechaNacimiento").val(), $("#fechaVisita").val()));
            			$("#sexo").change();
            });
 		   
@@ -344,12 +351,15 @@ var FormWizardHSFModalPersonaValidation = function () {
 	           			}
 	       });
 		   
-		   function getAge(dateString) {
-			   var now = new Date();
-
-			   var yearNow = now.getYear();
-			   var monthNow = now.getMonth();
-			   var dateNow = now.getDate();
+		   function getAge(dateString,dateVisita) {
+			   var dov = new Date(dateVisita.substring(6,10),
+					   dateVisita.substring(3,5)-1,                   
+					   dateVisita.substring(0,2)                  
+	                      );
+			   
+			   var yearNow = dov.getYear();
+			   var monthNow = dov.getMonth();
+			   var dateNow = dov.getDate();
 
 			   var dob = new Date(dateString.substring(6,10),
 			                      dateString.substring(3,5)-1,                   

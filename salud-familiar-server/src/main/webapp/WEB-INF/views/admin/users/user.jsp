@@ -373,7 +373,7 @@
 							</thead>
 							<c:forEach items="${accesses}" var="acceso">
 								<tr>
-									<td><c:out value="${acceso.username}" /></td>
+									<td><c:out value="${acceso.usuario.username}" /></td>
 									<td class="hidden-xs"><c:out value="${acceso.sessionId}" /></td>
 									<td class="hidden-xs"><c:out value="${acceso.remoteIpAddress}" /></td>
 									<td><c:out value="${acceso.loginDate}" /></td>

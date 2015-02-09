@@ -856,6 +856,8 @@ public class HsfController {
 		if(persona!=null){
 			UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());    
     		if(hsfService.verificarPermisoDatos(persona.getFamilia().getComunidad(), usuario)){
+    			Visita visita = this.visitaService.getUltimaVisita(persona.getFamilia().getIdFamilia());
+    			model.addAttribute("fechaDeVisita",visita.getFechaVisita());
 				List<SiNoNs> sinons = catalogoService.getSiNoNs();
 				List<Etnia> etnias = catalogoService.getEtnia();
 				List<Sexo> sexos = catalogoService.getSexo();
@@ -903,6 +905,7 @@ public class HsfController {
     @RequestMapping(value = "newPersona/{idFamilia}/{opcion}", method = RequestMethod.GET)
 	public String initNewPersonForm(@PathVariable("idFamilia") String idFamilia, @PathVariable("opcion") int opcion, Model model) {
     	Familia familia = this.familiaService.getFamilia(idFamilia);
+    	Visita visita = this.visitaService.getUltimaVisita(idFamilia);
     	if(familia ==null){
     		return "404";
     	}
@@ -939,6 +942,7 @@ public class HsfController {
 	    	model.addAttribute("profesiones", profesiones);
 			model.addAttribute("persona",persona);
 			model.addAttribute("accion",opcion);
+			model.addAttribute("fechaDeVisita",visita.getFechaVisita());
 			return "hsf/editPersona";
 		}
 	}
@@ -1122,16 +1126,23 @@ public class HsfController {
 	 * @throws ParseException 
      */
     @RequestMapping(value = "hsfs", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody List<Familia> fetchFamiliasJson(@RequestParam(value = "codComunidad", required = true) String comunidad,
+    public @ResponseBody List<Visita> fetchFamiliasJson(@RequestParam(value = "codComunidad", required = true) String comunidad,
     		@RequestParam(value = "numVivienda", required = false, defaultValue = "") Integer numVivienda,
     		@RequestParam(value = "numFamilia", required = false, defaultValue = "") Integer numFamilia,
-    		@RequestParam(value = "numFicha", required = false, defaultValue = "") Integer numFicha) throws ParseException {
+    		@RequestParam(value = "numFicha", required = false, defaultValue = "") Integer numFicha,
+    		@RequestParam(value = "fechaVisitaDesde", required = false, defaultValue = "") String fechaVisitaDesde,
+    		@RequestParam(value = "fechaVisitaHasta", required = false, defaultValue = "") String fechaVisitaHasta) throws ParseException {
         logger.info("Obteniendo las visitas en JSON");
-        List<Familia> familias = familiaService.getFamilias(comunidad, numVivienda, numFamilia, numFicha);
-        if (familias == null){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date date1 = null;
+        Date date2 = null;
+		if (!fechaVisitaDesde.equals("")) date1 = formatter.parse(fechaVisitaDesde);
+		if (!fechaVisitaHasta.equals("")) date2 = formatter.parse(fechaVisitaHasta);
+        List<Visita> visitas = visitaService.getVisitas(comunidad, numVivienda, numFamilia, numFicha, date1, date2);
+        if (visitas == null){
         	logger.debug("Nulo");
         }
-        return familias;	
+        return visitas;	
     }
     
     /**
@@ -1140,16 +1151,23 @@ public class HsfController {
 	 * @throws ParseException 
      */
     @RequestMapping(value = "hsfsact", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody List<Familia> fetchFamiliasActivasJson(@RequestParam(value = "codComunidad", required = true) String comunidad,
+    public @ResponseBody List<Visita> fetchFamiliasActivasJson(@RequestParam(value = "codComunidad", required = true) String comunidad,
     		@RequestParam(value = "numVivienda", required = false, defaultValue = "") Integer numVivienda,
     		@RequestParam(value = "numFamilia", required = false, defaultValue = "") Integer numFamilia,
-    		@RequestParam(value = "numFicha", required = false, defaultValue = "") Integer numFicha) throws ParseException {
+    		@RequestParam(value = "numFicha", required = false, defaultValue = "") Integer numFicha,
+    		@RequestParam(value = "fechaVisitaDesde", required = false, defaultValue = "") String fechaVisitaDesde,
+    		@RequestParam(value = "fechaVisitaHasta", required = false, defaultValue = "") String fechaVisitaHasta) throws ParseException {
         logger.info("Obteniendo las visitas en JSON");
-        List<Familia> familias = familiaService.getFamiliasActivas(comunidad, numVivienda, numFamilia, numFicha);
-        if (familias == null){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date date1 = null;
+        Date date2 = null;
+		if (!fechaVisitaDesde.equals("")) date1 = formatter.parse(fechaVisitaDesde);
+		if (!fechaVisitaHasta.equals("")) date2 = formatter.parse(fechaVisitaHasta);
+        List<Visita> visitas = visitaService.getVisitasFamActivas(comunidad, numVivienda, numFamilia, numFicha,date1,date2);
+        if (visitas == null){
         	logger.debug("Nulo");
         }
-        return familias;	
+        return visitas;	
     }
     
     /**

@@ -274,7 +274,7 @@ var FormWizardHSF = function () {
                 	isValid = false;
                 }
                 return isValid;
-	      	}, "Invalido");
+	      	}, "Inválido");
                        
             form.validate({
                 errorElement: 'span', //default input error message container
@@ -556,6 +556,7 @@ var FormWizardHSF = function () {
                 $(".hsfcompleta").find("div.tab-pane").each(function (index, tab) {
                     var id = $(tab).attr("id");
                     $('a[href="#' + id + '"]').tab('show');
+                    $('.step-title', $('#form_wizard_1')).text('Paso ' + (index+1) + ' de 6');
                     var IsTabValid = form.valid();
                     if (!IsTabValid) {
                         IsValid = false;
@@ -576,6 +577,7 @@ var FormWizardHSF = function () {
 	        		form.find('select').multiSelect('deselect_all');
 	        		jQuery('li', $('#form_wizard_1')).removeClass("done");
 	        		$('a[href="#tab1"]').tab('show');	
+	        		$('.step-title', $('#form_wizard_1')).text('Paso 1 de 6');
 	        		$('#form_wizard_1').find('.button-submit').hide();
 	        		$('#form_wizard_1').find('.button-previous').hide();
 	        		$('#form_wizard_1').find('.button-next').show();

@@ -6,8 +6,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
@@ -15,7 +18,7 @@ import org.hibernate.annotations.GenericGenerator;
 public class UserAccess {
 
 	private int id;
-	private String username;
+	private UserSistema usuario;
 	private Date loginDate;
 	private String sessionId;
 	private String remoteIpAddress;
@@ -28,10 +31,10 @@ public class UserAccess {
 	}
 	
 	
-	public UserAccess(String username, Date loginDate, String sessionId,
+	public UserAccess(UserSistema usuario, Date loginDate, String sessionId,
 			String remoteIpAddress) {
 		super();
-		this.username = username;
+		this.usuario = usuario;
 		this.loginDate = loginDate;
 		this.sessionId = sessionId;
 		this.remoteIpAddress = remoteIpAddress;
@@ -48,13 +51,17 @@ public class UserAccess {
 		this.id = id;
 	}
 
-	@Column(name = "NOMBRE_USUARIO", nullable = false, length =50)
-	public String getUsername() {
-		return username;
+	@ManyToOne(optional=false)
+	@JoinColumn(name="NOMBRE_USUARIO")
+	@ForeignKey(name = "USER_ACCESOS_FK")
+	public UserSistema getUsuario() {
+		return usuario;
 	}
-	public void setUsername(String username) {
-		this.username = username;
+
+	public void setUsuario(UserSistema usuario) {
+		this.usuario = usuario;
 	}
+
 	@Column(name = "FECHA_ENTRADA")
 	public Date getLoginDate() {
 		return loginDate;
@@ -92,6 +99,6 @@ public class UserAccess {
 	}
 	@Override
 	public String toString(){
-		return username;
+		return usuario.toString();
 	}
 }

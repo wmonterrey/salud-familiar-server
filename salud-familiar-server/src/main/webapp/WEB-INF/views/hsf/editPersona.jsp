@@ -220,6 +220,19 @@
 														</div>
 													</div>
 												</div>
+												<div class="col-md-6">
+													<div class="form-group" hidden="true">
+														<label class="control-label col-md-6"><spring:message code="visit.date" />:
+														<span class="required">
+															 *
+														</span>
+														</label>
+														<div class="col-md-6">
+															<fmt:formatDate  value="${fechaDeVisita}" var="parsedEmpDate" pattern="dd/MM/yyyy" />
+															<input type="text" value="<c:out value="${parsedEmpDate}" />" id="fechaVisita" name="fechaVisita" class="form-control"/>
+														</div>
+													</div>
+												</div>
 											</div>
 											<!-- START ROW -->
 											<div class="row">

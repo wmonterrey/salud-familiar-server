@@ -34,6 +34,14 @@ var SearchHSF = function () {
             "repeat": 6,
             "greedy": false
         });
+        
+        $("#fechaVisitaDesde").inputmask("d/m/y", {
+            "placeholder": "dd/mm/yyyy"
+        }); //multi-char placeholder
+        
+        $("#fechaVisitaHasta").inputmask("d/m/y", {
+            "placeholder": "dd/mm/yyyy"
+        }); //multi-char placeholder
     };
 
     
@@ -58,7 +66,7 @@ var SearchHSF = function () {
             
             var table1 = $('#resultados').dataTable( {  
                 "aoColumns" : [   
-                               null,   
+                               null,null,   
                                {sClass: "aw-right" },{sClass: "aw-right" },{sClass: "aw-right" },null,{sClass: "aw-right" },{sClass: "aw-right" },{sClass: "aw-right" },null  
                            ]   } );
     		$('#resultados_wrapper .dataTables_filter input').addClass("form-control input-medium"); // modify table search input
@@ -215,13 +223,16 @@ var SearchHSF = function () {
     				numVivienda : $('#numVivienda').val(),
     				numFamilia : $('#numFamilia').val(),
     				numFicha : $('#numFicha').val(),
+    				fechaVisitaDesde : $('#fechaVisitaDesde').val(),
+    				fechaVisitaHasta : $('#fechaVisitaHasta').val(),
     				ajax : 'true'
     			}, function(data) {
     				var len = data.length;
     				for ( var i = 0; i < len; i++) {
-						var famUrl = parametros.familiaUrl + '/'+data[i].idFamilia;
+    					var d = new Date(data[i].fechaVisita);
+						var famUrl = parametros.familiaUrl + '/'+data[i].familia.idFamilia;
 						table1.fnAddData(
-    							[data[i].comunidad.nombre, data[i].numVivienda, data[i].numFamilia, data[i].numFicha, data[i].direccion, data[i].dispensarizada,data[i].infoCompleta,data[i].pasive,'<a href='+ famUrl + ' class="btn btn-default btn-xs"><i class="fa fa-search"></i></a>']);
+    							[data[i].familia.comunidad.nombre,d.yyyymmdd(), data[i].familia.numVivienda, data[i].familia.numFamilia, data[i].familia.numFicha, data[i].familia.direccion, data[i].familia.dispensarizada,data[i].familia.infoCompleta,data[i].familia.pasive,'<a href='+ famUrl + ' class="btn btn-default btn-xs"><i class="fa fa-edit"></i></a>']);
     				}
     				App.unblockUI(pageContent);
     			})
@@ -230,6 +241,15 @@ var SearchHSF = function () {
 				    App.unblockUI(pageContent);
 				});
             };
+            
+            Date.prototype.yyyymmdd = function() {         
+		        
+		        var yyyy = this.getFullYear().toString();                                    
+		        var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based         
+		        var dd  = this.getDate().toString();             
+		                            
+		        return yyyy + '-' + (mm[1]?mm:"0"+mm[0]) + '-' + (dd[1]?dd:"0"+dd[0]);
+		   };
         }
     };
 

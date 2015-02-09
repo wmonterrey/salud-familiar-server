@@ -158,7 +158,7 @@ public class UsuarioService {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("FROM UserAccess u where " +
-				"u.username = '" + username + "' order by u.loginDate DESC");
+				"u.usuario.username = '" + username + "' order by u.loginDate DESC");
 		return query.list();
 	}
 	
