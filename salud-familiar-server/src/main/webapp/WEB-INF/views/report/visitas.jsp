@@ -151,12 +151,10 @@
 									</div>
 								</div>
 								<!-- END ROW -->
-								<div class="form-actions fluid">
-									<div class="row">
-										<div class="col-md-12">
-											<div class="col-md-offset-11 col-md-1">
-												<button type="submit" id="search-hsf" class="btn btn-info"><i class="fa fa-refresh"></i> <spring:message code="update" /></button>
-											</div>
+								<div class="row">
+									<div class="col-md-12">
+										<div class="modal-footer">
+											<button type="submit" id="search-hsf" class="btn btn-info"><i class="fa fa-refresh"></i> <spring:message code="update" /></button>
 										</div>
 									</div>
 								</div>
