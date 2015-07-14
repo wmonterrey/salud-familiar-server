@@ -234,7 +234,7 @@ public class HsfController {
 	@RequestMapping( value="newFamiliaVisita", method=RequestMethod.POST)
 	public ResponseEntity<String> processCreationFamiliaVisitaForm( @RequestParam(value="comunidad", required=true ) String comunidad
 			, @RequestParam( value="numVivienda", required=true ) Integer numVivienda
-			, @RequestParam( value="numFamilia", required=true ) Integer numFamilia
+			, @RequestParam( value="numFamilia", required=true ) String numFamilia
 			, @RequestParam( value="direccion", required=true ) String direccion
 			, @RequestParam( value="idFamilia", required=false, defaultValue="" ) String idFamilia
 			, @RequestParam( value="idVisita", required=false, defaultValue="" ) String idVisita
@@ -402,7 +402,7 @@ public class HsfController {
 	@RequestMapping( value="editFamilia", method=RequestMethod.POST)
 	public ResponseEntity<String> processEditionFamiliaForm( @RequestParam(value="comunidad", required=true ) String comunidad
 			, @RequestParam( value="numVivienda", required=true ) Integer numVivienda
-			, @RequestParam( value="numFamilia", required=true ) Integer numFamilia
+			, @RequestParam( value="numFamilia", required=true ) String numFamilia
 			, @RequestParam( value="direccion", required=true ) String direccion
 			, @RequestParam( value="idFamilia", required=true) String idFamilia
 			, @RequestParam( value="numFicha", required=true ) Integer numFicha) throws ParseException
@@ -1128,7 +1128,7 @@ public class HsfController {
     @RequestMapping(value = "hsfs", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody List<Visita> fetchFamiliasJson(@RequestParam(value = "codComunidad", required = true) String comunidad,
     		@RequestParam(value = "numVivienda", required = false, defaultValue = "") Integer numVivienda,
-    		@RequestParam(value = "numFamilia", required = false, defaultValue = "") Integer numFamilia,
+    		@RequestParam(value = "numFamilia", required = false, defaultValue = "") String numFamilia,
     		@RequestParam(value = "numFicha", required = false, defaultValue = "") Integer numFicha,
     		@RequestParam(value = "fechaVisitaDesde", required = false, defaultValue = "") String fechaVisitaDesde,
     		@RequestParam(value = "fechaVisitaHasta", required = false, defaultValue = "") String fechaVisitaHasta) throws ParseException {
@@ -1153,7 +1153,7 @@ public class HsfController {
     @RequestMapping(value = "hsfsact", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody List<Visita> fetchFamiliasActivasJson(@RequestParam(value = "codComunidad", required = true) String comunidad,
     		@RequestParam(value = "numVivienda", required = false, defaultValue = "") Integer numVivienda,
-    		@RequestParam(value = "numFamilia", required = false, defaultValue = "") Integer numFamilia,
+    		@RequestParam(value = "numFamilia", required = false, defaultValue = "") String numFamilia,
     		@RequestParam(value = "numFicha", required = false, defaultValue = "") Integer numFicha,
     		@RequestParam(value = "fechaVisitaDesde", required = false, defaultValue = "") String fechaVisitaDesde,
     		@RequestParam(value = "fechaVisitaHasta", required = false, defaultValue = "") String fechaVisitaHasta) throws ParseException {

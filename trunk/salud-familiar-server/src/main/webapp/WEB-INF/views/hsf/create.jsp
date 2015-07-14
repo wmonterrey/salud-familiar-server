@@ -44,7 +44,7 @@
 				<div class="col-md-12">
 					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
 					<h3 class="page-title">
-						<spring:message code="heading" />
+						<spring:message code="heading" /> <small><spring:message code="hsf" /></small>
 					</h3>
 					<ul class="page-breadcrumb breadcrumb">
 						<li>
@@ -254,9 +254,7 @@
 													<div class="col-md-6">
 														<div class="form-group">
 															<label class="control-label col-md-6"><spring:message code="novivienda" />:
-															<span class="required">
-																 *
-															</span>
+															
 															</label>
 															<div class="col-md-6">
 																<div class="input-group">
@@ -713,9 +711,6 @@
 													<div class="col-md-12">
 														<div class="form-group">
 															<label class="control-label col-md-2"><spring:message code="obs" />:
-															<span class="required">
-																 *
-															</span>
 															</label>
 															<div class="col-md-10">
 																<div class="input-group">
@@ -903,9 +898,6 @@
 													<div class="col-md-6">
 														<div class="form-group">
 															<label class="control-label col-md-6"><spring:message code="obs" />:
-															<span class="required">
-																 *
-															</span>
 															</label>
 															<div class="col-md-6">
 																<div class="input-group">
@@ -1054,9 +1046,6 @@
 													<div class="col-md-6">
 														<div class="form-group">
 															<label class="control-label col-md-6"><spring:message code="obs" />:
-															<span class="required">
-																 *
-															</span>
 															</label>
 															<div class="col-md-6">
 																<div class="input-group">

@@ -23,12 +23,6 @@ var SearchHSF = function () {
             "greedy": false
         });
         
-        $("#numFamilia").inputmask({
-            "mask": "9",
-            "repeat": 6,
-            "greedy": false
-        });
-        
         $("#numVivienda").inputmask({
             "mask": "9",
             "repeat": 6,
@@ -167,10 +161,6 @@ var SearchHSF = function () {
                         required: true
                     },
                     numVivienda: {
-                    	min:1,
-                        required: false
-                    },
-                    numFamilia: {
                     	min:1,
                         required: false
                     },

@@ -38,13 +38,13 @@
 				<div class="col-md-12">
 					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
 					<h3 class="page-title">
-					<spring:message code="heading" /> <small><spring:message code="statisctics" /></small>
+					<spring:message code="heading" /> <small><spring:message code="monitor" /></small>
 					</h3>
 					<ul class="page-breadcrumb breadcrumb">
 						<li>
 							<i class="fa fa-home"></i>
 							<a href="<spring:url value="/" htmlEscape="true "/>"><spring:message code="dashboard" /></a>
-							<i class="fa fa-angle-right"></i>
+							<i class="fa fa-angle-right"></i> <a href="<spring:url value="/monitor/activity" htmlEscape="true "/>"><spring:message code="monitor.activity" /></a>
 						</li>
 						<li class="pull-right">
 							<div id="dashboard-report-range" class="dashboard-date-range tooltips" data-placement="top" data-original-title="<spring:message code="change.date.range" />">
@@ -61,24 +61,82 @@
 			<!-- END PAGE HEADER-->
 			<div class="clearfix">
 			</div>
-			<div class="row">
+			<div class="row ">
 				<div class="col-md-6 col-sm-12">
-					<!-- BEGIN PORTLET-->
-					<div id="visitas-dia-div" class="portlet">
+					<div class="portlet">
 						<div class="portlet-title">
 							<div class="caption">
-								<i class="fa fa-bar-chart-o"></i><spring:message code="visit.day" />
-								<c:choose> 
-									<c:when test="${usuario.nivel.codigo eq 'HSF_NIVELES|SILAIS'}">
-										<c:out value="${usuario.entidad.nombre}" />
-									</c:when>
-									<c:when test="${usuario.nivel.codigo eq 'HSF_NIVELES|UNIDAD'}">
-										<c:out value="${usuario.unidad.nombre}" />
-									</c:when>
-								</c:choose>
+								<i class="fa fa-table"></i><spring:message code="monitor.activity" />
+							</div>
+						</div>
+						<div class="portlet-body">
+							<div class="table-toolbar1">
+							</div>
+							<table class="table table-striped table-hover table-bordered" id="por_usuario">
+								<thead>
+									<tr>
+										<th><spring:message code="users.user" /></th>
+										<th><spring:message code="users.username" /></th>
+										<th><spring:message code="users.accesscount" /></th>
+										<th><spring:message code="users.firstaccess" /></th>
+										<th><spring:message code="users.lastaccess" /></th>
+									</tr>
+								</thead>
+								<c:forEach items="${accesosUsuarios}" var="accesoUsuario">
+									<tr>
+										<td><c:out value="${accesoUsuario[0]}" /></td>
+										<td><c:out value="${accesoUsuario[1]}" /></td>
+										<td align="right"><c:out value="${accesoUsuario[2]}" /></td>
+										<td><fmt:formatDate value="${accesoUsuario[3]}" pattern="yyyy-MM-dd hh:mm a" /></td>
+										<td><fmt:formatDate value="${accesoUsuario[4]}" pattern="yyyy-MM-dd hh:mm a" /></td>
+									</tr>
+								</c:forEach>
+							</table>
+						</div>
+					</div>
+					<!-- END PORTLET-->
+				</div>
+				<div class="col-md-6 col-sm-12">
+					<div class="portlet">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="fa fa-table"></i><spring:message code="monitor.activity" />
+							</div>
+						</div>
+						<div class="portlet-body">
+							<div class="table-toolbar2">
+							</div>
+							<table class="table table-striped table-hover table-bordered" id="por_dia">
+								<thead>
+									<tr>
+										<th><spring:message code="date" /></th>
+										<th><spring:message code="users.accesscount" /></th>
+									</tr>
+								</thead>
+								<c:forEach items="${accesosDias}" var="accesoDia">
+									<tr>
+										<td><c:out value="${accesoDia[0]}" /></td>
+										<td><c:out value="${accesoDia[1]}" /></td>
+									</tr>
+								</c:forEach>
+							</table>
+						</div>
+					</div>
+					<!-- END PORTLET-->
+				</div>
+			</div>
+			<div class="clearfix">
+			</div>
+			<div class="row">
+				<div class="col-md-12 col-sm-12">
+					<!-- BEGIN PORTLET-->
+					<div id="actividad-dias-div" class="portlet">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="fa fa-bar-chart-o"></i><spring:message code="monitor.activity" />
 							</div>
 							<div class="actions">
-								<a href="#" onclick="exportVisitaDia();" class="btn btn-info btn-sm"><i class="fa fa-download"></i></a>
+								<a href="#" onclick="exportActividadDias();" class="btn btn-info btn-sm"><i class="fa fa-download"></i></a>
 							</div>
 						</div>
 						<div class="portlet-body">
@@ -94,118 +152,30 @@
 					</div>
 					<!-- END PORTLET-->
 				</div>
-				<div class="col-md-6 col-sm-12">
+			</div>
+			<div class="clearfix">
+			</div>
+			<div class="row">
+				<div class="col-md-12 col-sm-12">
 					<!-- BEGIN PORTLET-->
-					<div id="visitas-area-div" class="portlet">
+					<div id="actividad-users-div" class="portlet">
 						<div class="portlet-title">
 							<div class="caption">
-								<i class="fa fa-bar-chart-o"></i><spring:message code="visit.area" />
-								<c:choose> 
-									<c:when test="${usuario.nivel.codigo eq 'HSF_NIVELES|SILAIS'}">
-										<c:out value="${usuario.entidad.nombre}" />
-									</c:when>
-									<c:when test="${usuario.nivel.codigo eq 'HSF_NIVELES|UNIDAD'}">
-										<c:out value="${usuario.unidad.nombre}" />
-									</c:when>
-								</c:choose>
+								<i class="fa fa-bar-chart-o"></i><spring:message code="monitor.activity" />
 							</div>
 							<div class="actions">
-								<a href="#" onclick="exportVisitaArea();" class="btn btn-info btn-sm"><i class="fa fa-download"></i></a>
+								<a href="#" onclick="exportActividadUsuarios();" class="btn btn-info btn-sm"><i class="fa fa-download"></i></a>
 							</div>
 						</div>
 						<div class="portlet-body">
 							<spring:url value="/resources/img/loading.gif" var="loading" />
-							<div id="site_statistics_2_loading">
+							<div id="site_statistics_loading_2">
 								<img src="${loading}" alt="loading"/>
 							</div>
-							<div id="site_statistics_2_content" class="display-none">
+							<div id="site_statistics_content_2" class="display-none">
 								<div id="site_statistics_2" class="chart">
 								</div>
 							</div>
-						</div>
-					</div>
-					<!-- END PORTLET-->
-				</div>
-			</div>
-			<div class="clearfix">
-			</div>
-			<div class="row ">
-				<div class="col-md-6 col-sm-12">
-					<div class="portlet">
-						<div class="portlet-title">
-							<div class="caption">
-								<i class="fa fa-table"></i><spring:message code="visit.day" />
-								<c:choose> 
-									<c:when test="${usuario.nivel.codigo eq 'HSF_NIVELES|SILAIS'}">
-										<c:out value="${usuario.entidad.nombre}" />
-									</c:when>
-									<c:when test="${usuario.nivel.codigo eq 'HSF_NIVELES|UNIDAD'}">
-										<c:out value="${usuario.unidad.nombre}" />
-									</c:when>
-								</c:choose>
-							</div>
-						</div>
-						<div class="portlet-body">
-							<div class="table-toolbar1">
-							</div>
-							<table class="table table-striped table-hover table-bordered" id="visitas_dia">
-								<thead>
-									<tr>
-										<th><spring:message code="visit.date" /></th>
-										<th><spring:message code="visit.first" /></th>
-										<th><spring:message code="visit.followup" /></th>
-										<th><spring:message code="total" /></th>
-									</tr>
-								</thead>
-								<c:forEach items="${visitasDia}" var="visitaDia">
-									<tr>
-										<td><fmt:formatDate value="${visitaDia[0]}" pattern="yyyy-MM-dd" /></td>
-										<td align="right"><c:out value="${visitaDia[1]}" /></td>
-										<td align="right"><c:out value="${visitaDia[2]}" /></td>
-										<td align="right"><c:out value="${visitaDia[3]}" /></td>
-									</tr>
-								</c:forEach>
-							</table>
-						</div>
-					</div>
-					<!-- END PORTLET-->
-				</div>
-				<div class="col-md-6 col-sm-12">
-					<div class="portlet">
-						<div class="portlet-title">
-							<div class="caption">
-								<i class="fa fa-table"></i><spring:message code="visit.area" />
-								<c:choose> 
-									<c:when test="${usuario.nivel.codigo eq 'HSF_NIVELES|SILAIS'}">
-										<c:out value="${usuario.entidad.nombre}" />
-									</c:when>
-									<c:when test="${usuario.nivel.codigo eq 'HSF_NIVELES|UNIDAD'}">
-										<c:out value="${usuario.unidad.nombre}" />
-									</c:when>
-								</c:choose>
-							</div>
-						</div>
-						<div class="portlet-body">
-							<div class="table-toolbar2">
-							</div>
-							<table class="table table-striped table-hover table-bordered" id="visitas_area">
-								<thead>
-									<tr>
-										<th><spring:message code="area" /></th>
-										<th><spring:message code="visit.first" /></th>
-										<th><spring:message code="visit.followup" /></th>
-										<th><spring:message code="total" /></th>
-									</tr>
-								</thead>
-								<c:forEach items="${visitasArea}" var="visitaArea">
-									<tr>
-										<td><c:out value="${visitaArea[0]}" /></td>
-										<td align="right"><c:out value="${visitaArea[1]}" /></td>
-										<td align="right"><c:out value="${visitaArea[2]}" /></td>
-										<td align="right"><c:out value="${visitaArea[3]}" /></td>
-									</tr>
-								</c:forEach>
-							</table>
 						</div>
 					</div>
 					<!-- END PORTLET-->
@@ -250,8 +220,8 @@
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <spring:url value="/resources/scripts/app.js" var="App" />
 <script src="${App}" type="text/javascript"></script>
-<spring:url value="/resources/scripts/home.js" var="IndexScript" />
-<script src="${IndexScript}"></script>
+<spring:url value="/resources/scripts/monactivity.js" var="ActivityMon" />
+<script src="${ActivityMon}"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 <c:set var="processSuccess"><spring:message code="process.success" /></c:set>
 <c:set var="processError"><spring:message code="process.error" /></c:set>
@@ -285,79 +255,40 @@
 <c:set var="october"><spring:message code="october" /></c:set>
 <c:set var="november"><spring:message code="november" /></c:set>
 <c:set var="december"><spring:message code="december" /></c:set>
-<c:set var="initial"><spring:message code="visit.first" /></c:set>
-<c:set var="followup"><spring:message code="visit.followup" /></c:set>
-<c:set var="total"><spring:message code="total" /></c:set>
-<spring:url value="/updateDashboard" var="dashUrl"/>
+<spring:url value="/monitor/updateDashboard" var="monitorUrl"/>
 <c:set var="exportar"><spring:message code="export" /></c:set>
+<c:set var="total"><spring:message code="total" /></c:set>
 <script>
     $(function () {
-        $("li.start").addClass("active");
+    	$("li.monitor").removeClass("monitor").addClass("active");
+    	$("li.monitoractivity").removeClass("monitoractivity").addClass("active");
     });
 </script>
 <script>
 	jQuery(document).ready(function() {
 		App.init();
-		Index.init();
-		var parametrosDateRange = {dashUrl: "${dashUrl}",yesterday: "${yesterday}", today: "${today}", last7days: "${last7days}"
+		ActivityMon.init();
+		var parametrosDateRange = {monitorUrl: "${monitorUrl}",yesterday: "${yesterday}", today: "${today}", last7days: "${last7days}"
 			, last30Days: "${last30Days}",tMonth:"${tMonth}",lMonth: "${lMonth}", applyLabel: "${applyLabel}", fromLabel: "${fromLabel}"
 			, toLabel: "${toLabel}",customRangeLabel:"${customRangeLabel}",Su: "${Su}", Mo: "${Mo}", Tu: "${Tu}",We: "${We}", Th: "${Th}", Fr: "${Fr}", Sa: "${Sa}"
 			, january: "${january}",february:"${february}",march: "${march}", april: "${april}", may: "${may}",june: "${june}", july: "${july}", august: "${august}"
-			, september: "${september}", october: "${october}", november: "${november}", december: "${december}", dataTablesTTSWF: "${dataTablesTTSWF}", exportar: "${exportar}"
-			, initial: "${initial}", followup: "${followup}", total: "${total}"};
-		Index.initDashboardDaterange(parametrosDateRange);
-		var iniciales = [];
-		var segs = [];
-		var totales = [];
+			, september: "${september}", october: "${october}", november: "${november}", december: "${december}", dataTablesTTSWF: "${dataTablesTTSWF}", exportar: "${exportar}"};
+		ActivityMon.initDashboardDaterange(parametrosDateRange);
 		var fechas = [];
-		var sumInicial = 0;
-		var sumSeg = 0;
-		var sumTotal = 0;
-		var ainiciales = [];
-		var asegs = [];
-		var atotales = [];
-		var areas = [];
-		<c:forEach var="visita" items="${visitasDia}">
-			fechas.push(["${visita[0]}"]);
-			iniciales.push(["${visita[0]}", "${visita[1]}"]);
-			sumInicial = sumInicial + parseInt("${visita[1]}");
-			segs.push(["${visita[0]}", "${visita[2]}"]);
-			sumSeg = sumSeg + parseInt("${visita[2]}");
-			totales.push(["${visita[0]}", "${visita[3]}"]);
-			sumTotal = sumTotal + parseInt("${visita[3]}");
+		var accesosD = [];
+		var usuarios = [];
+		var accesosU = [];
+		<c:forEach var="accesoD" items="${accesosDias}">
+			fechas.push(["${accesoD[0]}"]);
+			accesosD.push(["${accesoD[0]}", "${accesoD[1]}"]);
 		</c:forEach>
-		<c:forEach var="areas" items="${visitasArea}">
-			areas.push([ "${areas[0]}"]);
-			ainiciales.push([ "${areas[0]}", "${areas[1]}"]);
-			asegs.push([ "${areas[0]}", "${areas[2]}"]);
-			atotales.push([ "${areas[0]}", "${areas[3]}"]);
+		<c:forEach var="accesoU" items="${accesosUsuarios}">
+			usuarios.push(["${accesoU[0]}"]);
+			accesosU.push(["${accesoU[0]}", "${accesoU[2]}"]);
 		</c:forEach>
-		var parametrosChart = {fechas: fechas,iniciales: iniciales, segs: segs, totales: totales,ainiciales: ainiciales, asegs: asegs, atotales: atotales, areas: areas
-			, sumInicial: sumInicial, sumSeg: sumSeg, sumTotal: sumTotal, initial: "${initial}", followup: "${followup}", total: "${total}"};
-		Index.initCharts(parametrosChart);
+		var parametrosChart = {fechas: fechas,accesosD: accesosD,usuarios:usuarios,accesosU: accesosU, total: "${total}"};
+		ActivityMon.initCharts(parametrosChart);
 	});
-	
-	function exportVisitaDia()
-	{
-		html2canvas($("#visitas-dia-div"), {
-	        onrendered: function(canvas) {
-	            // canvas is the final rendered <canvas> element
-	        	var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");  /// here is the most important part because if you dont replace you will get a DOM 18 exception.
-	        	document.location.href=image;
-	        }
-	    });
-	}
-	
-	function exportVisitaArea()
-	{
-		html2canvas($("#visitas-area-div"), {
-	        onrendered: function(canvas) {
-	            // canvas is the final rendered <canvas> element
-	        	var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");  /// here is the most important part because if you dont replace you will get a DOM 18 exception.
-	        	document.location.href=image;
-	        }
-	    });
-	}
 </script>
 <!-- END JAVASCRIPTS -->
 </body>

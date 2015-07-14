@@ -24,7 +24,7 @@ public class Familia extends BaseMetaData implements Auditable{
 	private String codFamilia;
 	private Comunidades comunidad;
 	private Integer numVivienda;
-	private Integer numFamilia;
+	private String numFamilia;
 	private Integer numFicha;
 	private String direccion;
 	private BigDecimal latitud;
@@ -39,7 +39,7 @@ public class Familia extends BaseMetaData implements Auditable{
 	}
 
 	public Familia(String idFamilia, String codFamilia, Comunidades comunidad,
-			Integer numVivienda, Integer numFamilia, String direccion) {
+			Integer numVivienda, String numFamilia, String direccion) {
 		super();
 		this.idFamilia = idFamilia;
 		this.codFamilia = codFamilia;
@@ -58,7 +58,7 @@ public class Familia extends BaseMetaData implements Auditable{
 		this.idFamilia = idFamilia;
 	}
 
-	@Column(name = "COD_FAMILIA", nullable = false, length = 30)
+	@Column(name = "COD_FAMILIA", nullable = false, length = 100)
 	public String getCodFamilia() {
 		return codFamilia;
 	}
@@ -78,7 +78,7 @@ public class Familia extends BaseMetaData implements Auditable{
 		this.comunidad = comunidad;
 	}
 
-	@Column(name = "NUM_VIVIENDA", nullable = false)
+	@Column(name = "NUM_VIVIENDA", nullable = true, length = 50)
 	public Integer getNumVivienda() {
 		return numVivienda;
 	}
@@ -87,12 +87,12 @@ public class Familia extends BaseMetaData implements Auditable{
 		this.numVivienda = numVivienda;
 	}
 
-	@Column(name = "NUM_FAMILIA", nullable = false)
-	public Integer getNumFamilia() {
+	@Column(name = "NUM_FAMILIA", nullable = false, length = 50)
+	public String getNumFamilia() {
 		return numFamilia;
 	}
 
-	public void setNumFamilia(Integer numFamilia) {
+	public void setNumFamilia(String numFamilia) {
 		this.numFamilia = numFamilia;
 	}
 	

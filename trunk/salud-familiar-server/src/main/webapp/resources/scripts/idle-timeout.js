@@ -12,7 +12,7 @@ var IdleTimeout = function () {
                     
             // start the idle timer plugin
             $.idleTimeout('#idle-timeout-dialog', '.modal-content button:last', {
-                idleAfter: 180, // 120 seconds
+                idleAfter: 420, // 420 seconds
                 timeout: 30000, //30 seconds to timeout
                 pollingInterval: 30, // 30 seconds
                 keepAliveURL: parametros.keepSessionUrl,

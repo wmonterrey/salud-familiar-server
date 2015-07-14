@@ -113,7 +113,7 @@ public class Persona extends BaseMetaData implements Auditable, Serializable{
 		this.familia = familia;
 	}
 
-	@Column(name = "COD_PERSONA", nullable = false, length = 30)
+	@Column(name = "COD_PERSONA", nullable = false, length = 100)
 	public String getCodPersona() {
 		return codPersona;
 	}
