@@ -833,6 +833,7 @@ var App = function () {
             var color_ = (App.isRTL() ? color + '-rtl' : color);
             var loc = window.location;
             var pathName = loc.pathname.substring(0,loc.pathname.indexOf('/', 1)+1);
+            pathName = pathName + "/";
             $('#style_color').attr("href", pathName+"resources/css/themes/" + color_ + ".css");
             localStorage.setItem("sm-style-color",color);
         };

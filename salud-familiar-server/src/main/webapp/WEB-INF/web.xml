@@ -51,8 +51,8 @@ see here: http://static.springsource.org/spring/docs/current/spring-framework-re
 		<location>/404</location>
 	</error-page>
 	
-    	    <session-config> 
-	    <session-timeout>5</session-timeout> 
+    <session-config> 
+	    <session-timeout>10</session-timeout> 
 	</session-config>
 	   
     <listener>

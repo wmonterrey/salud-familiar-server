@@ -1,5 +1,6 @@
 package ni.gob.minsa.hsf.service;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -32,13 +33,18 @@ public class VisitaService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Visita> getVisitas(String comunidad, Integer numVivienda, Integer numFamilia, Integer numFicha, Date fecha1, Date fecha2) throws ParseException {
+	public List<Visita> getVisitas(String comunidad, Integer numVivienda, String numFamilia, Integer numFicha, Date fecha1, Date fecha2) throws ParseException {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
+		Timestamp timeStampInicio = null;
+		Timestamp timeStampFinal = null;
+		if (fecha1 != null) timeStampInicio = new Timestamp(fecha1.getTime());
+		if (fecha2 != null) timeStampFinal = new Timestamp(fecha2.getTime());
+		
 		// Create a Hibernate query (HQL)
 		String strQuery = "FROM Visita vis where vis.familia.comunidad.codigo = :codComunidad";
 		if (numVivienda != null) strQuery = strQuery + " and vis.familia.numVivienda = :numVivienda";
-		if (numFamilia != null) strQuery = strQuery + " and vis.familia.numFamilia = :numFamilia";
+		if (!numFamilia.matches("")) strQuery = strQuery + " and vis.familia.numFamilia = :numFamilia";
 		if (numFicha != null) strQuery = strQuery + " and vis.familia.numFicha = :numFicha";
 		if (fecha1 != null) strQuery = strQuery + " and vis.fechaVisita >= :fec1";
 		if (fecha2 != null) strQuery = strQuery + " and vis.fechaVisita <= :fec2";
@@ -46,22 +52,26 @@ public class VisitaService {
 		Query query = session.createQuery(strQuery);
 		query.setParameter("codComunidad", comunidad);
 		if (numVivienda != null) query.setParameter("numVivienda", numVivienda);
-		if (numFamilia != null) query.setParameter("numFamilia", numFamilia);
+		if (!numFamilia.matches("")) query.setParameter("numFamilia", numFamilia);
 		if (numFicha != null) query.setParameter("numFicha", numFicha);
-		if (fecha1 != null) query.setTimestamp("fec1", fecha1);
-		if (fecha2 != null) query.setTimestamp("fec2", fecha2);
+		if (fecha1 != null) query.setTimestamp("fec1", timeStampInicio);
+		if (fecha2 != null) query.setTimestamp("fec2", timeStampFinal);
 		// Retrieve all
 		return  query.list();
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Visita> getVisitasFamActivas(String comunidad, Integer numVivienda, Integer numFamilia, Integer numFicha, Date fecha1, Date fecha2) throws ParseException {
+	public List<Visita> getVisitasFamActivas(String comunidad, Integer numVivienda, String numFamilia, Integer numFicha, Date fecha1, Date fecha2) throws ParseException {
 		// Retrieve session from Hibernate
 		Session session = sessionFactory.getCurrentSession();
+		Timestamp timeStampInicio = null;
+		Timestamp timeStampFinal = null;
+		if (fecha1 != null) timeStampInicio = new Timestamp(fecha1.getTime());
+		if (fecha2 != null) timeStampFinal = new Timestamp(fecha2.getTime());
 		// Create a Hibernate query (HQL)
 		String strQuery = "FROM Visita vis where vis.familia.comunidad.codigo = :codComunidad";
 		if (numVivienda != null) strQuery = strQuery + " and vis.familia.numVivienda = :numVivienda";
-		if (numFamilia != null) strQuery = strQuery + " and vis.familia.numFamilia = :numFamilia";
+		if (!numFamilia.matches("")) strQuery = strQuery + " and vis.familia.numFamilia = :numFamilia";
 		if (numFicha != null) strQuery = strQuery + " and vis.familia.numFicha = :numFicha";
 		if (fecha1 != null) strQuery = strQuery + " and vis.fechaVisita >= :fec1";
 		if (fecha2 != null) strQuery = strQuery + " and vis.fechaVisita <= :fec2";
@@ -70,10 +80,10 @@ public class VisitaService {
 		query.setParameter("codComunidad", comunidad);
 		query.setParameter("pasivo", '0');
 		if (numVivienda != null) query.setParameter("numVivienda", numVivienda);
-		if (numFamilia != null) query.setParameter("numFamilia", numFamilia);
+		if (!numFamilia.matches("")) query.setParameter("numFamilia", numFamilia);
 		if (numFicha != null) query.setParameter("numFicha", numFicha);
-		if (fecha1 != null) query.setTimestamp("fec1", fecha1);
-		if (fecha2 != null) query.setTimestamp("fec2", fecha2);
+		if (fecha1 != null) query.setTimestamp("fec1", timeStampInicio);
+		if (fecha2 != null) query.setTimestamp("fec2", timeStampFinal);
 		// Retrieve all
 		return  query.list();
 	}

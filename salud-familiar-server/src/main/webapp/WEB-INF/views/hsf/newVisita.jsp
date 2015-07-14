@@ -49,7 +49,7 @@
 				<div class="col-md-12">
 					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
 					<h3 class="page-title">
-						<spring:message code="heading" />
+						<spring:message code="heading" /> <small><spring:message code="hsf" /></small>
 					</h3>
 					<ul class="page-breadcrumb breadcrumb">
 						<li>

@@ -60,10 +60,16 @@ var FormWizardHSFModalPersonaValidation = function () {
     	                max: 20
     	            },
     	            nombres: {
-    	                required: true
+    	                required: true,
+    	                maxlength:50
     	            },
     	            primerApellido: {
-    	                required: true
+    	                required: true,
+    	                maxlength:50
+    	            },
+    	            segundoApellido: {
+    	                required: false,
+    	                maxlength:50
     	            },
     	            cedula: {
     	                required: false,
@@ -283,7 +289,9 @@ var FormWizardHSFModalPersonaValidation = function () {
 									  persona.numPersona, persona.nombres, persona.primerApellido, persona.segundoApellido, persona.cedula, d.yyyymmdd(), persona.grupoDisp.valor]);
 								}
 								$('#idPersona').val(persona.idPersona);
-								$('#noPersonasFamilia').val($('#numPersona').val());
+								
+								$('#noPersonasFamilia').val(persona.numPersona);
+								
 				        		validatorPerson.resetForm();
 		    				}
 			            }

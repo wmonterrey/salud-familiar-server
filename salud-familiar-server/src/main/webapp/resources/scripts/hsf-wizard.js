@@ -23,12 +23,6 @@ var FormWizardHSF = function () {
             "greedy": false
         });
         
-        $("#numFamilia").inputmask({
-            "mask": "9",
-            "repeat": 6,
-            "greedy": false
-        });
-        
         $("#numVivienda").inputmask({
             "mask": "9",
             "repeat": 6,
@@ -295,11 +289,11 @@ var FormWizardHSF = function () {
                         required: true
                     },
                     numVivienda: {
-                    	min:1,
-                        required: true
+                        required: false
                     },
                     numFamilia: {
-                    	min:1,
+                    	minlength:1,
+                    	maxlength:50,
                         required: true
                     },
                     direccion: {

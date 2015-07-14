@@ -65,7 +65,8 @@ public class DivisionPoliticaService {
 			query.setParameter("munUnidad", usuario.getUnidad().getMunicipio());
 		}
 		else {
-			query = session.createQuery("FROM  Divisionpolitica dp where dp.dependenciaSilais.codigo = :entidad order by dp.nombre");
+			query = session.createQuery("From Divisionpolitica dps where dps.codigoNacional in " +
+					"(select lu.municipio from Unidades lu where lu.entidadAdtva = :entidad)");
 			query.setParameter("entidad", entidadId);
 		}
 		// Retrieve all

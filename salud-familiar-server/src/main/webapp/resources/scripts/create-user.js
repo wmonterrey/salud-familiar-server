@@ -189,6 +189,7 @@ var CreateUser = function () {
             
             $('#entidad').change(
             		function() {
+            			App.blockUI(pageContent, false);
             			$.getJSON('/hsf/opciones/municipios', {
             				entidadId : $('#entidad').val(),
             				ajax : 'true'
@@ -203,11 +204,13 @@ var CreateUser = function () {
             				}
             				html += '</option>';
             				$('#municipio').html(html);
+            				App.unblockUI(pageContent);
             			});
                     });
             
             $('#municipio').change(
             		function() {
+            			App.blockUI(pageContent, false);
             			$.getJSON('/hsf/opciones/unidades', {
             				muniId : $('#municipio').val(),
             				ajax : 'true'
@@ -221,6 +224,7 @@ var CreateUser = function () {
             				}
             				html += '</option>';
             				$('#unidad').html(html);
+            				App.unblockUI(pageContent);
             			});
                     });
             
