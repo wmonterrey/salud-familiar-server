@@ -13,7 +13,7 @@
 	    <intercept-url pattern="/info/delete/.*" access="ROLE_DELETE" />
 	    <intercept-url pattern="/info/.*" access="ROLE_INFO" />
 	    <intercept-url pattern="/report/.*" access="ROLE_REPORT" />
-	    <intercept-url pattern="/monitor/.*" access="ROLE_NOSHOWN" />
+	    <intercept-url pattern="/monitor/.*" access="ROLE_MONITOR" />
 		<intercept-url pattern="/login" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<intercept-url pattern="/loginfailed" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<intercept-url pattern="/logout" access="IS_AUTHENTICATED_ANONYMOUSLY" />
@@ -26,7 +26,7 @@
 		    delete-cookies="JSESSIONID"/>
 		<access-denied-handler error-page="/403"/>
 		<session-management invalid-session-url="/login">
-        	<concurrency-control error-if-maximum-exceeded="true" max-sessions="1" expired-url="/login"/>            
+        	<concurrency-control error-if-maximum-exceeded="true" max-sessions="10" expired-url="/login"/>            
     	</session-management>
 	</http>
 	

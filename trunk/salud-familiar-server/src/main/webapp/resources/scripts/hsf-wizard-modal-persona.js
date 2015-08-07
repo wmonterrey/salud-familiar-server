@@ -243,12 +243,9 @@ var FormWizardHSFModalPersonaValidation = function () {
                     }
                 });
                 if (IsValid){
-                	App.blockUI(pageContent, false);
                 	$('#idFamiliaPerson').val($('#idFamilia').val());
-                	guardarPersona();
-                	jQuery('li', $('#form_wizard_2')).removeClass("done");
+                	guardarPersonaFinal();
                 	$('#personamodalform').modal('hide');
-                	App.unblockUI(pageContent);
                 }
             }).hide();
     	    
@@ -265,15 +262,14 @@ var FormWizardHSFModalPersonaValidation = function () {
                     }
                 });
                 if (IsValid){
-                	App.blockUI(pageContent, false);
                 	$('#idFamiliaPerson').val($('#idFamilia').val());
                 	guardarPersona();
-                	App.unblockUI(pageContent);
                 }
     	    });
     	    
-    	    function guardarPersona(){
+    	    function guardarPersonaFinal(){
 		    if (personForm.valid()){
+		    	App.blockUI(pageContent, false);
 				$.post( parametros.addPersonUrl
 			            , $('#add_person_form').serialize()
 			            , function( data )
@@ -283,24 +279,63 @@ var FormWizardHSFModalPersonaValidation = function () {
 		    				}
 		    				else{
 								persona = JSON.parse(data);
-								if ($('#idPersona').val()==''){
 									var d = new Date(Date.parse(persona.fechaNacimiento));
 									$('table#lista_personas').dataTable().fnAddData( [
 									  persona.numPersona, persona.nombres, persona.primerApellido, persona.segundoApellido, persona.cedula, d.yyyymmdd(), persona.grupoDisp.valor]);
-								}
 								$('#idPersona').val(persona.idPersona);
 								
 								$('#noPersonasFamilia').val(persona.numPersona);
 								
 				        		validatorPerson.resetForm();
+				            	$('#add_person_form .alert-danger').hide();
+				            	$('#add_person_form .alert-success').hide();
+				            	$('#add_person_form').find('input:text, input:password, textarea').val('');
+				                $('#add_person_form').find('input:radio, input:checkbox').prop('checked', false);
+				                $('#add_person_form').find('select').select2('val','');
+				                $('#add_person_form').find('select').multiSelect('deselect_all');
+				                $('#form_wizard_2 .button-submit').unbind("click");
+				                $("#save-person").unbind("click");
+								$("#dismiss-modalperson").unbind("click");
+								$('a[href="#tab2_1"]').tab('show');
+				            	$('#nombres').focus();
+				            	jQuery('li', $('#form_wizard_2')).removeClass("done");
+				            	$('#personamodalform').modal('hide');
 		    				}
+							App.unblockUI(pageContent);
 			            }
 			            , 'text' )
 				  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {
 				  			alert( parametros.processError + " : " + errorThrown);
+				  			App.unblockUI(pageContent);
 				  		});
 			 }
 		   }
+    	    
+    	    
+    	    function guardarPersona(){
+    		    if (personForm.valid()){
+    		    	App.blockUI(pageContent, false);
+    				$.post( parametros.addPersonUrl
+    			            , $('#add_person_form').serialize()
+    			            , function( data )
+    			            {
+    							if (data == ""){
+    		    					toastr.error(parametros.deniedError);
+    		    				}
+    		    				else{
+    								persona = JSON.parse(data);
+    								$('#idPersona').val(persona.idPersona);
+    				        		validatorPerson.resetForm();
+    		    				}
+    							App.unblockUI(pageContent);
+    			            }
+    			            , 'text' )
+    				  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {
+    				  			alert( parametros.processError + " : " + errorThrown);
+    				  			App.unblockUI(pageContent);
+    				  		});
+    			 }
+    		   }
 		   
 		   Date.prototype.yyyymmdd = function() {         
 		        
