@@ -508,9 +508,7 @@ var FormWizardHSF = function () {
                         return false;
                     }
                     else {
-                    	App.blockUI(pageContent, false);
                     	guardarHSF(index + 1);
-                    	App.unblockUI(pageContent);
                     }
                     handleTitle(tab, navigation, clickedIndex);
                 },
@@ -522,9 +520,7 @@ var FormWizardHSF = function () {
                         return false;
                     }
                     else{
-                    	App.blockUI(pageContent, false);
                     	guardarHSF(index);
-                    	App.unblockUI(pageContent);
                     }
                     handleTitle(tab, navigation, index);
                 },
@@ -558,43 +554,16 @@ var FormWizardHSF = function () {
                     }
                 });
                 if (IsValid){
-                	guardarFuncFam();
-                	guardarFactSocEc();
-                	guardarCarHigSan();
-	        		guardarFamiliaVisita();
-	        		
-	        		table1.fnClearTable();
-	        		
-	        		form.find('input:text, input:password, textarea').val('');
-	        		form.find('input:radio, input:checkbox').prop('checked', false);
-	        		form.find('select').select2('val','');
-	        		form.find('select').multiSelect('deselect_all');
-	        		jQuery('li', $('#form_wizard_1')).removeClass("done");
-	        		$('a[href="#tab1"]').tab('show');	
-	        		$('.step-title', $('#form_wizard_1')).text('Paso 1 de 6');
-	        		$('#form_wizard_1').find('.button-submit').hide();
-	        		$('#form_wizard_1').find('.button-previous').hide();
-	        		$('#form_wizard_1').find('.button-next').show();
+                	guardarFuncFam(false);
+                	guardarFactSocEc(false);
+                	guardarCarHigSan(false);
+	        		guardarFamiliaVisitaFinal();
                 }
             }).hide();
             
-            function guardarHSF(index){
-            	if (index == 1){
-            		guardarFamiliaVisita();
-            	}
-            	else if (index == 3){
-            		guardarCarHigSan();
-            	}
-            	else if (index == 4){
-            		guardarFactSocEc();
-            	}
-            	else if (index == 5){
-            		guardarFuncFam();
-            	}
-            }
-            
-            function guardarFamiliaVisita()
+            function guardarFamiliaVisitaFinal()
         	{
+            	App.blockUI(pageContent, false);
             	$.post( parametros.addFamiliaVisitaUrl
     		            , $('#submit_form').serialize()
     		            , function( data )
@@ -605,18 +574,77 @@ var FormWizardHSF = function () {
             				else{
             					visita = JSON.parse(data);
             					toastr.success(parametros.processSuccess);
-            					$('#idFamilia').val(visita.familia.idFamilia);
-            					$('#idVisita').val(visita.idVisita);
+            					table1.fnClearTable();
+            	        		
+            	        		form.find('input:text, input:password, textarea').val('');
+            	        		form.find('input:radio, input:checkbox').prop('checked', false);
+            	        		form.find('select').select2('val','');
+            	        		form.find('select').multiSelect('deselect_all');
+            	        		jQuery('li', $('#form_wizard_1')).removeClass("done");
+            	        		$('a[href="#tab1"]').tab('show');	
+            	        		$('.step-title', $('#form_wizard_1')).text('Paso 1 de 6');
+            	        		$('#form_wizard_1').find('.button-submit').hide();
+            	        		$('#form_wizard_1').find('.button-previous').hide();
+            	        		$('#form_wizard_1').find('.button-next').show();
+            	        		App.unblockUI(pageContent);
             				}
     		            }
     		            , 'text' )
     			  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {
     			    		alert( parametros.processError + " : " + errorThrown);
+    			    		App.unblockUI(pageContent);
     			  		});
         	}
             
-            function guardarCarHigSan()
+            function guardarHSF(index){
+            	if (index == 1){
+            		guardarFamiliaVisita();
+            	}
+            	else if (index == 3){
+            		guardarCarHigSan(true);
+            	}
+            	else if (index == 4){
+            		guardarFactSocEc(true);
+            	}
+            	else if (index == 5){
+            		guardarFuncFam(true);
+            	}
+            }
+            
+            function guardarFamiliaVisita()
         	{
+            	App.blockUI(pageContent, false);
+            	$.post( parametros.addFamiliaVisitaUrl
+    		            , $('#submit_form').serialize()
+    		            , function( data )
+    		            {
+            				if (data == ""){
+            					toastr.error(parametros.deniedError);
+            				}
+            				else{
+            					visita = JSON.parse(data);
+            					if (visita.familia === undefined) {
+            						toastr.error(visita);
+            						$('a[href="#tab1"]').tab('show');
+            					}
+            					else{
+            						toastr.success(parametros.processSuccess);
+            						$('#idFamilia').val(visita.familia.idFamilia);
+            						$('#idVisita').val(visita.idVisita);
+            					}
+            					App.unblockUI(pageContent);
+            				}
+    		            }
+    		            , 'text' )
+    			  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {
+    			    		alert( parametros.processError + " : " + errorThrown);
+    			    		App.unblockUI(pageContent);
+    			  		});
+        	}
+            
+            function guardarCarHigSan(mostrarToast)
+        	{
+            	App.blockUI(pageContent, false);
             	$.post( parametros.addCarHigSanUrl
     		            , $('#submit_form').serialize()
     		            , function( data )
@@ -626,18 +654,21 @@ var FormWizardHSF = function () {
 		    				}
 		    				else{
 	    						caract = JSON.parse(data);
-	    						toastr.success(parametros.processSuccess);
+	    						if (mostrarToast) toastr.success(parametros.processSuccess);
 	    						$('#idCaractHig').val(caract.idCaractHig);
+	    						App.unblockUI(pageContent);
 		    				}
     		            }
     		            , 'text' )
     			  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {
     			  			alert( parametros.processError + " : " + errorThrown);
+    			  			App.unblockUI(pageContent);
     			  		});
         	}
             
-            function guardarFactSocEc()
+            function guardarFactSocEc(mostrarToast)
         	{
+            	App.blockUI(pageContent, false);
             	$.post( parametros.addFactSocEcUrl
     		            , $('#submit_form').serialize()
     		            , function( data )
@@ -647,18 +678,21 @@ var FormWizardHSF = function () {
 		    				}
 		    				else{
 	    						factores = JSON.parse(data);
-	    						toastr.success(parametros.processSuccess);
+	    						if (mostrarToast) toastr.success(parametros.processSuccess);
 	    						$('#idFactSocioEc').val(factores.idFactSocioEc);
+	    						App.unblockUI(pageContent);
 		    				}
     		            }
     		            , 'text' )
     			  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {
     			  			alert( parametros.processError + " : " + errorThrown);
+    			  			App.unblockUI(pageContent);
     			  		});
         	}
             
-            function guardarFuncFam()
+            function guardarFuncFam(mostrarToast)
         	{
+            	App.blockUI(pageContent, false);
             	$.post( parametros.addFuncFamUrl
     		            , $('#submit_form').serialize()
     		            , function( data )
@@ -668,13 +702,15 @@ var FormWizardHSF = function () {
 		    				}
 		    				else{
 	    						funcionamiento = JSON.parse(data);
-	    						toastr.success(parametros.processSuccess);
+	    						if (mostrarToast)  toastr.success(parametros.processSuccess);
 	    						$('#idFuncFamiliar').val(funcionamiento.idFuncFamiliar);
+	    						App.unblockUI(pageContent);
 		    				}
     		            }
     		            , 'text' )
     			  		.fail(function(XMLHttpRequest, textStatus, errorThrown) {
     			  			alert( parametros.processError + " : " + errorThrown);
+    			  			App.unblockUI(pageContent);
     			  		});
         	}
             

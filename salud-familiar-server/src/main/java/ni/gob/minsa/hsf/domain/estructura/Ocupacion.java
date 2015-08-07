@@ -141,7 +141,7 @@ public class Ocupacion  implements java.io.Serializable {
 			return true;
 		if ((other == null))
 			return false;
-		if (!(other instanceof Catalogo))
+		if (!(other instanceof Ocupacion))
 			return false;
 		
 		Ocupacion castOther = (Ocupacion) other;

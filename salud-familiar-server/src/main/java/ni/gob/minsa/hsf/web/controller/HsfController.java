@@ -247,6 +247,7 @@ public class HsfController {
 		UserSistema usuario = usuarioService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
 		Comunidades com = comunidadService.getComunidad(comunidad);
     	if(hsfService.verificarPermisoDatos(com, usuario)){
+    		try {
 			Familia familia = new Familia();
 			familia.setComunidad(com);
 			familia.setNumVivienda(numVivienda);
@@ -263,6 +264,7 @@ public class HsfController {
 			familia.setInfoCompleta(estaCompleta(idFamilia));
 			familia.setDispensarizada(esDispensarizada(idFamilia));
 			familiaService.addFamilia(familia);
+
 			
 			Visita visita = new Visita();
 			visita.setFamilia(familia);
@@ -283,6 +285,9 @@ public class HsfController {
 			visita.setMovilInfo(movilInfo);
 			visitaService.addVisita(visita);
 			return createJsonResponse(visita);
+    		} catch (Exception e){
+    			return createJsonResponse(e.getLocalizedMessage());
+    		}
     	}
     	else{
     		return null;
